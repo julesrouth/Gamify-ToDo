@@ -18,6 +18,7 @@ class MoveType(enumerate):
     ATTACK = 0
     DEFEND = 1
     SPELL = 2
+    USEITEM =3
 
 
 

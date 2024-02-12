@@ -9,10 +9,10 @@ class Stat():
         self.attack = attack
         self.defense = defense
         self.level = level
-        self.mana = level
+        self.mana = level * 3
         self.speed = speed
         self.max_health = health
-        self.max_mna = self.mana
+        self.max_mana = self.mana
 
 if __name__ == "__main__":
     print("Testing Stat")

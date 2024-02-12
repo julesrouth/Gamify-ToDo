@@ -108,15 +108,65 @@ class Game():
             actionStr = "Player used " + playerMove.name + " for " + str(damage) + " damage"
             self.message_log.append(actionStr)
             self.damageEnemy(damage)
-        else:
+        elif playerMove.moveType == GameEnum.MoveType.DEFEND:
             # print("Player Defended")
             self.player.shielding = playerMove.power
             actionStr = "Player used " + playerMove.name + " for " + str(playerMove.power) + " shield"
             self.message_log.append(actionStr)
+        elif playerMove.moveType == GameEnum.MoveType.SPELL:
+            if not self.spellDoSomething(playerMove):
+                print("Invalid Spell\n")
+                self.player.initiative += 2
+                time.sleep(1)
+                return
+        elif playerMove.moveType == GameEnum.MoveType.USEITEM:
+            self.message_log.append("Player used " + playerMove.name)
+            print(self.player.printInventory())
+            print("Input item to use")
+            inputPlayer = input()
+            for i in self.player.inventory:
+                print(i)
+                if i.name.lower() == inputPlayer:
+                    
+                    self.message_log.append("Using item: " + i.name)
+                    if self.useItem(i):
+                        return
+            self.message_log.append("Invalid item")
+            return
         self.player.lastMoveInit = self.player.initiative
         self.player.initiative += math.ceil(playerMove.speed * self.player.getSpeed())
         print('\n')
 
+    def useItem(self, item):
+        self.message_log.append("The item: " + item.name)
+        if item.name.lower() == "potion":
+            self.message_log.append("Player used " + item.name + " for " + str(item.stats.health) + " health")
+            self.player.stat.health += item.stats.health
+            if self.player.stat.health > self.player.stat.max_health:
+                self.player.stat.health = self.player.stat.max_health
+            self.player.inventory.remove(item)
+            return True
+        else:
+            self.message_log.append("Invalid item" + " " + item.name)
+
+
+
+    def spellDoSomething(self, spell):
+        if spell.name == "fireball":
+            if self.player.stat.mana < spell.manacost:
+
+                self.message_log.append("Not enough mana for fireball, you need "+ str(spell.manacost) + " mana" + " you have " + str(self.player.stat.mana) + " mana")
+                return False
+            self.player.stat.mana -= spell.manacost
+            damage = self.damageCalc(self.player.getAttack() * spell.power, self.currentEnemy.getDefense())
+            self.damageEnemy(damage)
+            actionStr = "Player used " + spell.name + " for " + str(damage) + " damage"
+            self.message_log.append(actionStr)
+
+        else:
+            self.message_log.append("Invalid spell")
+            return False
+        return True
     def resolveEnemyMove(self, enemyMove):
         if enemyMove.moveType == GameEnum.MoveType.ATTACK:
             # print("ENEMY ATTACKED")
@@ -182,13 +232,13 @@ class Game():
                     self.message_log.append(i)
                 
             printCnt +=1
-            if self.combatTime == self.player.initiative:
+            if self.combatTime >= self.player.initiative:
                 playerMove = self.player.getMove()
                 self.resolvePlayerMove(playerMove)
                 # print("Combat Time: ", combatTime, "Player Initiative: ", self.player.initiative, "Enemy Initiative: ", self.currentEnemy.initiative)            
                 # self.printCombatStatus()
                 # time.sleep(.5)
-            if self.combatTime == self.currentEnemy.initiative:
+            if self.combatTime >= self.currentEnemy.initiative:
                 enemyMove = self.currentEnemy.move()
                 self.resolveEnemyMove(enemyMove)
                 

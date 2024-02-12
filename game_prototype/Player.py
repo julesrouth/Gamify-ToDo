@@ -30,7 +30,7 @@ class Player:
     shielding = 0
     lastMoveInit = 0
     inventory = []
-    moves = [Move.Move(GameEnum.MoveType.ATTACK, 2, 100,  name = "attack"), Move.Move(GameEnum.MoveType.DEFEND, 2, 75,  name = "defend"), Move.Move(GameEnum.MoveType.ATTACK, 4, 150, name = "strong attack")]
+    moves = [Move.Move(GameEnum.MoveType.USEITEM, 0, 0, name = "Use an Item")  ,Move.Move(GameEnum.MoveType.ATTACK, 2, 100,  name = "attack"), Move.Move(GameEnum.MoveType.DEFEND, 2, 75,  name = "defend"), Move.Move(GameEnum.MoveType.ATTACK, 4, 150, name = "strong attack"), Move.Move(GameEnum.MoveType.SPELL, 4, 50, effect = "10", name = "fireball")]
     initiative = 5
     def __init__(self, x, y):
         self.location = [x, y]
@@ -97,7 +97,8 @@ class Player:
     def movesStr(self):
         tempStr = ""
         for i in self.moves:
-            tempStr += i.name + " "
+            tempStr += i.name + ", "
+        tempStr = tempStr[:-2]
         return tempStr
 
     def getMove(self):
@@ -106,11 +107,12 @@ class Player:
             inputPlayer = inputPlayer.lower()
 
             for i in self.moves:
-                if i.name == inputPlayer:
+                if i.name.lower() == inputPlayer:
                     return i
             
             print("Invalid move")
 
+        
 
 if __name__ == "__main__":
     player = Player(0, 0)
