@@ -1,4 +1,4 @@
-from Model import Authtoken, User
+from Model import Authtoken, User, Task
 import sqlite3
 
 def create_connection(db_file):
@@ -123,3 +123,85 @@ class UserDAO:
             return user
         else:
             return None
+        
+
+class TaskDAO:
+    def __init__(self, conn):
+        self.conn = conn
+    
+    def insert(self, task):
+        sql = ''' INSERT INTO Tasks(taskId, taskName, description, dueDate, difficulty, type, username, completed)
+                  VALUES(?,?,?,?,?,?,?) '''
+        cur = self.conn.cursor()
+        try:
+            cur.execute(sql, (task.taskId, task.taskName, task.description, task.dueDate, task.difficulty, task.type, task.username, task.completed))
+        except Exception as e:
+            raise e
+        self.conn.commit()
+        return cur.lastrowid
+    
+    def delete(self, task):
+        sql = 'DELETE FROM Tasks WHERE taskId=?'
+        cur = self.conn.cursor()
+        try:
+            cur.execute(sql, (task.taskId,))
+        except Exception as e:
+            raise e
+        self.conn.commit()
+        return cur.lastrowid
+    
+    def clear(self):
+        sql = 'DELETE FROM Tasks'
+        cur = self.conn.cursor()
+        try:
+            cur.execute(sql)
+        except Exception as e:
+            raise e
+        self.conn.commit()
+        return cur.lastrowid
+    
+    def find_by_taskId(self, task):
+        cur = self.conn.cursor()
+        try:
+            cur.execute("SELECT * FROM Tasks WHERE taskId=?", (task.taskId,))
+        except Exception as e:
+            raise e
+        rows = cur.fetchall()
+        if rows:
+            task = Task(rows[0][0], rows[0][1], rows[0][2], rows[0][3], rows[0][4], rows[0][5], rows[0][6], rows[0][7])
+            return task
+        else:
+            return None
+        
+    def update_task(self, task):
+        sql = ''' UPDATE Tasks
+                  SET taskName = ? ,
+                      description = ? ,
+                      dueDate = ? ,
+                      difficulty = ? ,
+                      type = ? ,
+                      username = ? ,
+                      completed = ?
+                  WHERE taskId = ?'''
+        cur = self.conn.cursor()
+        try:
+            cur.execute(sql, (task.taskName, task.description, task.dueDate, task.difficulty, task.type, task.username, task.completed, task.taskId))
+        except Exception as e:
+            raise e
+        self.conn.commit()
+        return cur.lastrowid
+        
+    def find_by_username(self, username):
+        cur = self.conn.cursor()
+        try:
+            cur.execute("SELECT * FROM Tasks WHERE username=?", (username,))
+        except Exception as e:
+            raise e
+        rows = cur.fetchall()
+        tasks = []
+        for row in rows:
+            task = Task(row[0], row[1], row[2], row[3], row[4], row[5], row[6],  row[7])
+            tasks.append(task)
+        return tasks
+    
+    
