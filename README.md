@@ -23,6 +23,7 @@
 - taskId INT
 - taskName VARCHAR(255)
 - description VARCHAR(255)
+- dueDate VARCHAR(255)
 - difficulty ENUM('easy', 'medium', 'hard')
 - type ENUM('daily', 'task', 'weekly')
 - username VARCHAR(255)
