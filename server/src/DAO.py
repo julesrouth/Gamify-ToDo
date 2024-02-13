@@ -91,11 +91,11 @@ class UserDAO:
         self.conn.commit()
         return cur.lastrowid
     
-    def delete(self, username):
+    def delete(self, user):
         sql = 'DELETE FROM Users WHERE username=?'
         cur = self.conn.cursor()
         try:
-            cur.execute(sql, (username,))
+            cur.execute(sql, (user.username,))
         except Exception as e:
             raise e
         self.conn.commit()
