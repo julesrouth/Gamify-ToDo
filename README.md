@@ -26,7 +26,7 @@
 - difficulty ENUM('easy', 'medium', 'hard')
 - type ENUM('daily', 'task', 'weekly')
 - username VARCHAR(255)
-- finisehd BOOLEAN
+- completed BOOLEAN
 ### Methods
 - getTasksForUser(username) returns Task[]
 - getTask(taskId) returns Task
