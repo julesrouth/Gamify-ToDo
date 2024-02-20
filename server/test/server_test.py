@@ -21,7 +21,7 @@ def send_register():
         response = requests.post(url, data=json_data, headers=headers)
 
         if response.status_code == 200:
-            print("Request successful!")
+            print("Request sent")
             print("Response:", response.text)
         else:
             print(f"Request failed with status code {response.status_code}")
@@ -35,7 +35,7 @@ def send_login():
 
     data = {
         "username": "value5",
-        "password": "value4",
+        "password": "new_value4",
     }
 
     json_data = json.dumps(data)
@@ -46,7 +46,7 @@ def send_login():
         response = requests.post(url, data=json_data, headers=headers)
 
         if response.status_code == 200:
-            print("Request successful!")
+            print("Request sent!")
             print("Response:", response.text)
         else:
             print(f"Request failed with status code {response.status_code}")
@@ -74,7 +74,7 @@ def send_updateUser():
         response = requests.post(url, data=json_data, headers=headers)
 
         if response.status_code == 200:
-            print("Request successful!")
+            print("Request sent")
             print("Response:", response.text)
         else:
             print(f"Request failed with status code {response.status_code}")
@@ -87,7 +87,7 @@ def send_updateUser():
 
 def main():
     parser = argparse.ArgumentParser(description="Send a request to the server")
-    parser.add_argument("request", help="The request to send (register or login)")
+    parser.add_argument("request", help="The request to send (register, login, or updateUser)")
 
     args = parser.parse_args()
 

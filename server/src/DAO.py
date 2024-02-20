@@ -160,7 +160,7 @@ class TaskDAO:
         self.conn.commit()
         return cur.lastrowid
     
-    def find_by_taskId(self, task):
+    def find_by_taskId(self, taskId):
         cur = self.conn.cursor()
         try:
             cur.execute("SELECT * FROM Tasks WHERE taskId=?", (task.taskId,))
