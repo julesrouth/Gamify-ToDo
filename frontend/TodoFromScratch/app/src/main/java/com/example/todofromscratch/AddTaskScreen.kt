@@ -42,6 +42,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,14 +59,15 @@ import androidx.compose.ui.window.DialogProperties
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import kotlin.properties.ReadWriteProperty
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTaskScreen(onNextButtonClicked: () -> Unit,) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+fun AddTaskScreen(onNextButtonClicked: () -> Unit, ) {
     val context = LocalContext.current
-    val dateState = rememberDatePickerState(initialSelectedDateMillis = Instant.now().toEpochMilli())
+    val dateState =
+        rememberDatePickerState(initialSelectedDateMillis = Instant.now().toEpochMilli())
     val timeState = rememberTimePickerState()
     val openDateDialog = remember { mutableStateOf(false) }
     val openTimeDialog = remember { mutableStateOf(false) }
@@ -77,47 +79,9 @@ fun AddTaskScreen(onNextButtonClicked: () -> Unit,) {
     }
 
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text(
-                        "Add Task",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        onNextButtonClicked()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Localized description"
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {
-                        Toast.makeText(
-                            context,
-                            "This is not yet implemented",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = "Localized description"
-                        )
-                    }
-                },
-                scrollBehavior = scrollBehavior,
-            )
-        },
+        topBar = showTopBar(
+            onNextButtonClicked
+        ),
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -136,7 +100,8 @@ fun AddTaskScreen(onNextButtonClicked: () -> Unit,) {
                 value = name,
                 onValueChange = { text ->
                     name = text
-                },)
+                },
+            )
 
             Row(
                 modifier = Modifier
@@ -145,7 +110,7 @@ fun AddTaskScreen(onNextButtonClicked: () -> Unit,) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
-                    text="Specify Time",
+                    text = "Specify Time",
                     modifier = Modifier
                         .size(55.dp)
                         .align(Alignment.CenterVertically)
@@ -154,6 +119,16 @@ fun AddTaskScreen(onNextButtonClicked: () -> Unit,) {
                     checked = pickTime,
                     onCheckedChange = {
                         pickTime = it
+                        if (pickTime) {
+                            dateStr = dateState.selectedDateMillis?.let {
+                                Instant.ofEpochMilli(it).atOffset(ZoneOffset.UTC)
+                            }
+                                ?.format(DateTimeFormatter.ISO_LOCAL_DATE)
+                                .toString()
+                        }
+                        else {
+                            dateStr = ""
+                        }
                     },
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
@@ -195,17 +170,13 @@ fun AddTaskScreen(onNextButtonClicked: () -> Unit,) {
             }
 
             if (pickTime) {
-                dateStr = dateState.selectedDateMillis?.let {
-                    Instant.ofEpochMilli(it).atOffset(ZoneOffset.UTC) }
-                    ?.format(DateTimeFormatter.ISO_LOCAL_DATE)
-                    .toString()
-                Row (
+                Row(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Text(
-                        text=dateStr,
+                        text = dateStr,
                         modifier = Modifier
                             .padding(5.dp)
                             .align(Alignment.CenterVertically)
@@ -237,24 +208,71 @@ fun AddTaskScreen(onNextButtonClicked: () -> Unit,) {
                     Text(text = "Select Time")
                 }
             }
-            else {
-                dateStr = ""
-            }
 
             Button(
-                modifier= Modifier
+                modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(5.dp),
                 onClick = {
                     Tasks.getInstance().addTask(Task(name, dateStr))
                     onNextButtonClicked()
                 },
-                enabled=(name.isNotBlank())
+                enabled = (name.isNotBlank())
             ) {
                 Text(text = "Add")
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun showTopBar(
+    onNextButtonClicked: () -> Unit
+) : @Composable () -> Unit {
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val context = LocalContext.current
+   return (@Composable () {
+        CenterAlignedTopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.primary,
+            ),
+            title = {
+                Text(
+                    "Add Task",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+
+                )
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    onNextButtonClicked()
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Localized description"
+                    )
+                }
+            },
+            actions = {
+                IconButton(onClick = {
+                    Toast.makeText(
+                        context,
+                        "This is not yet implemented",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Menu,
+                        contentDescription = "Localized description"
+                    )
+                }
+            },
+            scrollBehavior = scrollBehavior,
+        )
+    })
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
