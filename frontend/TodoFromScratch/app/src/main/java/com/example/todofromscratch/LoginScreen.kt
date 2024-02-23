@@ -1,6 +1,8 @@
 package com.example.todofromscratch
 
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,19 +30,61 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.todofromscratch.model.domain.User
+import com.example.todofromscratch.presenter.AuthenticatePresenter
+import com.example.todofromscratch.presenter.LoginPresenter;
 
 @Composable
 fun LoginScreen(
     onLoginButtonClicked: () -> Unit
 ) {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("username1") }
+    var password by remember { mutableStateOf("password2") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    class LoginView : AuthenticatePresenter.View {
+        override fun showErrorMessage(message: String?) {
+            Toast.makeText(
+                context,
+                message,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        override fun hideErrorMessage() {
+        }
+
+        override fun hideInfoMessage() {
+        }
+
+        override fun showInfoMessage(message: String?) {
+            Toast.makeText(
+                context,
+                message,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        override fun openMainView(user: User?) {
+            Toast.makeText(
+                context,
+                "opening main view",
+                Toast.LENGTH_SHORT
+            ).show()
+            onLoginButtonClicked()
+        }
+
+    }
+
+    val presenter = LoginPresenter(LoginView())
 
     Surface () {
         Column(
@@ -102,7 +146,8 @@ fun LoginScreen(
                     .padding(15.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    onLoginButtonClicked()
+                    presenter.login(username, password)
+//                    onLoginButtonClicked()
                 },
                 enabled = username.isNotBlank() && password.isNotBlank()
             ) {
