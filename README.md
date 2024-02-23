@@ -4,6 +4,7 @@
 
 ## Users
 ### Attributes
+- id uuid
 - username VARCHAR(255)
 - password VARCHAR(255)
 - email VARCHAR(255)
@@ -12,7 +13,8 @@
 ### Methods
 - login(username, password) returns User
 - register(username, password, email, firstName, lastName) returns Success
-- updateUser(username, password, email, firstName, lastName) returns User
+- updateUser(id, username, password, email, firstName, lastName) returns User
+- deleteUser(id)
 
 ## Authtokens
 - token VARCHAR(255)
@@ -26,11 +28,12 @@
 - dueDate VARCHAR(255)
 - difficulty ENUM('easy', 'medium', 'hard')
 - type ENUM('daily', 'task', 'weekly')
-- username VARCHAR(255)
+- userId VARCHAR(255) FOREIGN KEY references User(id)
 - completed BOOLEAN
 ### Methods
-- getTasksForUser(username) returns Task[]
+- listTasksForUser(userId) returns Task[]
 - getTask(taskId) returns Task
+- createTask(taskName, description, type, username, finished) returns Task
 - deleteTask(taskId) returns Success
 - updateTask(taskId, taskName, description, type, username, finished) returns Task
 
@@ -43,13 +46,21 @@
 - getExperience(difficulty, type) returns experiencePoints
 
 ## Players
-- username VARCHAR(255)
+### Attributes
+- userId VARCHAR(255) FOREIGN KEY references User(id)
 - characterName VARCHAR(255)
-- level INT
-- experience INT
-- gold INT
+- level INT DEFAULT 0
+- experience INT DEFAULT 0
+- gold INT DEFAULT 0
+### Methods
+- getPlayer(userId) returns Player
+- createPlayer(userId, characterName) returns Player
+- updateExperience(experience) returns int experience
+- updateGold(gold) returns int gold
+- updateName(name) returns string name
 
 ## Enemies
+
 
 ## Items
 
