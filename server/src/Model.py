@@ -11,6 +11,13 @@ class Authtoken:
         self.token = token
         self.username = username
 
+class LoginResponse:
+    def __init__(self, success, message, authtoken, user):
+        self.success = success
+        self.message = message
+        self.authtoken = authtoken.__dict__
+        self.user = user.__dict__
+
 class Task:
     def __init__(self, taskId, taskName, description, dueDate, difficulty, type, username, completed):
         self.taskId = taskId

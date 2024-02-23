@@ -1,7 +1,7 @@
 from flask import Flask
 from markupsafe import escape
 from flask import jsonify, request
-from Model import Authtoken, User, Task
+from Model import Authtoken, User, Task, LoginResponse
 from DAO import AuthtokenDAO, UserDAO, TaskDAO, create_connection
 import random
 import string
@@ -22,21 +22,21 @@ def register():
                     json_data['firstname'],
                     json_data['lastname'])
     except Exception as e:
-        return str(e)
+        return jsonify({'success': False, 'message': str(e)})
 
     try:
         conn = create_connection("database/todo_data.db")
     except Exception as e:
-        return str(e)
+        return jsonify({'success': False, 'message': str(e)})
     
     with conn:
         user_dao = UserDAO(conn)
         try:
             user_dao.insert(user)
         except Exception as e:
-            return str(e)
-
-    return "User created"
+            return jsonify({'success': False, 'message': str(e)})
+            
+    return jsonify({'success': True, 'message': 'User created'})
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -45,24 +45,30 @@ def login():
         username = json_data['username']
         password = json_data['password']
     except Exception as e:
-        return str(e)
+        login_response = LoginResponse(False, str(e), None, None)
+        return jsonify(login_response.__dict__)
 
     try:
         conn = create_connection("database/todo_data.db")
     except Exception as e:
-        return str(e)
+        login_response = LoginResponse(False, str(e), None, None)
+        return jsonify(login_response.__dict__)
     
     with conn:
         user_dao = UserDAO(conn)
         try:
             user = user_dao.find_by_username(username)
         except Exception as e:
-            return str(e)
+            login_response = LoginResponse(False, str(e), None, None)
+            return jsonify(login_response.__dict__)
+        
         if user == None:
-            return 'User not found'
+            login_response = LoginResponse(False, 'User not found', None, None)
+            return jsonify(login_response.__dict__)
         
         if user.password != password:
-            return 'Incorrect password'
+            login_response = LoginResponse(False, 'Incorrect password', None, None)
+            return jsonify(login_response.__dict__)
         else:
             token = ''.join(random.choices(string.ascii_lowercase +
                              string.digits, k=12))
@@ -71,9 +77,11 @@ def login():
             try:
                 auth_dao.insert(authtoken)
             except Exception as e:
-                return 'Error creating authtoken'
-            
-            return jsonify(authtoken.__dict__)
+                login_response = LoginResponse(False, str(e), None, None)
+                return jsonify(login_response.__dict__)
+
+            login_response = LoginResponse(True, "Login successful", authtoken, user)
+            return jsonify(login_response.__dict__)
         
 @app.route('/updateUser', methods=['POST'])
 def updateUser():
