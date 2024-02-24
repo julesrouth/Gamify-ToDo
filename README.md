@@ -88,4 +88,5 @@
 ### Methods
 - listStoreItems() return [] StoreItems
 
-![alt text](https://github.com/julesrouth/Gamify-To/README.md)
+![alt text](https://github.com/julesrouth/Gamify-ToDo/blob/main/images/Tables.png)
+![alt text](https://github.com/julesrouth/Gamify-ToDo/blob/main/images/Flow.png)
