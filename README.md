@@ -55,12 +55,11 @@
 - experience INT DEFAULT 0
 - gold INT DEFAULT 0
 ### Methods
-- getPlayer(userId) returns Player
-- createPlayer(userId, characterName) returns Player
-- updateExperience(experience) returns int experience, int level
-- updateGold(gold) returns int gold
-- updateName(name) returns string name
-- getItems(userID)
+- getPlayer(authtoken) returns Player
+- createPlayer(authtoken, characterName) returns Player
+- updateExperience(authtoken, experience) returns int experience, int level
+- updateGold(authtoken, gold) returns int gold
+- updateName(authtoken, name) returns string name
 
 ## Enemies
 ### Attributes
@@ -72,19 +71,19 @@
 ### Methods
 - getRandEnemy(level) return Enemy
 
-## Player Items
+## PlayerItems
 ### Attributes
 - itemID INT FOREIGN KEY references Store(itemID)
 - userId VARCHAR(255) FOREIGN KEY references Player(userID)
 ### Methods
-- getPlayerItem(itemID, userID) return Player Item
-- listPlayerItems(userID) return list of Player Items
-- removePlayerItem(itemID, userID) return success
+- getPlayerItem(itemID, authtoken) return PlayerItems
+- listPlayerItems(authtoken) return []PlayerItems
+- removePlayerItem(itemID, authtoken) return success
 
-## Store Items
+## StoreItems
 ### Attributes
 - itemID INT 
 - effects VARCHAR(255)
 - cost INT
 ### Methods
-- listStoreItems() return list of Store Items
+- listStoreItems() return [] StoreItems
