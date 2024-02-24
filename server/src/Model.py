@@ -1,5 +1,6 @@
 class User:
-    def __init__(self, username, password, email, firstName, lastName):
+    def __init__(self, uuid, username, password, email, firstName, lastName):
+        self.uuid = uuid
         self.username = username
         self.password = password
         self.email = email
@@ -15,8 +16,14 @@ class LoginResponse:
     def __init__(self, success, message, authtoken, user):
         self.success = success
         self.message = message
-        self.authtoken = authtoken.__dict__
-        self.user = user.__dict__
+        if authtoken is not None:
+            self.authtoken = authtoken.__dict__
+        else:
+            self.authtoken = None
+        if user is not None:
+            self.user = user.__dict__
+        else:
+            self.user = None
 
 class Task:
     def __init__(self, taskId, taskName, description, dueDate, difficulty, type, username, completed):

@@ -58,12 +58,21 @@ def send_login(dest, username):
 def send_updateUser(dest, username):
     url = f"http://{dest}/updateUser"
 
-    data = {
+    user = {
+        "uuid": "WZ7ZPMNSVYYJ",
+        "username": username,
+        "password": "new_value4",
         "email": "value1",
         "firstname": "value2",
-        "lastname": "value3",
-        "password": "new_value4",
-        "username": username
+        "lastname": "value3"
+    }
+
+    authtoken = {"token":"dwi8jmlyi47s",
+                 "username":"username2"}
+
+    data = {
+        "user": user,
+        "authtoken": authtoken
     }
 
     json_data = json.dumps(data)
