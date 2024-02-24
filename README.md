@@ -2,7 +2,7 @@
 
 # Architecture
 
-## Users
+## User
 ### Attributes
 - id uuid
 - username VARCHAR(255)
@@ -16,12 +16,12 @@
 - updateUser(id, username, password, email, firstName, lastName, authtoken) returns User
 - deleteUser(id, authtoken) return Success
 
-## Authtokens
+## Authtoken
 ### Attributes
 - token VARCHAR(255)
 - userId 
 
-## Tasks
+## Task
 ### Attributes
 - taskId INT
 - taskName VARCHAR(255)
@@ -39,7 +39,7 @@
 - updateTask(taskId, taskName, description, dueDate, difficulty, type, authtoken) returns Task //purely for editing tasks
 - checkTask(taskId, bool completed, authtoken) return success //for finishing and unchecking tasks
 
-## Difficulties
+## Difficulty
 ### Attributes
 - difficulty ENUM('easy', 'medium', 'hard')
 - type ENUM('daily', 'weekly', 'to-do')
@@ -47,7 +47,7 @@
 ### Methods
 - getGold(difficulty, type) returns int gold
 
-## Players
+## Player
 ### Attributes
 - userId VARCHAR(255) FOREIGN KEY references User(id)
 - characterName VARCHAR(255)
@@ -61,7 +61,7 @@
 - updateGold(authtoken, gold) returns int gold
 - updateName(authtoken, name) returns string name
 
-## Enemies
+## Enemy
 ### Attributes
 - enemyName VARCHAR(255)
 - enemyType VARCHAR(255)
@@ -71,7 +71,7 @@
 ### Methods
 - getRandEnemy(level) return Enemy
 
-## PlayerItems
+## PlayerItem
 ### Attributes
 - itemID INT FOREIGN KEY references Store(itemID)
 - userId VARCHAR(255) FOREIGN KEY references Player(userID)
@@ -80,10 +80,12 @@
 - listPlayerItems(authtoken) return []PlayerItems
 - removePlayerItem(itemID, authtoken) return success
 
-## StoreItems
+## StoreItem
 ### Attributes
 - itemID INT 
 - effects VARCHAR(255)
 - cost INT
 ### Methods
 - listStoreItems() return [] StoreItems
+
+![alt text](https://github.com/julesrouth/Gamify-To/README.md)
