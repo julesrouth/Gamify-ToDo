@@ -1,7 +1,7 @@
 # How to Run the Server
 
 ## Setup a database
-
+Setup a database however you like. The `.db` database file should be in the database folder. I used DB Browser for SQLight to create a database, execute sql to create the tables, and confirm changes made by the server. Use the sql instructions in `database/makeTables.txt` to create the tables for the database.
 
 ## Setup your python environment
 I used a virtual environment, but you can install the python packages stright up if you want. Create a virtual environment called env by running `python3 -m venv env`. They activate it by running `source env/bin/activate`. Next install the necessary packages by running `pip install -r requirements.txt`.
