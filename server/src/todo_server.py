@@ -111,9 +111,7 @@ def updateUser():
                     json_data['user']['email'],
                     json_data['user']['firstname'],
                     json_data['user']['lastname'])
-        print("Got user")
         authtoken = Authtoken(json_data['authtoken']['token'], json_data['user']['username'])
-        print("Got authtoken")
     except Exception as e:
         return jsonify({'success': False, 'message': "Invalid Request Format", 'user': None})
 

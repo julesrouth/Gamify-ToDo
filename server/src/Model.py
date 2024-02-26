@@ -26,12 +26,12 @@ class LoginResponse:
             self.user = None
 
 class Task:
-    def __init__(self, taskId, taskName, description, dueDate, difficulty, type, username, completed):
+    def __init__(self, taskId, taskName, description, dueDate, difficulty, type, userId, completed):
         self.taskId = taskId
         self.taskName = taskName
         self.description = description
         self.dueDate = dueDate
         self.difficulty = difficulty
         self.type = type
-        self.username = username
+        self.userId = userId
         self.completed = completed

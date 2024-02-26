@@ -23,6 +23,7 @@ CREATE TABLE "Tasks"
     dueDate VARCHAR(255) not null,
     difficulty VARCHAR(255) CHECK(difficulty IN ('easy', 'meduim', 'hard')) not null,
     type VARCHAR(255) CHECK(type IN ('daily', 'task', 'weekly')) not null,
-    username VARCHAR(255) not null,
-    completed BOOLEAN not null
+	userId VARCHAR(255) not null,
+    completed BOOLEAN not null,
+    FOREIGN KEY(userId) REFERENCES Users(uuid)
 );
