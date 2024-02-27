@@ -23,8 +23,8 @@ def register():
                     json_data['username'],
                     json_data['password'],
                     json_data['email'],
-                    json_data['firstname'],
-                    json_data['lastname'])
+                    json_data['firstName'],
+                    json_data['lastName'])
     except Exception as e:
         login_response = LoginResponse(False, str(e), None, None)
         return jsonify(login_response.__dict__)
@@ -109,8 +109,8 @@ def updateUser():
                     json_data['user']['username'],
                     json_data['user']['password'],
                     json_data['user']['email'],
-                    json_data['user']['firstname'],
-                    json_data['user']['lastname'])
+                    json_data['user']['firstName'],
+                    json_data['user']['lastName'])
         authtoken = Authtoken(json_data['authtoken']['token'], json_data['user']['username'])
     except Exception as e:
         return jsonify({'success': False, 'message': "Invalid Request Format", 'user': None})

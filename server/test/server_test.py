@@ -75,7 +75,23 @@ def send_updateUser(dest, username):
         "authtoken": authtoken
     }
 
+    temp = {
+        "uuid": "WZ7ZPMNSVYYJ",
+        "username": username,
+        "password": "new_value4",
+        "email": "value1",
+        "firstname": "value2",
+        "lastname": "value3",
+        "token":"dwi8jmlyi47s",
+        "username":"username2"
+    }
+
     json_data = json.dumps(data)
+
+    temp_data = json.dumps(temp)
+
+    print(json_data)
+    print(temp_data)
 
     headers = {"Content-Type": "application/json"}
 
