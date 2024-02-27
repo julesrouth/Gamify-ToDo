@@ -7,8 +7,8 @@ def send_register(dest, username):
 
     data = {
         "email": "value1",
-        "firstname": "value2",
-        "lastname": "value3",
+        "firstName": "value2",
+        "lastName": "value3",
         "password": "value4",
         "username": username
     }
@@ -63,8 +63,8 @@ def send_updateUser(dest, username):
         "username": username,
         "password": "new_value4",
         "email": "value1",
-        "firstname": "value2",
-        "lastname": "value3"
+        "firstName": "value2",
+        "lastName": "value3"
     }
 
     authtoken = {"token":"dwi8jmlyi47s",
@@ -80,8 +80,8 @@ def send_updateUser(dest, username):
         "username": username,
         "password": "new_value4",
         "email": "value1",
-        "firstname": "value2",
-        "lastname": "value3",
+        "firstName": "value2",
+        "lastName": "value3",
         "token":"dwi8jmlyi47s",
         "username":"username2"
     }
