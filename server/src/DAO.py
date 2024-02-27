@@ -20,21 +20,21 @@ class AuthtokenDAO:
         self.conn = conn
 
     def insert(self, authtoken):
-        sql = ''' INSERT INTO Authtokens(token, username)
+        sql = ''' INSERT INTO Authtokens(token, userId)
                   VALUES(?,?) '''
         cur = self.conn.cursor()
         try:
-            cur.execute(sql, (authtoken.token, authtoken.username))
+            cur.execute(sql, (authtoken.token, authtoken.userId))
         except Exception as e:
             raise e
         self.conn.commit()
         return cur.lastrowid
     
-    def delete(self, authtoken):
+    def delete(self, userId):
         sql = 'DELETE FROM Authtokens WHERE token=?'
         cur = self.conn.cursor()
         try:
-            cur.execute(sql, (authtoken.token,))
+            cur.execute(sql, (userId,))
         except Exception as e:
             raise e
         self.conn.commit()
@@ -50,10 +50,10 @@ class AuthtokenDAO:
         self.conn.commit()
         return cur.lastrowid
 
-    def find_by_username(self, username):
+    def find_by_userId(self, userId):
         cur = self.conn.cursor()
         try:
-            cur.execute("SELECT * FROM Authtokens WHERE username=?", (username,))
+            cur.execute("SELECT * FROM Authtokens WHERE userId=?", (userId,))
         except Exception as e:
             raise e
         rows = cur.fetchall()

@@ -45,7 +45,7 @@ def register():
     
     token = ''.join(random.choices(string.ascii_lowercase +
                              string.digits, k=12))
-    authtoken = Authtoken(token, user.username)
+    authtoken = Authtoken(token, user.userId)
     auth_dao = AuthtokenDAO(conn)
     try:
         auth_dao.insert(authtoken)
@@ -90,7 +90,7 @@ def login():
         else:
             token = ''.join(random.choices(string.ascii_lowercase +
                              string.digits, k=12))
-            authtoken = Authtoken(token, username)
+            authtoken = Authtoken(token, user.userId)
             auth_dao = AuthtokenDAO(conn)
             try:
                 auth_dao.insert(authtoken)
@@ -111,7 +111,7 @@ def updateUser():
                     json_data['user']['email'],
                     json_data['user']['firstName'],
                     json_data['user']['lastName'])
-        authtoken = Authtoken(json_data['authtoken']['token'], json_data['user']['username'])
+        authtoken = Authtoken(json_data['authtoken']['token'], json_data['authtoken']['userId'])
     except Exception as e:
         return jsonify({'success': False, 'message': "Invalid Request Format", 'user': None})
 
@@ -141,115 +141,25 @@ def updateUser():
 
     return jsonify({'success': True, 'message': 'User updated', 'user': user.__dict__})
 
-# @app.route('/getTask/<taskId>', methods=['GET'])
-# def getTask(taskId):
-#     try:
-#         conn = create_connection("database/todo_data.db")
-#     except Exception as e:
-#         return str(e)
+@app.route('/deleteUser', methods=['POST'])
+def deleteUser():
+    try:
+        json_data = request.get_json()
+        authtoken = Authtoken(json_data['authtoken']['token'], json_data['authtoken']['userId'])
+    except Exception as e:
+        return jsonify({'success': False, 'message': "Invalid Request Format"})
     
-#     with conn:
-#         task_dao = TaskDAO(conn)
-#         try:
-#             task = task_dao.find_by_taskId(taskId)
-#         except Exception as e:
-#             return str(e)
+    try:
+        conn = create_connection("database/todo_data.db")
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+    
+    with conn:
+        user_dao = UserDAO(conn)
+        try:
+            user_dao.delete(authtoken.userId)
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)})
         
-#     if task == None:
-#         return 'Task not found'
-#     else:
-#         return jsonify(task.__dict__)
-    
-# @app.route('/getTasksForUser/<username>', methods=['GET'])
-# def getTasksForUser(username):
-#     try:
-#         conn = create_connection("database/todo_data.db")
-#     except Exception as e:
-#         return str(e)
-    
-#     with conn:
-#         task_dao = TaskDAO(conn)
-#         try:
-#             tasks = task_dao.find_by_username(username)
-#         except Exception as e:
-#             return str(e)
-        
-#     if tasks == None:
-#         return 'No tasks found'
-#     else:
-#         return jsonify([task.__dict__ for task in tasks])
-    
-# @app.route('/insertTask', methods=['POST'])
-# def insertTask():
-#     try:
-#         json_data = request.get_json()
-#         task = Task(json_data['taskId'],
-#                     json_data['taskName'],
-#                     json_data['description'],
-#                     json_data['dueDate'],
-#                     json_data['difficulty'],
-#                     json_data['type'],
-#                     json_data['username'],
-#                     json_data['completed'])
-#     except Exception as e:
-#         return str(e)
+    return jsonify({'success': True, 'message': 'User deleted'})
 
-#     try:
-#         conn = create_connection("database/todo_data.db")
-#     except Exception as e:
-#         return str(e)
-    
-#     with conn:
-#         task_dao = TaskDAO(conn)
-#         try:
-#             task_dao.insert(task)
-#         except Exception as e:
-#             return str(e)
-
-#     return "Task created"
-
-# @app.route('/deleteTask/<taskId>', methods=['POST'])
-# def deleteTask(taskId):
-#     try:
-#         conn = create_connection("database/todo_data.db")
-#     except Exception as e:
-#         return str(e)
-    
-#     with conn:
-#         task_dao = TaskDAO(conn)
-#         try:
-#             task = task_dao.find_by_taskId(taskId)
-#             task_dao.delete(task)
-#         except Exception as e:
-#             return str(e)
-
-#     return "Task deleted"
-
-# @app.route('/updateTask', methods=['POST'])
-# def updateTask():
-#     try:
-#         json_data = request.get_json()
-#         task = Task(json_data['taskId'],
-#                     json_data['taskName'],
-#                     json_data['description'],
-#                     json_data['dueDate'],
-#                     json_data['difficulty'],
-#                     json_data['type'],
-#                     json_data['username'],
-#                     json_data['completed'])
-#     except Exception as e:
-#         return str(e)
-
-#     try:
-#         conn = create_connection("database/todo_data.db")
-#     except Exception as e:
-#         return str(e)
-    
-#     with conn:
-#         task_dao = TaskDAO(conn)
-#         try:
-#             task_dao.update_task(task)
-#         except Exception as e:
-#             return str(e)
-
-#     return jsonify(task.__dict__)
