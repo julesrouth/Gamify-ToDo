@@ -12,9 +12,9 @@
 - lastName VARCHAR(255)
 ### Methods
 - login(username, password) returns User, Authtoken
-- register(username, password, email, firstName, lastName) returns User, Authtoken
-- updateUser(id, username, password, email, firstName, lastName, authtoken) returns User
-- deleteUser(id, authtoken) return Success
+- register(User) returns User, Authtoken
+- updateUser(User, authtoken) returns User
+- deleteUser(authtoken) return Success
 
 ## Authtoken
 ### Attributes
@@ -34,9 +34,9 @@
 ### Methods
 - listTasksForUser(authtoken) returns Task[]
 - getTask(taskId, authtoken) returns Task
-- createTask(taskName, description, dueDate, difficulty, type, completed, authtoken) returns Task
+- createTask(Task, authtoken) returns Task
 - deleteTask(taskId, authtoken) returns Success
-- updateTask(taskId, taskName, description, dueDate, difficulty, type, authtoken) returns Task //purely for editing tasks
+- updateTask(Task, authtoken) returns Task //purely for editing tasks
 - checkTask(taskId, bool completed, authtoken) return success //for finishing and unchecking tasks
 
 ## Difficulty
