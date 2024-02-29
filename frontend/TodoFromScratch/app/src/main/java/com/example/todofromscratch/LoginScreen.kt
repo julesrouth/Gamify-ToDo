@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import android.util.Log
-import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -46,11 +44,7 @@ import androidx.compose.ui.unit.dp
 import com.example.todofromscratch.model.domain.User
 import com.example.todofromscratch.presenter.AuthenticatePresenter
 import com.example.todofromscratch.presenter.LoginPresenter;
-import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
-
-@Composable
-fun LoginScreen(
-    onLoginButtonClicked: () -> Unit
+import com.example.todofromscratch.ui.theme.TodoFromScratchTheme;
 
 @Composable
 fun LoginScreen(
