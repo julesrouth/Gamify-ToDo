@@ -63,12 +63,19 @@ public class UserService extends Service {
 //        BackgroundTaskUtils.runTask(logoutTask);
 //    }
 
-    public void register(EditText firstName, EditText lastName, EditText alias, EditText password, String imageBytesBase64, RegisterObserver observer) {
-        RegisterTask registerTask = new RegisterTask(firstName.getText().toString(), lastName.getText().toString(),
-                alias.getText().toString(), password.getText().toString(), imageBytesBase64, new RegisterHandler(observer));
+    public void register(String username, String password, String email, String firstName, String lastName,  RegisterObserver observer) {
+        RegisterTask registerTask = new RegisterTask(username, password,
+                email, firstName, lastName, new RegisterHandler(observer));
 
         BackgroundTaskUtils.runTask(registerTask);
     }
+
+//    public void register(EditText firstName, EditText lastName, EditText alias, EditText password, String imageBytesBase64, RegisterObserver observer) {
+//        RegisterTask registerTask = new RegisterTask(firstName.getText().toString(), lastName.getText().toString(),
+//                alias.getText().toString(), password.getText().toString(), imageBytesBase64, new RegisterHandler(observer));
+//
+//        BackgroundTaskUtils.runTask(registerTask);
+//    }
 
 //    public void getUser(AuthToken authToken, TextView userAlias, StatusObserver observer) {
 //        GetUserTask getUserTask = new GetUserTask(authToken,

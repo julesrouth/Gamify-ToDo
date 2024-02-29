@@ -43,7 +43,22 @@ class MainActivity : ComponentActivity() {
                 LoginScreen(
                     onLoginButtonClicked = {
                         navController.navigate(Screen.MainScreen.route)
-                    })
+                    },
+                    onRegisterClicked = {
+                        navController.navigate(Screen.RegisterScreen.route)
+                    }
+                )
+            }
+            composable(route = Screen.RegisterScreen.route) {
+                RegisterScreen(
+                    onRegisterButtonClicked = {
+                        navController.navigate(Screen.MainScreen.route)
+                    },
+                    onLoginClicked = {
+                        // Navigate back to LoginScreen when cancel is clicked
+                        navController.popBackStack()
+                    }
+                )
             }
             composable(route = Screen.MainScreen.route) {
                 MainScreen(

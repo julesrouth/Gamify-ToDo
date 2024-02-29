@@ -44,7 +44,11 @@ public class ServerFacade {
 //    private static final String SERVER_URL = "https://q8mr6p52na.execute-api.us-west-2.amazonaws.com/Test";
 //    private static final String SERVER_URL = "http://127.0.0.1:5000";
 
-    private static final String SERVER_URL = "http://192.168.1.106:5000";
+//    private static final String SERVER_URL = "http://192.168.1.106:5000";
+//    private static final String SERVER_URL = "http://192.168.39.105:5001";
+    private static final String SERVER_URL = "http://10.37.103.182:5001";
+
+
 
     private final ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
 

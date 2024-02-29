@@ -32,20 +32,22 @@ public class RegisterTask extends AuthenticateTask {
      * The user's last name.
      */
     private final String lastName;
+    private final String email;
 
     /**
      * The base-64 encoded bytes of the user's profile image.
      */
-    private final String image;
+//    private final String image;
     private User registeredUser;
     private AuthToken authToken;
 
-    public RegisterTask(String firstName, String lastName, String username, String password,
-                        String image, Handler messageHandler) {
+    public RegisterTask(String username, String password, String email, String firstName, String lastName,
+                        Handler messageHandler) {
         super(messageHandler, username, password);
         this.firstName = firstName;
         this.lastName = lastName;
-        this.image = image;
+        this.email = email;
+//        this.image = image;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class RegisterTask extends AuthenticateTask {
 //        authToken = loginResult.getSecond();
 
         try {
-            RegisterRequest request = new RegisterRequest(firstName, lastName, username, password, image);
+            RegisterRequest request = new RegisterRequest(username, password, email, firstName, lastName);
             RegisterResponse response = getServerFacade().register(request, UserService.REGISTER_URL_PATH);
 
             if (response.isSuccess()) {
