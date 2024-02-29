@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 
 /*
 Next steps:
@@ -22,7 +23,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Navigation()
+            TodoFromScratchTheme {
+                Navigation()
+            }
         }
     }
 
@@ -46,7 +49,7 @@ class MainActivity : ComponentActivity() {
                 MainScreen(
                     onAddTaskButtonClicked = {
                         navController.navigate(Screen.AddTaskScreen.route)
-                })
+                    })
             }
             composable(
                 route = Screen.AddTaskScreen.route,

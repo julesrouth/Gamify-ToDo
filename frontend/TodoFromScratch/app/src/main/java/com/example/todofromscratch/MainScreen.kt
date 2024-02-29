@@ -6,16 +6,12 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
@@ -38,8 +34,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 import java.time.LocalDate
-import java.time.LocalTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,12 +120,12 @@ fun MainScreen(
                             .clickable(
                                 onClick = {
                                     Toast.makeText(
-                                        context,
-                                        task.name,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                            context,
+                                            task.name,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                 }
-                        )
+                            )
                     ) {
                         Text(
                             text = task.name,
@@ -162,5 +158,8 @@ fun populateExampleTasks() {
 @Preview
 @Composable
 fun MainScreenPreview() {
-    MainScreen(onAddTaskButtonClicked = {})
+    TodoFromScratchTheme {
+        MainScreen(
+            onAddTaskButtonClicked = {},)
+    }
 }
