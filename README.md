@@ -13,8 +13,8 @@
 ### Methods
 - login(username, password) returns User, Authtoken
 - register(User) returns User, Authtoken
-- updateUser(User, authtoken) returns User
-- deleteUser(authtoken) return Success
+- updateUser(User, Authtoken) returns User
+- deleteUser(Authtoken) return Success
 
 ## Authtoken
 ### Attributes
@@ -32,12 +32,12 @@
 - userId VARCHAR(255) FOREIGN KEY references User(id)
 - completed BOOLEAN
 ### Methods
-- listTasksForUser(authtoken) returns Task[]
-- getTask(taskId, authtoken) returns Task
-- createTask(Task, authtoken) returns Task
-- deleteTask(taskId, authtoken) returns Success
-- updateTask(Task, authtoken) returns Task //purely for editing tasks
-- checkTask(taskId, bool completed, authtoken) return success //for finishing and unchecking tasks
+- listTasksForUser(Authtoken) returns Task[]
+- getTask(taskId, Authtoken) returns Task
+- createTask(Task, Authtoken) returns Task
+- deleteTask(taskId, Authtoken) returns Success
+- updateTask(Task, Authtoken) returns Task //purely for editing tasks
+- checkTask(taskId, bool completed, Authtoken) return success //for finishing and unchecking tasks
 
 ## Difficulty
 ### Attributes
@@ -55,11 +55,11 @@
 - experience INT DEFAULT 0
 - gold INT DEFAULT 0
 ### Methods
-- getPlayer(authtoken) returns Player
-- createPlayer(authtoken, characterName) returns Player
-- updateExperience(authtoken, experience) returns int experience, int level
-- updateGold(authtoken, gold) returns int gold
-- updateName(authtoken, name) returns string name
+- getPlayer(Authtoken) returns Player
+- createPlayer(Authtoken, characterName) returns Player
+- updateExperience(Authtoken, experience) returns int experience, int level
+- updateGold(Authtoken, gold) returns int gold
+- updateName(Authtoken, name) returns string name
 
 ## Enemy
 ### Attributes
@@ -73,20 +73,30 @@
 
 ## PlayerItem
 ### Attributes
-- itemID INT FOREIGN KEY references Store(itemID)
+- itemId INT FOREIGN KEY references Store(itemID)
 - userId VARCHAR(255) FOREIGN KEY references Player(userID)
 ### Methods
-- getPlayerItem(itemID, authtoken) return PlayerItems
-- listPlayerItems(authtoken) return []PlayerItems
-- removePlayerItem(itemID, authtoken) return success
+- removePlayerItem(itemId, Authtoken) return success
 
 ## StoreItem
 ### Attributes
-- itemID INT 
+- itemId INT 
 - effects VARCHAR(255)
 - cost INT
 ### Methods
 - listStoreItems() return [] StoreItems
+- getPlayerItem(itemId) return StoreItem
+- listPlayerItems(userId) return [] StoreItem
+
+## Stat
+### Attributes
+- userId PRIMARY KEY
+- health INT
+- attack INT
+- defence INT
+### Methods
+- getPlayerStats(AuthToken)
+- updatePlayerStats(Stat, Authtoken)
 
 ![alt text](https://github.com/julesrouth/Gamify-ToDo/blob/main/images/Tables.png)
 ![alt text](https://github.com/julesrouth/Gamify-ToDo/blob/main/images/Flow.png)
