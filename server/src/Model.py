@@ -8,9 +8,9 @@ class User:
         self.lastName = lastName
 
 class Authtoken:
-    def __init__(self, token, username):
+    def __init__(self, token, userId):
         self.token = token
-        self.username = username
+        self.userId = userId
 
 class LoginResponse:
     def __init__(self, success, message, authtoken, user):

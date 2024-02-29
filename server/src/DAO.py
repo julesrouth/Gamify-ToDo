@@ -20,21 +20,21 @@ class AuthtokenDAO:
         self.conn = conn
 
     def insert(self, authtoken):
-        sql = ''' INSERT INTO Authtokens(token, username)
+        sql = ''' INSERT INTO Authtokens(token, userId)
                   VALUES(?,?) '''
         cur = self.conn.cursor()
         try:
-            cur.execute(sql, (authtoken.token, authtoken.username))
+            cur.execute(sql, (authtoken.token, authtoken.userId))
         except Exception as e:
             raise e
         self.conn.commit()
         return cur.lastrowid
     
-    def delete(self, authtoken):
-        sql = 'DELETE FROM Authtokens WHERE token=?'
+    def delete_forUser(self, userId):
+        sql = 'DELETE FROM Authtokens WHERE userId=?'
         cur = self.conn.cursor()
         try:
-            cur.execute(sql, (authtoken.token,))
+            cur.execute(sql, (userId,))
         except Exception as e:
             raise e
         self.conn.commit()
@@ -50,10 +50,10 @@ class AuthtokenDAO:
         self.conn.commit()
         return cur.lastrowid
 
-    def find_by_username(self, username):
+    def find_by_userId(self, userId):
         cur = self.conn.cursor()
         try:
-            cur.execute("SELECT * FROM Authtokens WHERE username=?", (username,))
+            cur.execute("SELECT * FROM Authtokens WHERE userId=?", (userId,))
         except Exception as e:
             raise e
         rows = cur.fetchall()
@@ -92,7 +92,7 @@ class UserDAO:
         return cur.lastrowid
     
     def delete(self, uuid):
-        sql = 'DELETE FROM Users WHERE username=?'
+        sql = 'DELETE FROM Users WHERE uuid=?'
         cur = self.conn.cursor()
         try:
             cur.execute(sql, (uuid,))
@@ -153,7 +153,6 @@ class UserDAO:
         self.conn.commit()
         return cur.lastrowid
         
-
 class TaskDAO:
     def __init__(self, conn):
         self.conn = conn
@@ -169,11 +168,22 @@ class TaskDAO:
         self.conn.commit()
         return cur.lastrowid
     
-    def delete(self, taskId):
-        sql = 'DELETE FROM Tasks WHERE taskId=?'
+    def delete_task(self, taskId, userId):
+        sql = 'DELETE FROM Tasks WHERE taskId=? AND userId=?'
         cur = self.conn.cursor()
         try:
-            cur.execute(sql, (taskId,))
+            cur.execute(sql, (taskId, userId))
+        except Exception as e:
+            raise e
+        self.conn.commit()
+        print(cur.lastrowid)
+        return cur.lastrowid
+    
+    def delete_forUser(self, userId):
+        sql = 'DELETE FROM Tasks WHERE userId=?'
+        cur = self.conn.cursor()
+        try:
+            cur.execute(sql, (userId,))
         except Exception as e:
             raise e
         self.conn.commit()
@@ -189,18 +199,19 @@ class TaskDAO:
         self.conn.commit()
         return cur.lastrowid
     
-    def find_by_taskid(self, taskId):
+    def find_by_id(self, taskId, userId):
         cur = self.conn.cursor()
         try:
-            cur.execute("SELECT * FROM Tasks WHERE taskId=?", (taskId,))
+            cur.execute("SELECT * FROM Tasks WHERE taskId=? AND userId=?", (taskId, userId))
         except Exception as e:
             raise e
         rows = cur.fetchall()
         if rows:
-            task = Task(rows[0][1], rows[0][2], rows[0][3], rows[0][4], rows[0][5], rows[0][6], rows[0][7])
+            task = Task(rows[0][0], rows[0][1], rows[0][2], rows[0][3], rows[0][4], rows[0][5], rows[0][6], rows[0][7])
             return task
         else:
             return None
+        
     
     def find_by_userId(self, userId):
         cur = self.conn.cursor()
@@ -211,9 +222,21 @@ class TaskDAO:
         rows = cur.fetchall()
         tasks = []
         for row in rows:
-            task = Task(row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+            task = Task(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
             tasks.append(task)
         return tasks
+    
+    def get_highest_id(self, userId):
+        cur = self.conn.cursor()
+        try:
+            cur.execute("SELECT MAX(taskId) FROM Tasks WHERE userId=?", (userId,))
+        except Exception as e:
+            raise e
+        rows = cur.fetchall()
+        if rows:
+            return rows[0][0]
+        else:
+            return None
 
     def update_task(self, task):
         sql = ''' UPDATE Tasks

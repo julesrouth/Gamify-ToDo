@@ -5,13 +5,20 @@ import argparse
 def send_register(dest, username):
     url = f"http://{dest}/register"
 
-    data = {
+
+    user = {
+        "uuid": None,
+        "username": username,
+        "password": "value4",
         "email": "value1",
         "firstName": "value2",
-        "lastName": "value3",
-        "password": "value4",
-        "username": username
+        "lastName": "value3"
     }
+
+    data = {
+        "user": user
+    }
+    
 
     json_data = json.dumps(data)
 
@@ -55,11 +62,11 @@ def send_login(dest, username):
     except requests.RequestException as e:
         print(f"An error occurred: {e}")
 
-def send_updateUser(dest, username):
+def send_updateUser(dest, username, userId, token):
     url = f"http://{dest}/updateUser"
 
     user = {
-        "uuid": "WZ7ZPMNSVYYJ",
+        "uuid": userId,
         "username": username,
         "password": "new_value4",
         "email": "value1",
@@ -67,31 +74,15 @@ def send_updateUser(dest, username):
         "lastName": "value3"
     }
 
-    authtoken = {"token":"dwi8jmlyi47s",
-                 "username":"username2"}
+    authtoken = {"token": token,
+                 "userId": userId}
 
     data = {
         "user": user,
         "authtoken": authtoken
     }
 
-    temp = {
-        "uuid": "WZ7ZPMNSVYYJ",
-        "username": username,
-        "password": "new_value4",
-        "email": "value1",
-        "firstName": "value2",
-        "lastName": "value3",
-        "token":"dwi8jmlyi47s",
-        "username":"username2"
-    }
-
     json_data = json.dumps(data)
-
-    temp_data = json.dumps(temp)
-
-    print(json_data)
-    print(temp_data)
 
     headers = {"Content-Type": "application/json"}
 
@@ -107,6 +98,225 @@ def send_updateUser(dest, username):
     
     except requests.RequestException as e:
         print(f"An error occurred: {e}")
+
+def send_deleteUser(dest, userId, token):
+    url = f"http://{dest}/deleteUser"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    data = {
+        "authtoken": authtoken
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+    
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+def send_createTask(dest, userId, token):
+    url = f"http://{dest}/createTask"
+
+    task = {
+            'taskId': None,
+            'taskName': "dishes",
+            'description': "clean all of the dishes",
+            'dueDate': "1/2/13,12:00,pm",
+            'difficulty' : "easy",
+            'type': "daily",
+            'userId': userId,
+            'completed': False
+    }
+
+    authtoken = {"token": token,
+                 "userId": userId}
+    
+    data = {
+        "task": task,
+        "authtoken": authtoken
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+    
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+def send_getTask(dest, userId, token):
+    url = f"http://{dest}/getTask"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    data = {
+        "authtoken": authtoken,
+        "taskId": 5
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+    
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+
+def send_listTasksForUser(dest, userId, token):
+    url = f"http://{dest}/listTasksForUser"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    data = {
+        "authtoken": authtoken
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+    
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+def send_deleteTask(dest, userId, token):
+    url = f"http://{dest}/deleteTask"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    data = {
+        "authtoken": authtoken,
+        "taskId": 5
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+    
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+def send_updateTask(dest, userId, token):
+    url = f"http://{dest}/updateTask"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+
+    task = {
+            'taskId': 5,
+            'taskName': "cool dishes",
+            'description': "clean all of the cool dishes",
+            'dueDate': "1/2/13,12:00,pm",
+            'difficulty' : "easy",
+            'type': "daily",
+            'userId': userId,
+            'completed': False
+    }
+    
+    data = {
+        "task": task,
+        "authtoken": authtoken
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+    
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+def send_checkTask(dest, userId, token):
+    url = f"http://{dest}/checkTask"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    data = {
+        "authtoken": authtoken,
+        "taskId": 6,
+        "completed": True
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+    
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
     
 
 
@@ -115,6 +325,8 @@ def main():
     parser.add_argument("request", help="The request to send (register, login, or updateUser)")
     parser.add_argument("--dest", "-d", help="The destination URL for the request", default="127.0.0.1:8080")
     parser.add_argument("--username", "-u", help="The username for the request", default="value5")
+    parser.add_argument("--token", "-t", help="The token for the request", default="ko4qtuxw2wi3")
+    parser.add_argument("--userId", "-i", help="The userId for the request", default="I5G57F8FPTKT")
 
     args = parser.parse_args()
 
@@ -123,7 +335,21 @@ def main():
     elif args.request == "login":
         send_login(args.dest, args.username)
     elif args.request == "updateUser":
-        send_updateUser(args.dest, args.username)
+        send_updateUser(args.dest, args.username, args.userId, args.token)
+    elif args.request == "deleteUser":
+        send_deleteUser(args.dest, args.userId, args.token)
+    elif args.request == "createTask":
+        send_createTask(args.dest, args.userId, args.token)
+    elif args.request == "getTask":
+        send_getTask(args.dest, args.userId, args.token)
+    elif args.request == "listTasksForUser":
+        send_listTasksForUser(args.dest, args.userId, args.token)
+    elif args.request == "deleteTask":
+        send_deleteTask(args.dest, args.userId, args.token)
+    elif args.request == "updateTask":
+        send_updateTask(args.dest, args.userId, args.token)
+    elif args.request == "checkTask":
+        send_checkTask(args.dest, args.userId, args.token)
     else:
         print("Invalid request")
 
