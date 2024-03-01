@@ -65,10 +65,14 @@ import androidx.compose.ui.unit.dp
 import java.time.Instant
 import java.time.ZoneOffset
 import androidx.compose.ui.semantics.Role.Companion.Button
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Locale
 import kotlin.properties.ReadWriteProperty
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -83,6 +87,13 @@ fun AddTaskScreen(onNextButtonClicked: () -> Unit, ) {
     val openTimeDialog = remember { mutableStateOf(false) }
     var pickTime by remember { mutableStateOf(false) }
     var dateStr by remember { mutableStateOf("") }
+    var timeStr by remember {mutableStateOf("")}
+    val formatter = remember { SimpleDateFormat("hh:mm a", Locale.getDefault()) }
+
+    val cal = Calendar.getInstance()
+    cal.set(Calendar.HOUR_OF_DAY, timeState.hour)
+    cal.set(Calendar.MINUTE, timeState.minute)
+    cal.isLenient = false
 
     var name by remember {
         mutableStateOf("")
@@ -135,9 +146,11 @@ fun AddTaskScreen(onNextButtonClicked: () -> Unit, ) {
                             }
                                 ?.format(DateTimeFormatter.ISO_LOCAL_DATE)
                                 .toString()
+                                timeStr = formatter.format(cal.time)
                         }
                         else {
                             dateStr = ""
+                            timeStr = ""
                         }
                     },
                     modifier = Modifier
@@ -179,6 +192,18 @@ fun AddTaskScreen(onNextButtonClicked: () -> Unit, ) {
                 }
             }
 
+            if (openTimeDialog.value) {
+                TimePickerDialog(
+                    onCancel = { openTimeDialog.value = false },
+                    onConfirm = {
+                        timeStr = formatter.format(cal.time)
+                        openTimeDialog.value = false
+                    },
+                ) {
+                    TimePicker(state = timeState)
+                }
+            }
+
             if (pickTime) {
                 Row(
                     modifier = Modifier
@@ -203,19 +228,26 @@ fun AddTaskScreen(onNextButtonClicked: () -> Unit, ) {
                     }
                 }
 
-                Button(
+                Row(
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(5.dp),
-                    onClick = {
-                        Toast.makeText(
-                            context,
-                            "This is not yet implemented",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                        .align(Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Text(text = "Select Time")
+                    Text(
+                        text = timeStr,
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .align(Alignment.CenterVertically)
+                    )
+                    Button(
+                        modifier = Modifier
+                            .padding(5.dp),
+                        onClick = {
+                            openTimeDialog.value = true
+                        }
+                    ) {
+                        Text(text = "Select Time")
+                    }
                 }
             }
 
@@ -285,9 +317,65 @@ fun showTopBar(
     })
 }
 
+@Composable
+fun TimePickerDialog(
+    title: String = "Select Time",
+    onCancel: () -> Unit,
+    onConfirm: () -> Unit,
+    toggle: @Composable () -> Unit = {},
+    content: @Composable () -> Unit,
+) {
+    Dialog(
+        onDismissRequest = onCancel,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false
+        ),
+    ) {
+        Surface(
+            shape = MaterialTheme.shapes.extraLarge,
+            tonalElevation = 6.dp,
+            modifier = Modifier
+                .width(IntrinsicSize.Min)
+                .height(IntrinsicSize.Min)
+                .background(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    color = MaterialTheme.colorScheme.surface
+                ),
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 20.dp),
+                    text = title,
+                    style = MaterialTheme.typography.labelMedium
+                )
+                content()
+                Row(
+                    modifier = Modifier
+                        .height(40.dp)
+                        .fillMaxWidth()
+                ) {
+                    toggle()
+                    Spacer(modifier = Modifier.weight(1f))
+                    TextButton(
+                        onClick = onCancel
+                    ) { Text("Cancel") }
+                    TextButton(
+                        onClick = onConfirm
+                    ) { Text("OK") }
+                }
+            }
+        }
+    }
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
-fun SimpleComposablePreview() {
+fun AddTaskScreenPreview() {
     AddTaskScreen(onNextButtonClicked = {})
 }
