@@ -55,11 +55,13 @@
 ### Attributes
 - enemyName VARCHAR(255)
 - enemyType VARCHAR(255)
-- levelType INT
-- hitPoints INT DEFAULT 0
-- experiencePoints INT
+- enemyLevel INT
+- health INT
+- attack INT
+- defence INT
+
 ### Methods
-- getRandEnemy(level) return Enemy
+- getRandEnemy(playerLevel) return Enemy
 - enemyKilled(Authtoken, enemyLevel) returns int experience, int level
 
 ## PlayerItem
