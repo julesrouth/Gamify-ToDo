@@ -50,6 +50,7 @@
 - getPlayer(Authtoken) returns Player
 - createPlayer(Authtoken, characterName) returns Player
 - updateCharacterName(Authtoken, characterName) returns Player
+- enemyKilled(Authtoken, enemyLevel) returns int experience, int level
 
 ## Enemy
 ### Attributes
@@ -62,7 +63,6 @@
 
 ### Methods
 - getRandEnemy(playerLevel) return Enemy
-- enemyKilled(Authtoken, enemyLevel) returns int experience, int level
 
 ## PlayerItem
 ### Attributes
