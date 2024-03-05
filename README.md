@@ -37,15 +37,7 @@
 - createTask(Task, Authtoken) returns Task
 - deleteTask(taskId, Authtoken) returns Success
 - updateTask(Task, Authtoken) returns Task //purely for editing tasks
-- checkTask(taskId, bool completed, Authtoken) return success //for finishing and unchecking tasks
-
-## Difficulty
-### Attributes
-- difficulty ENUM('easy', 'medium', 'hard')
-- type ENUM('daily', 'weekly', 'to-do')
-- gold INT
-### Methods
-- getGold(difficulty, type) returns int gold
+- checkTask(taskId, bool completed, Authtoken) return int gold //update player gold
 
 ## Player
 ### Attributes
@@ -76,7 +68,8 @@
 - itemId INT FOREIGN KEY references Store(itemID)
 - userId VARCHAR(255) FOREIGN KEY references Player(userID)
 ### Methods
-- removePlayerItem(itemId, Authtoken) return success
+- removePlayerItem(itemId, Authtoken) return Success
+- addPlayerItem(itemId, Authtoken) return Success
 
 ## StoreItem
 ### Attributes
@@ -84,8 +77,7 @@
 - effects VARCHAR(255)
 - cost INT
 ### Methods
-- listStoreItems() return [] StoreItems
-- getPlayerItem(itemId) return StoreItem
+- listStoreItems() return [] StoreItem
 - listPlayerItems(userId) return [] StoreItem
 
 ## Stat
