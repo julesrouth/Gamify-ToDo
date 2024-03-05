@@ -66,7 +66,7 @@
 
 ## PlayerItem
 ### Attributes
-- itemId INT FOREIGN KEY references Store(itemID)
+- itemName VARCHAR(255) FOREIGN KEY references Store(itemID)
 - userId VARCHAR(255) FOREIGN KEY references Player(userID)
 ### Methods
 - removePlayerItem(itemId, Authtoken) return Success
@@ -74,7 +74,7 @@
 
 ## StoreItem
 ### Attributes
-- itemId INT 
+- itemName VARCHAR(255) 
 - effects VARCHAR(255)
 - cost INT
 ### Methods
