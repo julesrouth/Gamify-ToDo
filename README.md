@@ -49,7 +49,7 @@
 ### Methods
 - getPlayer(Authtoken) returns Player
 - createPlayer(Authtoken, characterName) returns Player
-- updateCharacterName(Authtoken, name) returns Player
+- updateCharacterName(Authtoken, characterName) returns Player
 
 ## Enemy
 ### Attributes
