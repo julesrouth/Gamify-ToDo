@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.todofromscratch.ui.GameMainScreen
+import com.example.todofromscratch.ui.ShopScreen
 import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 
 /*
@@ -73,6 +75,23 @@ class MainActivity : ComponentActivity() {
                     onNextButtonClicked = {
                         navController.navigate(Screen.MainScreen.route)
                 })
+            }
+            composable(
+                route = Screen.GameMainScreen.route
+            ) {
+                GameMainScreen(
+                    onAdventureClicked = {},
+                    onShopClicked = {
+                        navController.navigate(Screen.ShopScreen.route)
+                    },
+                    onCharacterClicked = {},
+                    onExitClicked = {}
+                )
+            }
+            composable(
+                route = Screen.ShopScreen.route
+            ) {
+                ShopScreen()
             }
         }
     }
