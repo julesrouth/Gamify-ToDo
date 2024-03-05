@@ -79,7 +79,7 @@
 - cost INT
 ### Methods
 - listStoreItems() return [] StoreItem
-- listPlayerItems(userId) return [] StoreItem
+- listPlayerItems(Authtoken) return [] StoreItem
 
 ## Stat
 ### Attributes
