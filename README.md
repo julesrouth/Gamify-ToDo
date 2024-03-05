@@ -69,8 +69,8 @@
 - itemName VARCHAR(255) FOREIGN KEY references Store(itemID)
 - userId VARCHAR(255) FOREIGN KEY references Player(userID)
 ### Methods
-- removePlayerItem(itemId, Authtoken) return Success
-- addPlayerItem(itemId, Authtoken) return Success
+- removePlayerItem(itemName, Authtoken) return Success
+- addPlayerItem(itemName, Authtoken) return Success
 
 ## StoreItem
 ### Attributes
