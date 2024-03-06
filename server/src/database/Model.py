@@ -35,3 +35,29 @@ class Task:
         self.type = type
         self.userId = userId
         self.completed = completed
+
+class Player:
+    def __init__(self, characterName, userId, level, experience, gold):
+        self.characterName = characterName
+        self.userId = userId
+        self.level = level
+        self.experience = experience
+        self.gold = gold
+
+class Enemy:
+    def __init__(self, enemyName, enemyType, enemylevel, hitPoints, experiencePoints):
+        self.enemyName = enemyName
+        self.enemyType = enemyType
+        self.enemylevel = enemylevel
+        self.hitPoints = hitPoints
+
+class PlayerItem:
+    def __init__(self, itemName, userId):
+        self.itemName = itemName
+        self.userId = userId
+
+class StoreItem:
+    def __init__(self, itemName, effects, cost):
+        self.itemName = itemName
+        self.effects = effects
+        self.cost = cost

@@ -193,7 +193,6 @@ def send_getTask(dest, userId, token):
     except requests.RequestException as e:
         print(f"An error occurred: {e}")
 
-
 def send_listTasksForUser(dest, userId, token):
     url = f"http://{dest}/listTasksForUser"
 
@@ -296,7 +295,7 @@ def send_checkTask(dest, userId, token):
     
     data = {
         "authtoken": authtoken,
-        "taskId": 6,
+        "taskId": 1,
         "completed": True
     }
 
@@ -317,8 +316,229 @@ def send_checkTask(dest, userId, token):
     except requests.RequestException as e:
         print(f"An error occurred: {e}")
 
-    
+def send_createPlayer(dest, userId, token):
+    url = f"http://{dest}/createPlayer"
 
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    data = {
+        "characterName": "character1",
+        "authtoken": authtoken
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+    
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+def send_getPlayer(dest, userId, token):
+    url = f"http://{dest}/getPlayer"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    data = {
+        "authtoken": authtoken
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+def send_updateCharacterName(dest, userId, token):
+    url = f"http://{dest}/updateCharacterName"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    data = {
+        "characterName": "character1_new",
+        "authtoken": authtoken
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+def send_enemyKilled(dest, userId, token):
+    url = f"http://{dest}/enemyKilled"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    data = {
+        "authtoken": authtoken,
+        "enemyName": "enemy1",
+        "enemyLevel": 5
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+def send_addPlayerItem(dest, userId, token):
+    url = f"http://{dest}/addPlayerItem"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    data = {
+        "authtoken": authtoken,
+        "itemName": "potion",
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+def send_removePlayerItem(dest, userId, token):
+    url = f"http://{dest}/removePlayerItem"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    data = {
+        "authtoken": authtoken,
+        "itemName": "potion",
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+def send_listPlayerItems(dest, userId, token):
+    url = f"http://{dest}/listPlayerItems"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    data = {
+        "authtoken": authtoken,
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+def send_listStoreItems(dest, userId, token):
+    url = f"http://{dest}/listStoreItems"
+
+    # authtoken = {"token":token,
+    #              "userId":userId}
+    
+    # data = {
+    #     "authtoken": authtoken,
+    # }
+
+    # json_data = json.dumps(data)
+
+    json_data = json.dumps({})
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
 
 def main():
     parser = argparse.ArgumentParser(description="Send a request to the server")
@@ -350,6 +570,22 @@ def main():
         send_updateTask(args.dest, args.userId, args.token)
     elif args.request == "checkTask":
         send_checkTask(args.dest, args.userId, args.token)
+    elif args.request == "createPlayer":
+        send_createPlayer(args.dest, args.userId, args.token)
+    elif args.request == "getPlayer":
+        send_getPlayer(args.dest, args.userId, args.token)
+    elif args.request == "updateCharacterName":
+        send_updateCharacterName(args.dest, args.userId, args.token)
+    elif args.request == "enemyKilled":
+        send_enemyKilled(args.dest, args.userId, args.token)
+    elif args.request == "addPlayerItem":
+        send_addPlayerItem(args.dest, args.userId, args.token)
+    elif args.request == "removePlayerItem":
+        send_removePlayerItem(args.dest, args.userId, args.token)
+    elif args.request == "listPlayerItems":
+        send_listPlayerItems(args.dest, args.userId, args.token)
+    elif args.request == "listStoreItems":
+        send_listStoreItems(args.dest, args.userId, args.token)
     else:
         print("Invalid request")
 
