@@ -6,7 +6,9 @@ sys.path.append('..')
 from database.Model import Authtoken, Task
 from database.TaskDAO import TaskDAO
 from database.AuthtokenDAO import AuthtokenDAO
+from database.PlayerDAO import PlayerDAO
 from database.conn import create_connection
+from tables import get_gold
 
 
 
@@ -275,6 +277,14 @@ def checkTask():
 
         try:
             task_dao.update_task(task)
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)})
+        
+        gold_added = get_gold(task.difficulty, task.type)
+        player_dao = PlayerDAO(conn)
+        try:
+            player = player_dao.find_by_userId(auth.userId)
+            player_dao.updateGold(authtoken.userId, player.gold + gold_added)
         except Exception as e:
             return jsonify({'success': False, 'message': str(e)})
         
