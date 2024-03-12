@@ -2,6 +2,7 @@
 
 <details close>
   <summary>Colors</summary>
+  
   ![image](https://github.com/julesrouth/Gamify-ToDo/assets/99697554/fe2eb710-c43e-451b-acfb-693cefecd51c)
 </details>
 
