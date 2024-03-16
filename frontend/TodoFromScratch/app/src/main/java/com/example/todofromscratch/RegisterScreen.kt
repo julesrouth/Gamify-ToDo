@@ -176,7 +176,7 @@ fun RegisterScreen(
                     .padding(15.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    presenter.registerUser(username, password, firstname, lastname, email)
+                    presenter.registerUser(username, password, email, firstname, lastname)
 //                    onLoginButtonClicked()
                 },
                 enabled = username.isNotBlank() && password.isNotBlank() && firstname.isNotBlank()

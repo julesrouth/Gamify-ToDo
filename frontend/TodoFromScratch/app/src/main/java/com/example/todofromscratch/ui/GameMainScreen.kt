@@ -1,5 +1,6 @@
 package com.example.todofromscratch.ui
 
+import android.widget.Button
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,9 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -26,8 +30,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.todofromscratch.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,9 +46,6 @@ fun GameMainScreen(
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val context = LocalContext.current
-    val buttonFontSize = 25.sp
-    val buttonWidth = 175.dp
-    val buttonHeight = 150.dp
 
     Scaffold(
         topBar = {
@@ -79,12 +82,23 @@ fun GameMainScreen(
                         .fillMaxSize(),
                     color = MaterialTheme.colorScheme.tertiaryContainer
                 ) {
-                    Text("Character Info placeholder")
+                    Column() {
+                        Text("Character Info placeholder",
+                            fontSize=30.sp)
+                        Text("Name:",
+                            fontSize=30.sp)
+                        Text("Level:",
+                            fontSize=30.sp)
+                        Text("Experience:",
+                            fontSize=30.sp)
+                        Text("Gold:",
+                            fontSize=30.sp)
+                    }
                 }
             }
             Spacer(
                 modifier = Modifier
-                    .size(35.dp)
+                    .size(55.dp)
             )
 
             Row(
@@ -93,34 +107,13 @@ fun GameMainScreen(
                     .align(Alignment.CenterHorizontally),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Button(
-                    modifier = Modifier
-                        .requiredSize(buttonWidth, buttonHeight)
-                        .padding(5.dp),
-                    onClick = {
-                        onAdventureClicked()
-                    }
-                ) {
-                    Text("Adventure",
-                        fontSize = buttonFontSize
-                    )
-                }
-                Button (
-                    modifier = Modifier
-                        .requiredSize(buttonWidth, buttonHeight)
-                        .padding(5.dp),
-                    onClick = {
-                        onShopClicked()
-                    }
-                ) {
-                    Text("Shop",
-                        fontSize = buttonFontSize)
-                }
+                ShowButton(onAdventureClicked, "Adventure")
+                ShowButton(onShopClicked, "Shop")
             }
 
             Spacer(
                 modifier = Modifier
-                    .size(15.dp)
+                    .size(25.dp)
             )
 
             Row(
@@ -129,37 +122,66 @@ fun GameMainScreen(
                     .align(Alignment.CenterHorizontally),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Button(
-                    modifier = Modifier
-                        .requiredSize(buttonWidth, buttonHeight)
-                        .padding(5.dp),
-                    onClick = {
-                        onCharacterClicked()
-                    }
-                ) {
-                    Text("Character",
-                        fontSize = buttonFontSize
-                    )
-                }
-                Button (
-                    modifier = Modifier
-                        .requiredSize(buttonWidth, buttonHeight)
-                        .padding(5.dp),
-                    onClick = {
-                        onExitClicked()
-                    }
-                ) {
-                    Text("Exit",
-                        fontSize = buttonFontSize
-                    )
-                }
+                ShowButton(onCharacterClicked, "Character")
+                ShowButton(onExitClicked, "Exit")
             }
 
             Spacer (
                 modifier = Modifier
-                    .size(25.dp)
+                    .size(65.dp)
             )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.shield_24),
+                    contentDescription = "Item",
+                    modifier = Modifier
+                        .size(105.dp)
+                        .align(Alignment.CenterVertically)
+                )
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_fort_24),
+                    contentDescription = "Item",
+                    modifier = Modifier
+                        .size(105.dp)
+                        .align(Alignment.CenterVertically)
+                )
+                Icon(
+                    painter = painterResource(id = R.drawable.shield_24),
+                    contentDescription = "Item",
+                    modifier = Modifier
+                        .size(105.dp)
+                        .align(Alignment.CenterVertically)
+                )
+            }
         }
+    }
+}
+
+@Composable
+fun ShowButton(
+    onClickAction : () -> Unit,
+    textString : String
+) {
+    val buttonWidth = 175.dp
+    val buttonHeight = 150.dp
+    val buttonFontSize = 25.sp
+    Button(
+        modifier = Modifier
+            .requiredSize(buttonWidth, buttonHeight)
+            .padding(5.dp),
+        onClick = {
+            onClickAction()
+        }
+    ) {
+        Text(
+            textString,
+            fontSize = buttonFontSize
+        )
     }
 }
 

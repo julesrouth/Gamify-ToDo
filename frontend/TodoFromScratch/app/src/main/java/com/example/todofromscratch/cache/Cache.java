@@ -2,7 +2,12 @@ package com.example.todofromscratch.cache;
 
 
 import com.example.todofromscratch.model.domain.AuthToken;
+import com.example.todofromscratch.model.domain.PlayerItem;
+import com.example.todofromscratch.model.domain.Player;
+import com.example.todofromscratch.model.domain.StoreItemsList;
 import com.example.todofromscratch.model.domain.User;
+
+import java.util.ArrayList;
 
 /**
  * The Cache class stores globally accessible data.
@@ -22,6 +27,11 @@ public class Cache {
      * The auth token for the current user session.
      */
     private AuthToken currUserAuthToken;
+
+    private Player currPlayer;
+    private StoreItemsList storeItems = new StoreItemsList(null);
+
+    private ArrayList<PlayerItem> playerItems = new ArrayList<>();
 
     private Cache() {
         initialize();
@@ -50,6 +60,30 @@ public class Cache {
 
     public void setCurrUserAuthToken(AuthToken currUserAuthToken) {
         this.currUserAuthToken = currUserAuthToken;
+    }
+
+    public Player getCurrPlayer() {
+        return currPlayer;
+    }
+
+    public void setCurrPlayer(Player currPlayer) {
+        this.currPlayer = currPlayer;
+    }
+
+    public StoreItemsList getStoreItems() {
+        return storeItems;
+    }
+
+    public void setStoreItems(StoreItemsList storeItems) {
+        this.storeItems = storeItems;
+    }
+
+    public ArrayList<PlayerItem> getPlayerItems() {
+        return playerItems;
+    }
+
+    public void setPlayerItems(ArrayList<PlayerItem> items) {
+        this.playerItems = items;
     }
 
     public static void setInstance(Cache instance) {

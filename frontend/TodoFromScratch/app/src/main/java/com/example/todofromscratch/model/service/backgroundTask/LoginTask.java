@@ -55,14 +55,11 @@ public class LoginTask extends BackgroundTask {
         try {
             LoginRequest request = new LoginRequest(username, password);
             LoginResponse response = getServerFacade().login(request, UserService.URL_PATH);
-            System.out.println("Got response");
             if (response.isSuccess()) {
-                System.out.println("It was a success");
                 this.user = response.getUser();
                 this.authToken = response.getAuthToken();
                 sendSuccessMessage();
             } else {
-                System.out.println("It was not a success");
                 sendFailedMessage(response.getMessage());
             }
         } catch (Exception ex) {
