@@ -1,5 +1,11 @@
 # Gamify-ToDo
 
+<details close>
+  <summary>Colors</summary>
+  
+  ![image](https://github.com/julesrouth/Gamify-ToDo/assets/99697554/fe2eb710-c43e-451b-acfb-693cefecd51c)
+</details>
+
 # Architecture
 
 ## User
@@ -49,36 +55,37 @@
 ### Methods
 - getPlayer(Authtoken) returns Player
 - createPlayer(Authtoken, characterName) returns Player
-- updateExperience(Authtoken, experience) returns int experience, int level
-- updateGold(Authtoken, gold) returns int gold
-- updateName(Authtoken, name) returns string name
+- updateCharacterName(Authtoken, characterName) returns Player
+- enemyKilled(Authtoken, enemyLevel) returns int experience, int level
 
 ## Enemy
 ### Attributes
 - enemyName VARCHAR(255)
 - enemyType VARCHAR(255)
-- levelType INT
-- hitPoints INT DEFAULT 0
-- experiencePoints INT
+- enemyLevel INT
+- health INT
+- attack INT
+- defence INT
+
 ### Methods
-- getRandEnemy(level) return Enemy
+- getRandEnemy(playerLevel) return Enemy
 
 ## PlayerItem
 ### Attributes
-- itemId INT FOREIGN KEY references Store(itemID)
+- itemName VARCHAR(255) FOREIGN KEY references Store(itemID)
 - userId VARCHAR(255) FOREIGN KEY references Player(userID)
 ### Methods
-- removePlayerItem(itemId, Authtoken) return Success
-- addPlayerItem(itemId, Authtoken) return Success
+- removePlayerItem(itemName, Authtoken) return Success
+- addPlayerItem(itemName, Authtoken) return Success
 
 ## StoreItem
 ### Attributes
-- itemId INT 
+- itemName VARCHAR(255) 
 - effects VARCHAR(255)
 - cost INT
 ### Methods
 - listStoreItems() return [] StoreItem
-- listPlayerItems(userId) return [] StoreItem
+- listPlayerItems(Authtoken) return [] StoreItem
 
 ## Stat
 ### Attributes
