@@ -12,7 +12,7 @@ CREATE TABLE "Users"
 CREATE TABLE "Authtokens"
 (
     token VARCHAR(255) not null primary key,
-    username VARCHAR(255) not null
+    userId VARCHAR(255) not null
 );
 
 CREATE TABLE "Tasks"
@@ -25,5 +25,23 @@ CREATE TABLE "Tasks"
     type VARCHAR(255) CHECK(type IN ('daily', 'task', 'weekly')) not null,
 	userId VARCHAR(255) not null,
     completed BOOLEAN not null,
+    FOREIGN KEY(userId) REFERENCES Users(uuid)
+);
+
+CREATE TABLE "Players"
+(
+    characterName VARCHAR(255) not null,
+    userId VARCHAR(255) not null primary key,
+    level INT not null,
+    experience INT not null,
+    gold INT not null,
+    FOREIGN KEY(userId) REFERENCES Users(uuid)
+);
+
+CREATE TABLE "PlayerItems"
+(
+    itemCount INT not null,
+    itemName VARCHAR(255) not null,
+    userId VARCHAR(255) not null,
     FOREIGN KEY(userId) REFERENCES Users(uuid)
 );

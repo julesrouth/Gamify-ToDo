@@ -6,8 +6,10 @@ sys.path.append('..')
 from database.Model import Authtoken, Task
 from database.TaskDAO import TaskDAO
 from database.AuthtokenDAO import AuthtokenDAO
-from routes.notifications import schedule_notification_task, schedule_notification_daily, schedule_notification_weekly
+from database.PlayerDAO import PlayerDAO
+from notifications import Notifications
 from database.conn import create_connection
+from tables import get_gold
 
 
 
@@ -38,7 +40,7 @@ def createTask():
     try:
         task = Task(highest_id + 1,
                     json_data['task']['taskName'],
-                    json_data['task']['description'],
+                    json_data['task']['description'],  
                     json_data['task']['dueDate'],
                     json_data['task']['difficulty'],
                     json_data['task']['type'],
@@ -72,11 +74,11 @@ def createTask():
         try:
             match json_data['task']['type']:
                 case "task":
-                    schedule_notification_task(task)
+                    Notifications.schedule_notification_task(task)
                 case "daily":
-                    schedule_notification_daily(task)
+                    Notifications.schedule_notification_daily(task)
                 case "weekly":
-                    schedule_notification_weekly(task)
+                    Notifications.schedule_notification_weekly(task)
                 case _:
                     return jsonify({'success': False, 'message': 'Invalid task type', 'task': None})
         except Exception as e:
@@ -292,5 +294,15 @@ def checkTask():
             task_dao.update_task(task)
         except Exception as e:
             return jsonify({'success': False, 'message': str(e)})
+        
+        gold_added = get_gold(task.difficulty, task.type)
+        player_dao = PlayerDAO(conn)
+        try:
+            player = player_dao.find_by_userId(auth.userId)
+            player_dao.updateGold(authtoken.userId, player.gold + gold_added)
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)})
+        
+        #delete from scheduler
         
     return jsonify({'success': True, 'message': 'Task checked'})
