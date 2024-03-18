@@ -1,7 +1,7 @@
 from flask import Flask
 import routes.user_routes as user_routes
 import routes.task_routes as task_routes
-import routes.notification_routes as notification_routes
+import routes.notifications as notifications
 
 # set configuration values
 class Config:
@@ -9,8 +9,9 @@ class Config:
 
 app = Flask(__name__)
 app.config.from_object(Config())
+
 #init scheduler
-notification_routes.init_scheduler(app)
+notifications.init_scheduler(app)
 
 @app.route("/")
 def hello_world():
@@ -31,4 +32,4 @@ app.route('/updateTask', methods=['POST'])(task_routes.updateTask)
 app.route('/checkTask', methods=['POST'])(task_routes.checkTask)
 
 #Notification Routes
-app.route('/scheduleNotification', methods=['POST'])(notification_routes.schedule_notification)
+#app.route('/scheduleNotification', methods=['POST'])(notification.schedule_notification)
