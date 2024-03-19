@@ -99,9 +99,4 @@ public class TaskPresenter extends PagedPresenters<Task>{
         TaskService taskService = new TaskService();
         taskService.addTask(Cache.getInstance().getCurrUserAuthToken(), newTask, new GetTaskObserver2());
     }
-//    public void postStatus(Status newStatus) {
-//        statusServiceObserver = new StatusServiceObserver();
-//        System.out.println("Status in main activity: " + newStatus.getPost());
-//        getStatusService().postStatus(Cache.getInstance().getCurrUserAuthToken(), newStatus, statusServiceObserver);
-//    }
 }

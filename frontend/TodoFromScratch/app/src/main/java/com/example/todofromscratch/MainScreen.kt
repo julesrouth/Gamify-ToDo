@@ -97,14 +97,6 @@ fun MainScreen(
         // Perform operations with each task here
         println("Task description in mainScreen: ${task.description}")
     }
-//    var updateTasks: ArrayList<Task> = ArrayList()
-//    updateTasks = Tasks.getInstance().getTasks()
-//    updateTasks.addAll(tasks);
-
-    // populate with sample tasks
-//    if (Tasks.getInstance().getTasks(). cvsize == 0) {
-//        populateExampleTasks()
-//    }
     if (tasks == null) {
         populateExampleTasks()
     }
@@ -200,101 +192,6 @@ fun MainScreen(
                 Divider()
             }
         }
-//    Scaffold(
-//        topBar = {
-//            CenterAlignedTopAppBar(
-//                colors = TopAppBarDefaults.topAppBarColors(
-//                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-//                    titleContentColor = MaterialTheme.colorScheme.primary,
-//                ),
-//                title = {
-//                    Text(
-//                        "Todo List",
-//                        maxLines = 1,
-//                        overflow = TextOverflow.Ellipsis
-//
-//                    )
-//                },
-//                actions = {
-//                    IconButton(onClick = {
-//                        Toast.makeText(
-//                            context,
-//                            "This is not yet implemented",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }) {
-//                        Icon(
-//                            imageVector = Icons.Filled.Menu,
-//                            contentDescription = "Localized description"
-//                        )
-//                    }
-//                },
-//                scrollBehavior = scrollBehavior,
-//            )
-//        },
-//        floatingActionButton = {
-//            FloatingActionButton(
-//                onClick = {
-//                    onAddTaskButtonClicked()
-//                })
-//            {
-//                Text(
-//                    text="Add Task",
-//                    modifier=Modifier
-//                        .padding(10.dp))
-//            }
-//        }
-//    ) { paddingValues ->
-//        LazyColumn(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(paddingValues)
-//        ) {
-//            items(Tasks.getInstance().getTasks()) { task ->
-//                val checkedState = remember { mutableStateOf(task.completed) }
-//                Row () {
-//                    Checkbox(
-//                        checked=checkedState.value,
-//                        onCheckedChange = {
-//                            checkedState.value = it
-//                            task.completed = checkedState.value
-//                                          },
-//                        modifier=Modifier
-//                            .padding(5.dp)
-//                    )
-//                    Column (
-//                        modifier = Modifier
-//                            .fillMaxSize()
-//                            .align(Alignment.CenterVertically)
-//                            .clickable(
-//                                onClick = {
-//                                    Toast
-//                                        .makeText(
-//                                            context,
-//                                            task.taskName,
-//                                            Toast.LENGTH_SHORT
-//                                        )
-//                                        .show()
-//                                }
-//                            )
-//                    ) {
-//                        Text(
-//                            text = task.taskName,
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                        )
-//                        if (task.dueDate.isNotBlank()) {
-//                            Text(
-//                                text = "Due: " + task.dueDate,
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                            )
-//                        }
-//                    }
-//                }
-//                Divider()
-//            }
-//        }
     }
 }
 

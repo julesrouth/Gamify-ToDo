@@ -27,8 +27,8 @@ public class AddTask extends AuthenticatedTask {
         this.task = task;
     }
 
-    private static final String LOG_TAG = "GET_POST_STATUS";
-    public static final String POSTSTATUS_KEY = "poststatus";
+    private static final String LOG_TAG = "GET_ADD_TASK";
+    public static final String ADD_TASK_KEY = "addtask";
 
     @Override
     protected void runTask() {

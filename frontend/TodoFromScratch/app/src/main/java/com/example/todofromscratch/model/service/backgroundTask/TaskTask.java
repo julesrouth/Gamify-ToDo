@@ -38,28 +38,18 @@ public class TaskTask extends PagedTaskTask {
 
     @Override
     protected void runTask() throws IOException {
-//        Pair<List<Task>, Boolean> pageOfItems = getItems();
-//
-//        tasks = pageOfItems.getFirst();
-//        hasMorePages = pageOfItems.getSecond();
 
         try {
             User targetUser = getTargetUser();
-//            Status lastStatus = getLastItem();
             Task lastTask = null;
             if (getLastItem() != null) {
                 lastTask = getLastItem();
             }
 
-//            Task temp_task = new Task(taskname, description, dueDate, difficulty, type, userId, completed);
-//            TaskRequest request = new TaskRequest(temp_task.taskName, temp_task.description, temp_task.dueDate,
-//                    temp_task.difficulty, temp_task.type, temp_task.userId, temp_task.completed);
-
             User cacheUser = Cache.getInstance().getCurrUser();
             authtoken cacheAuthtoken = Cache.getInstance().getCurrUserAuthToken();
             System.out.println("cacheUser in TaskTask: " + cacheUser.getUsername());
             System.out.println("cacheAuthToken in TaskTask: " + cacheAuthtoken.token);
-//            authtoken = new authtoken("nou3hfrayosw","RTW94TC2RH33");
             System.out.println("AuthToken before: " + cacheAuthtoken);
             TasksRequest request = new TasksRequest(cacheAuthtoken);
             System.out.println("AuthToken: " + cacheAuthtoken);
@@ -68,10 +58,7 @@ public class TaskTask extends PagedTaskTask {
             System.out.println("Tasks from Response: " + response.getTasks());
 
             if (response.isSuccess()) {
-//                this.statuses = pageOfItems.getFirst();
-//                this.hasMorePages = pageOfItems.getSecond();
                 this.tasks = response.getTasks();
-
 
                 Tasks tasksInstance = Tasks.Companion.getInstance(); // Accessing Kotlin companion object
                 for (Task newTask : tasks) {
@@ -120,8 +107,4 @@ public class TaskTask extends PagedTaskTask {
         return Pair;
     }
 
-    // Add a method to return tasks
-    public List<Task> getTasksTest() {
-        return tasks;
-    }
 }

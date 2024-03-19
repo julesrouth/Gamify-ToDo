@@ -8,7 +8,6 @@ import java.util.Objects;
 
 public class Task implements Serializable {
 
-//    public int taskId; //TODO DO I NEED THE TASKID HERE????
     public String taskName;
     public String description;
     public String dueDate;

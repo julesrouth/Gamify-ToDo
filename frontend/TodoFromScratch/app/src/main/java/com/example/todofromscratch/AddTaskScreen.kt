@@ -310,14 +310,6 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                     .align(Alignment.CenterHorizontally)
                     .padding(5.dp),
                 onClick = {
-//                    val difficulty = Difficulty.EASY.value
-//                    val type = TaskType.TASK.value
-//                    var completed: Boolean = false
-//                    println("UserID in addtaskscreen: " + Cache.getInstance().currUserAuthToken.userId)
-//                    println("Completed in AddTaskScreen: " + completed)
-//                    val task = Task(name, "test 2", dateStr, difficulty, type, Cache.getInstance().currUserAuthToken.userId, completed)
-//                    Tasks.getInstance().addTask(task)
-//                    taskPresenter.addTask(task);
                     // If taskToUpdate is null, it means we're in add mode
                     if (taskToUpdate == null) {
                         // Add new task logic

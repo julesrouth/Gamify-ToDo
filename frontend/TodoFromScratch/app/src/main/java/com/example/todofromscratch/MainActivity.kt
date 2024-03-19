@@ -63,12 +63,6 @@ class MainActivity : ComponentActivity() {
                     }
                 )
             }
-//            composable(route = Screen.MainScreen.route) {
-//                MainScreen(
-//                    onAddTaskButtonClicked = {
-//                        navController.navigate(Screen.AddTaskScreen.route)
-//                    })
-//            }
             composable(route = Screen.MainScreen.route) {
                 MainScreen(
                     onAddTaskButtonClicked = {
@@ -80,27 +74,6 @@ class MainActivity : ComponentActivity() {
                     }
                 )
             }
-//            composable(route = Screen.AddTaskScreen.route) {
-//                AddTaskScreen(
-//                    onNextButtonClicked = {
-//                        navController.popBackStack()
-//                    }
-//                )
-//            }
-//            composable(
-//                route = "${Screen.AddTaskScreen.route}/{taskName}",
-//                arguments = listOf(navArgument("taskName") { type = NavType.StringType })
-//            ) { backStackEntry ->
-//                val taskName = backStackEntry.arguments?.getString("taskName")
-//                // Convert taskId to task object using your data source (Tasks.getInstance().getTaskById(taskId))
-//                val task = taskName?.let { Tasks.getInstance().getTaskbyName(it) }
-//                AddTaskScreen(
-//                    taskToUpdate = task,
-//                    onNextButtonClicked = {
-//                        navController.popBackStack()
-//                    }
-//                )
-//            }
             composable(
                 route = Screen.AddTaskScreen.route
             ) {

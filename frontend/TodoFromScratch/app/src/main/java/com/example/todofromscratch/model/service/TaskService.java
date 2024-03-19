@@ -34,18 +34,6 @@ public class TaskService extends Service {
         execute(getTaskTask);
     }
 
-//    public void loadMoreItems(AuthToken currUserAuthToken, User user, int pageSize, Task lastStatus, GetTaskServiceObserver observer) {
-////        GetFeedTask getFeedTask = new GetFeedTask(currUserAuthToken,
-////                user, pageSize, lastStatus, new GetFeedHandler(observer));
-////        execute(getFeedTask);
-//    }
-
-//    public void loadMoreStoryItems(AuthToken currUserAuthToken, User user, int pageSize, Status lastStatus, GetStatusServiceObserver observer) {
-//        GetStoryTask getStoryTask = getStoryTask(currUserAuthToken,
-//                user, pageSize, lastStatus, observer);
-//        execute(getStoryTask);
-//    }
-//
     public void addTask(authtoken currUserAuthToken, Task newTask, GetTaskServiceObserver observer) {
         AddTask getAddTask = new AddTask(currUserAuthToken,
                 newTask, new TaskHandler(observer));
