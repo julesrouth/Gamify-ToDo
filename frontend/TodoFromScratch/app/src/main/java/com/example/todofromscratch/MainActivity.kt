@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
                     onCharacterClicked = {},
                     onExitClicked = {
                         navController.navigate(Screen.MainScreen.route)
-                    }
+                    },
                     game = Game()
                 )
             }

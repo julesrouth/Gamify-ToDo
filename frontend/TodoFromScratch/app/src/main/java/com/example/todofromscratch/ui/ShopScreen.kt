@@ -64,6 +64,8 @@ fun ShopScreen(
     val storeItems = remember {mutableStateListOf<StoreItem>()}
     val playerItemsMap = remember { mutableMapOf<String, Int>()}
     val recomposeToggleState = remember { mutableStateOf(false) } // used to force recompose
+    val gettingStoreItems = remember { mutableStateOf(false) }
+    val gettingPlayerItems = remember { mutableStateOf(false) }
 
     class GeneralView (onSuccess : () -> Unit) : StorePresenter.View {
 
@@ -100,32 +102,59 @@ fun ShopScreen(
     }})
 
     if (Cache.getInstance().storeItems.items == null) {
-        // get storeItems from database
-        println("Store items is null. So getting them");
-        storePresenter.getStoreItems();
+        if (!gettingStoreItems.value) {        // get storeItems from database
+            gettingStoreItems.value = true;
+            println("Store items is null. So getting them");
+            storePresenter.getStoreItems();
+        }
+    }
+    else if (storeItems.isEmpty()){
+        for (item in Cache.getInstance().storeItems.items) {
+            println("Cache has ${item.itemName}")
+            storeItems.add(item)
+        }
     }
 
     if (Cache.getInstance().playerItems.isEmpty()) {
-        // get storeItems from database
-        println("Player items is null. So getting them");
-        val listPlayerItemsPresenter = StorePresenter(GeneralView {
-            println("In general view success for listing player items")
-            for (item in Cache.getInstance().playerItems) {
-                if (playerItemsMap.containsKey(item.itemName)) {
-                    playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
-                } else {
-                    playerItemsMap[item.itemName] = 1
+        if (!gettingPlayerItems.value) {
+            gettingPlayerItems.value = true;
+
+            // get storeItems from database
+            println("Player items is null. So getting them");
+            val listPlayerItemsPresenter = StorePresenter(GeneralView {
+                println("In general view success for listing player items")
+                for (item in Cache.getInstance().playerItems) {
+                    if (playerItemsMap.containsKey(item.itemName)) {
+                        playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
+                    } else {
+                        playerItemsMap[item.itemName] = 1
+                    }
                 }
-            }
-            for (item in Cache.getInstance().storeItems.items) {
-                if (playerItemsMap.containsKey(item.itemName)) {
-                    continue;
+                for (item in Cache.getInstance().storeItems.items) {
+                    if (playerItemsMap.containsKey(item.itemName)) {
+                        continue;
+                    }
+                    playerItemsMap[item.itemName] = 0
                 }
-                playerItemsMap[item.itemName] = 0
-            }
-        })
-        listPlayerItemsPresenter.listPlayerItems();
+            })
+            listPlayerItemsPresenter.listPlayerItems();
+        }
     }
+//    else {
+//        for (item in Cache.getInstance().playerItems) {
+//            if (playerItemsMap.containsKey(item.itemName)) {
+//                playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
+//            } else {
+//                playerItemsMap[item.itemName] = 1
+//            }
+//        }
+//        for (item in Cache.getInstance().storeItems.items) {
+//            if (playerItemsMap.containsKey(item.itemName)) {
+//                continue;
+//            }
+//            playerItemsMap[item.itemName] = 0
+//        }
+//    }
 
     val purchaseItemPresenter = StorePresenter(GeneralView {})
 

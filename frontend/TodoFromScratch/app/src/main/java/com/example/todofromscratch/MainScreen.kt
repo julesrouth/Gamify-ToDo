@@ -58,7 +58,7 @@ import java.time.LocalTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-//    onAddTaskButtonClicked: () -> Unit,
+    onMenuButtonClicked: () -> Unit,
     onAddTaskButtonClicked: () -> Unit,
     onTaskClicked: (Task) -> Unit // Callback to handle task clicks
 ) {
@@ -134,11 +134,6 @@ fun MainScreen(
                 },
                 actions = {
                     IconButton(onClick = {
-                        Toast.makeText(
-                            context,
-                            "This is not yet implemented",
-                            Toast.LENGTH_SHORT
-                        ).show()
                         onMenuButtonClicked()
 //                        NavController.navigate(Screen.NewTaskScreen.route)
 
