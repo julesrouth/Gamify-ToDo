@@ -86,7 +86,10 @@ fun GameMainScreen(
 //                    color = MaterialTheme.colorScheme.tertiaryContainer
                     color = Color.LightGray,
                 ) {
-                    Column() {
+                    Column(
+                        modifier = Modifier
+                            .padding(7.dp)
+                    ) {
                         Text("Player Info",
                             fontSize=30.sp)
                         Text("Name: ",
