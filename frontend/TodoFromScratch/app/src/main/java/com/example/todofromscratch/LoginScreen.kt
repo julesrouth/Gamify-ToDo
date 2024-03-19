@@ -80,11 +80,6 @@ fun LoginScreen(
         }
 
         override fun openMainView(user: User?) {
-            Toast.makeText(
-                context,
-                "opening main view",
-                Toast.LENGTH_SHORT
-            ).show()
             onLoginButtonClicked()
         }
 
