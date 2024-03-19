@@ -61,3 +61,12 @@ class StoreItem:
         self.itemName = itemName
         self.effects = effects
         self.cost = cost
+
+class Stat:
+    def __init__(self, userId, health,  defense, attack, speed, strength):
+        self.userId = userId
+        self.health = health
+        self.defense = defense
+        self.attack = attack
+        self.speed = speed
+        self.strength = strength
