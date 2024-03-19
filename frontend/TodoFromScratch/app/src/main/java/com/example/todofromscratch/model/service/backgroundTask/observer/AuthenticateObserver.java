@@ -5,7 +5,7 @@ import com.example.todofromscratch.model.domain.User;
 
 public interface AuthenticateObserver {
 
-    void authenticationSucceeded(AuthToken authToken, User user);
+    void authenticationSucceeded(AuthToken authtoken, User user);
 
     void authenticationFailed(String message);
 

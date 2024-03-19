@@ -1,12 +1,8 @@
 package com.example.todofromscratch.model.service.backgroundTask.handler;
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 
 import com.example.todofromscratch.cache.Cache;
-import com.example.todofromscratch.model.service.UserService;
 import com.example.todofromscratch.model.service.backgroundTask.BackgroundTask;
 import com.example.todofromscratch.model.service.backgroundTask.LoginTask;
 import com.example.todofromscratch.model.service.backgroundTask.observer.AuthenticateObserver;
@@ -39,13 +35,15 @@ public class LoginTaskHandler extends MainHandler {
     @Override
     protected void success(Message msg) {
         User loggedInUser = (User) msg.getData().getSerializable(LoginTask.USER_KEY);
-        AuthToken authToken = (AuthToken) msg.getData().getSerializable(LoginTask.AUTH_TOKEN_KEY);
+        AuthToken authtoken = (AuthToken) msg.getData().getSerializable(LoginTask.AUTH_TOKEN_KEY);
 
         //Cache user session info
         Cache.getInstance().setCurrUser(loggedInUser);
-        Cache.getInstance().setCurrUserAuthToken(authToken);
+        Cache.getInstance().setCurrUserAuthToken(authtoken);
+        System.out.println("Current user in login User: " + loggedInUser.getFirstName());
+        System.out.println("Current authtoken in lgoin user: " + authtoken.token);
 
-        observer.authenticationSucceeded(authToken, loggedInUser);
+        observer.authenticationSucceeded(authtoken, loggedInUser);
     }
 
     @Override

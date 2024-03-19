@@ -1,10 +1,9 @@
 package com.example.todofromscratch.cache;
 
-
-import com.example.todofromscratch.model.domain.AuthToken;
 import com.example.todofromscratch.model.domain.PlayerItem;
 import com.example.todofromscratch.model.domain.Player;
 import com.example.todofromscratch.model.domain.StoreItemsList;
+import com.example.todofromscratch.model.domain.AuthToken;
 import com.example.todofromscratch.model.domain.User;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class Cache {
     /**
      * The auth token for the current user session.
      */
-    private AuthToken currUserAuthToken;
+    private AuthToken currUserAuthtoken;
 
     private Player currPlayer;
     private StoreItemsList storeItems = new StoreItemsList(null);
@@ -39,7 +38,7 @@ public class Cache {
 
     private void initialize() {
         currUser = new User(null, null, null, null, null);
-        currUserAuthToken = null;
+        currUserAuthtoken = null;
     }
 
     public void clearCache() {
@@ -55,11 +54,11 @@ public class Cache {
     }
 
     public AuthToken getCurrUserAuthToken() {
-        return currUserAuthToken;
+        return currUserAuthtoken;
     }
 
-    public void setCurrUserAuthToken(AuthToken currUserAuthToken) {
-        this.currUserAuthToken = currUserAuthToken;
+    public void setCurrUserAuthToken(AuthToken currUserAuthtoken) {
+        this.currUserAuthtoken = currUserAuthtoken;
     }
 
     public Player getCurrPlayer() {

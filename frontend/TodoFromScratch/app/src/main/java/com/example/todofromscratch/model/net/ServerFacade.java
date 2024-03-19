@@ -12,8 +12,12 @@ import com.example.todofromscratch.model.net.request.RegisterRequest;
 import com.example.todofromscratch.model.net.response.AddItemResponse;
 import com.example.todofromscratch.model.net.response.ListPlayerItemsResponse;
 import com.example.todofromscratch.model.net.response.ListStoreItemsResponse;
+import com.example.todofromscratch.model.net.request.AddTaskRequest;
+import com.example.todofromscratch.model.net.request.TasksRequest;
+import com.example.todofromscratch.model.net.response.AddTaskResponse;
 import com.example.todofromscratch.model.net.response.LoginResponse;
 import com.example.todofromscratch.model.net.response.RegisterResponse;
+import com.example.todofromscratch.model.net.response.TasksResponse;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -31,6 +35,10 @@ public class ServerFacade {
 //    private static final String SERVER_URL = "http://10.37.196.176:5000";
 //    private static final String SERVER_URL = "http://172.20.10.10:5000";
     private static final String SERVER_URL = "http://192.168.1.106:5000";
+//    private static final String SERVER_URL = "http://192.168.39.105:5001";
+//    private static final String SERVER_URL = "http://10.37.103.182:5001";
+//    private static final String SERVER_URL = "http://10.37.137.246:5001";
+    // private static final String SERVER_URL = "http://10.37.48.61:5001";
 
 
     private final ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
@@ -60,6 +68,26 @@ public class ServerFacade {
     public ListPlayerItemsResponse listPlayerItems(ListPlayerItemsRequest request, String urlPath) throws IOException, TweeterRemoteException {
         return clientCommunicator.doPost(urlPath, request, null, ListPlayerItemsResponse.class);
     }
+    public TasksResponse getTasks(TasksRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        System.out.println("urlPath serverFacade storyResponse" + urlPath);
+        System.out.println("request serverFacade storyResponse" + request);
+        TasksResponse response = clientCommunicator.doPost(urlPath, request, null, TasksResponse.class);
+        System.out.println(response);
+        System.out.println(response.getTasks());
+//        System.out.println(response.getStory().size());
+        return response;
+    }
+
+    public AddTaskResponse addTask(AddTaskRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        System.out.println("Completed in serverFacade: " + request.getTask().completed);
+        AddTaskResponse response = clientCommunicator.doPost(urlPath, request, null, AddTaskResponse.class);
+        return response;
+    }
+//
+//    public TaskResponse updateTask(TaskRequest request, String urlPath) throws IOException, TweeterRemoteException {
+//        TasksResponse response = clientCommunicator.doPost(urlPath, request, null, TasksResponse.class);
+//        return response;
+//    }
 
 }
 

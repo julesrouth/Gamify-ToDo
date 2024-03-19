@@ -12,15 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
@@ -35,32 +26,85 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.todofromscratch.model.domain.Task
+import com.example.todofromscratch.model.domain.User
+import com.example.todofromscratch.presenter.TaskPresenter
 import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 import java.time.LocalDate
-import java.time.LocalTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    onAddTaskButtonClicked: () -> Unit,) {
+//    onAddTaskButtonClicked: () -> Unit,
+    onAddTaskButtonClicked: () -> Unit,
+    onTaskClicked: (Task) -> Unit // Callback to handle task clicks
+) {
 
-    // populate with sample tasks
-    if (Tasks.getInstance().getTasks().size == 0) {
+    val context = LocalContext.current
+
+    // State variables to track if we are adding or updating a task
+    var isUpdatingTask by remember { mutableStateOf(false) }
+    var taskToUpdate by remember { mutableStateOf<Task?>(null) }
+
+    class TaskView : TaskPresenter.View {
+
+        override fun displayMessage(message: String?) {
+            Toast.makeText(
+                context,
+                message,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        override fun setLoadingFooter(value: Boolean) {
+            if (value) {
+                // Add loading footer logic here
+                // storyRecyclerViewAdapter.addLoadingFooter()
+            } else {
+                // Remove loading footer logic here
+                // storyRecyclerViewAdapter.removeLoadingFooter()
+            }
+        }
+
+        override fun addMoreItems(tasks: MutableList<com.example.todofromscratch.model.domain.Task>?) {
+//            tasks?.let { storyRecyclerViewAdapter.addItems(it) }
+        }
+
+        override fun startUserActivity(user: User?) {
+//            user?.let { startActivity(Intent(context, MainActivity::class.java).apply { putExtra(MainActivity.CURRENT_USER_KEY, it) }) }
+        }
+
+    }
+
+    val taskPresenter = TaskPresenter(TaskView())
+
+    // Call getTasks method from TaskPresenter
+    taskPresenter.getTasks() //Load all tasks
+
+    val tasks = Tasks.getInstance().getTasks();
+    tasks.forEach { task ->
+        // Perform operations with each task here
+        println("Task description in mainScreen: ${task.description}")
+    }
+    if (tasks == null) {
         populateExampleTasks()
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val context = LocalContext.current
+//    val context = LocalContext.current
 
+    // Scaffold with top app bar and floating action button
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -111,42 +155,36 @@ fun MainScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            items(Tasks.getInstance().getTasks()) { task ->
+            items(tasks) { task ->
                 val checkedState = remember { mutableStateOf(task.completed) }
-                Row () {
+                Row() {
                     Checkbox(
-                        checked=checkedState.value,
+                        checked = checkedState.value,
                         onCheckedChange = {
                             checkedState.value = it
                             task.completed = checkedState.value
-                                          },
-                        modifier=Modifier
-                            .padding(5.dp)
+                        },
+                        modifier = Modifier.padding(5.dp)
                     )
-                    Column (
+                    Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .align(Alignment.CenterVertically)
                             .clickable(
                                 onClick = {
-                                    Toast.makeText(
-                                        context,
-                                        task.name,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    // Call the onTaskClicked callback when a task is clicked
+                                    onTaskClicked(task)
                                 }
-                        )
+                            )
                     ) {
                         Text(
-                            text = task.name,
-                            modifier = Modifier
-                                .fillMaxWidth()
+                            text = task.taskName,
+                            modifier = Modifier.fillMaxWidth()
                         )
-                        if (task.date.isNotBlank()) {
+                        if (task.dueDate.isNotBlank()) {
                             Text(
-                                text = "Due: " + task.date,
-                                modifier = Modifier
-                                    .fillMaxWidth()
+                                text = "Due: " + task.dueDate,
+                                modifier = Modifier.fillMaxWidth()
                             )
                         }
                     }
@@ -159,9 +197,9 @@ fun MainScreen(
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun populateExampleTasks() {
-    Tasks.getInstance().addTask(Task("Task 1", ""))
-    Tasks.getInstance().addTask(Task("Task 2", LocalDate.now().toString()))
-    Tasks.getInstance().addTask(Task("Task 3", ""))
+//    Tasks.getInstance().addTask(Task("Task 1", ""))
+//    Tasks.getInstance().addTask(Task("Task 2", LocalDate.now().toString()))
+//    Tasks.getInstance().addTask(Task("Task 3", ""))
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -170,6 +208,8 @@ fun populateExampleTasks() {
 fun MainScreenPreview() {
     TodoFromScratchTheme {
         MainScreen(
-            onAddTaskButtonClicked = {},)
+            onAddTaskButtonClicked = {},
+            onTaskClicked = {} // Dummy implementation for onTaskClicked
+        )
     }
 }

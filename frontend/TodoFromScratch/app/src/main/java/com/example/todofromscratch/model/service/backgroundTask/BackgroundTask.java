@@ -1,5 +1,7 @@
 package com.example.todofromscratch.model.service.backgroundTask;
 
+import static com.example.todofromscratch.model.service.backgroundTask.TaskTask.TASKS_KEY;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -41,6 +43,7 @@ public abstract class BackgroundTask implements Runnable {
         Bundle msgBundle = new Bundle();
         msgBundle.putBoolean(SUCCESS_KEY, true);
         loadSuccessBundle(msgBundle);
+        System.out.println("Tasks in msgBundle: " + msgBundle.getSerializable(TASKS_KEY));
         sendMessage(msgBundle);
     }
 

@@ -46,9 +46,9 @@ fun RegisterScreen(
 ) {
     var username by remember { mutableStateOf("username2") }
     var password by remember { mutableStateOf("password3") }
+    var email by remember { mutableStateOf("username@123.com") }
     var firstname by remember { mutableStateOf("user") }
     var lastname by remember { mutableStateOf("name") }
-    var email by remember { mutableStateOf("username@123.com") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -136,6 +136,18 @@ fun RegisterScreen(
                 }
             )
             TextField(
+                value = email,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(15.dp),
+                onValueChange = { email = it },
+                label = { Text("email") },
+                singleLine = true,
+                placeholder = { Text("username@123.com") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+
+                )
+            TextField(
                 value = firstname,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -156,18 +168,6 @@ fun RegisterScreen(
                 label = { Text("lastname") },
                 singleLine = true,
                 placeholder = { Text("name") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-
-                )
-            TextField(
-                value = email,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(15.dp),
-                onValueChange = { email = it },
-                label = { Text("email") },
-                singleLine = true,
-                placeholder = { Text("username@123.com") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
 
                 )

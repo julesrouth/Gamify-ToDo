@@ -51,7 +51,9 @@ import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShopScreen() {
+fun ShopScreen(
+    onBackClicked: () -> Unit
+) {
 
     /* TODO next.
     *   Update gold when item is purchased.
@@ -145,7 +147,7 @@ fun ShopScreen() {
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(onClick = {
-                        // TODO implement this
+                        onBackClicked()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -304,6 +306,8 @@ fun ShopScreen() {
 @Composable
 fun ShopScreenPreview() {
     TodoFromScratchTheme {
-        ShopScreen()
+        ShopScreen(
+            onBackClicked = {}
+        )
     }
 }
