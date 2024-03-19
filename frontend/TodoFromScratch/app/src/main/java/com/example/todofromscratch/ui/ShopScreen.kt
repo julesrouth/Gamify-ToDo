@@ -68,7 +68,7 @@ fun ShopScreen(
     val gettingStoreItems = remember { mutableStateOf(false) }
     val gettingPlayerItems = remember { mutableStateOf(false) }
 
-    class GeneralView (onSuccess : () -> Unit) : StorePresenter.View {
+    open class GeneralView (onSuccess : () -> Unit) : StorePresenter.View {
 
         var onSuccess: (() -> Unit)? = onSuccess
 
@@ -81,11 +81,6 @@ fun ShopScreen(
         }
 
         override fun taskSuccess(message: String?) {
-            Toast.makeText(
-                context,
-                message,
-                Toast.LENGTH_SHORT
-            ).show()
             onSuccess?.invoke()
         }
 
@@ -141,23 +136,44 @@ fun ShopScreen(
             listPlayerItemsPresenter.listPlayerItems();
         }
     }
-//    else {
-//        for (item in Cache.getInstance().playerItems) {
-//            if (playerItemsMap.containsKey(item.itemName)) {
-//                playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
-//            } else {
-//                playerItemsMap[item.itemName] = 1
-//            }
-//        }
-//        for (item in Cache.getInstance().storeItems.items) {
-//            if (playerItemsMap.containsKey(item.itemName)) {
-//                continue;
-//            }
-//            playerItemsMap[item.itemName] = 0
-//        }
-//    }
+    else if (playerItemsMap.isEmpty()) {
+        for (item in Cache.getInstance().playerItems) {
+            if (playerItemsMap.containsKey(item.itemName)) {
+                playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
+            } else {
+                playerItemsMap[item.itemName] = 1
+            }
+        }
+        for (item in Cache.getInstance().storeItems.items) {
+            if (playerItemsMap.containsKey(item.itemName)) {
+                continue;
+            }
+            playerItemsMap[item.itemName] = 0
+        }
+    }
 
-    val purchaseItemPresenter = StorePresenter(GeneralView {})
+    class PurchaseItemView (onSuccess : (String) -> Unit, val itemName: String) : StorePresenter.View {
+
+        var onSuccess: ((String) -> Unit)? = onSuccess
+
+        override fun taskSuccess(message: String?) {
+            onSuccess?.invoke(itemName)
+        }
+        override fun showInfoMessage(message: String?) {
+            Toast.makeText(
+                context,
+                message,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+        override fun taskFail(message: String?) {
+            Toast.makeText(
+                context,
+                message,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -205,7 +221,7 @@ fun ShopScreen(
                         .fillMaxWidth()
                 )
                 Box(
-                    modifier=Modifier
+                    modifier= Modifier
                         .width(150.dp)
                         .height(50.dp)
                 ) {
@@ -263,9 +279,16 @@ fun ShopScreen(
                             defaultElevation = 6.dp
                         ),
                         onClick = {
+                            val purchaseItemPresenter = StorePresenter(PurchaseItemView(
+                                itemName = item.itemName,
+                                onSuccess = { itemName ->
+                                    playerItemsMap[itemName] = playerItemsMap[itemName]!! + 1
+                                    recomposeToggleState.value = !recomposeToggleState.value
+                                }
+                            ))
                             purchaseItemPresenter.addItem(item.itemName)
-                            playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
-                            recomposeToggleState.value = !recomposeToggleState.value
+//                            playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
+//                            recomposeToggleState.value = !recomposeToggleState.value
 
                             // TODO update gold
 //                            Cache.getInstance().currPlayer.gold = Cache.getInstance().currPlayer.gold - item.cost
