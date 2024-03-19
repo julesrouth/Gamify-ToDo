@@ -37,6 +37,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -180,7 +181,7 @@ fun ShopScreen(
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Localized description"
+                            contentDescription = "Localized description",
                         )
                     }
                 },
@@ -209,7 +210,8 @@ fun ShopScreen(
                         .height(50.dp)
                 ) {
                     Surface(
-                        color = MaterialTheme.colorScheme.tertiaryContainer,
+//                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        color = Color.LightGray,
                         modifier = Modifier
                     ) {
                         Row(
@@ -227,7 +229,8 @@ fun ShopScreen(
                                 painter = painterResource(id = R.drawable.ic_android_gold_24dp),
                                 contentDescription = "Localized description",
                                 modifier = Modifier
-                                    .align(Alignment.CenterVertically)
+                                    .align(Alignment.CenterVertically),
+                                tint = Color.Unspecified
                             )
                             Text("x" + 500,
                                 fontSize = 15.sp,
@@ -279,7 +282,7 @@ fun ShopScreen(
                                 contentDescription = "Item",
                                 modifier = Modifier
                                     .size(35.dp)
-                                    .align(Alignment.CenterVertically)
+                                    .align(Alignment.CenterVertically),
                             )
                             Column(
                                 modifier = Modifier
@@ -318,7 +321,8 @@ fun ShopScreen(
                                 contentDescription = "Localized description",
                                 modifier = Modifier
                                     .size(15.dp)
-                                    .align(Alignment.CenterVertically)
+                                    .align(Alignment.CenterVertically),
+                                tint = Color.Unspecified
                             )
 
                         }

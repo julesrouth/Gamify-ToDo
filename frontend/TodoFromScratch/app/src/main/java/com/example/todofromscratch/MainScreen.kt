@@ -4,6 +4,7 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +23,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Start
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
@@ -129,18 +131,24 @@ fun MainScreen(
                         "Todo List",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
-
                     )
                 },
                 actions = {
-                    IconButton(onClick = {
-                        onMenuButtonClicked()
-//                        NavController.navigate(Screen.NewTaskScreen.route)
-
-                    }) {
+                    Row(
+                        modifier = Modifier
+                            .clickable {onMenuButtonClicked()}
+                            .padding(5.dp)
+                    ) {
+                        Text("Game",
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .padding(2.dp)
+                        )
                         Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = "Localized description"
+                            imageVector = Icons.Filled.Start,
+                            contentDescription = "Localized description",
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
                         )
                     }
                 },
