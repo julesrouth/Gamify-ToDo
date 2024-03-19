@@ -5,7 +5,7 @@ import android.os.Handler;
 
 import java.io.IOException;
 
-import com.example.todofromscratch.model.domain.AuthToken;
+import com.example.todofromscratch.model.domain.authtoken;
 import com.example.todofromscratch.model.domain.User;
 import com.example.todofromscratch.util.Pair;
 
@@ -16,7 +16,7 @@ public abstract class AuthenticateTask extends BackgroundTask {
 
     private User authenticatedUser;
 
-    private AuthToken authToken;
+    private authtoken authtoken;
 
     /**
      * The user's username (or "alias" or "handle"). E.g., "@susan".
@@ -37,10 +37,10 @@ public abstract class AuthenticateTask extends BackgroundTask {
 
     @Override
     protected void runTask()  throws IOException {
-        Pair<User, AuthToken> loginResult = runAuthenticationTask();
+        Pair<User, authtoken> loginResult = runAuthenticationTask();
 
         authenticatedUser = loginResult.getFirst();
-        authToken = loginResult.getSecond();
+        authtoken = loginResult.getSecond();
 
         // Call sendSuccessMessage if successful
         sendSuccessMessage();
@@ -48,12 +48,12 @@ public abstract class AuthenticateTask extends BackgroundTask {
         // sendFailedMessage()
     }
 
-    protected abstract Pair<User, AuthToken> runAuthenticationTask();
+    protected abstract Pair<User, authtoken> runAuthenticationTask();
 
     @Override
     protected void loadSuccessBundle(Bundle msgBundle) {
         msgBundle.putSerializable(USER_KEY, authenticatedUser);
-        msgBundle.putSerializable(AUTH_TOKEN_KEY, authToken);
+        msgBundle.putSerializable(AUTH_TOKEN_KEY, authtoken);
     }
 }
 

@@ -1,9 +1,7 @@
 package com.example.todofromscratch.presenter;
 
-import android.util.Log;
-
 import com.example.todofromscratch.model.service.backgroundTask.observer.AuthenticateObserver;
-import com.example.todofromscratch.model.domain.AuthToken;
+import com.example.todofromscratch.model.domain.authtoken;
 import com.example.todofromscratch.model.domain.User;
 
 public class AuthenticatePresenter implements AuthenticateObserver {
@@ -29,7 +27,7 @@ public class AuthenticatePresenter implements AuthenticateObserver {
     }
 
     @Override
-    public void authenticationSucceeded(AuthToken authToken, User user) {
+    public void authenticationSucceeded(authtoken authtoken, User user) {
 //        Log.i("AuthPresenter", "in authenticationSucceeded");
         System.out.println("In authenticationSucceeded");
         view.hideErrorMessage();

@@ -1,8 +1,5 @@
 package com.example.todofromscratch.model.service;
 
-import android.widget.EditText;
-import android.widget.TextView;
-
 import com.example.todofromscratch.model.service.backgroundTask.BackgroundTaskUtils;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetUserTask;
 import com.example.todofromscratch.model.service.backgroundTask.LoginTask;
@@ -17,7 +14,7 @@ import com.example.todofromscratch.model.service.backgroundTask.observer.Authent
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.observer.LogoutObserver;
 import com.example.todofromscratch.model.service.backgroundTask.observer.RegisterObserver;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.observer.StatusObserver;
-import com.example.todofromscratch.model.domain.AuthToken;
+import com.example.todofromscratch.model.domain.authtoken;
 import com.example.todofromscratch.model.domain.User;
 
 /**
@@ -35,7 +32,7 @@ public class UserService extends Service {
      * asynchronous operations complete.
      */
     public interface LoginObserver {
-        void handleSuccess(User user, AuthToken authToken);
+        void handleSuccess(User user, authtoken authtoken);
         void handleFailure(String message);
         void handleException(Exception exception);
     }
@@ -64,18 +61,11 @@ public class UserService extends Service {
 //    }
 
     public void register(String username, String password, String email, String firstName, String lastName,  RegisterObserver observer) {
-        RegisterTask registerTask = new RegisterTask(username, password,
-                email, firstName, lastName, new RegisterHandler(observer));
+        RegisterTask registerTask = getRegisterTask(username, password,
+                email, firstName, lastName, observer);
 
         BackgroundTaskUtils.runTask(registerTask);
     }
-
-//    public void register(EditText firstName, EditText lastName, EditText alias, EditText password, String imageBytesBase64, RegisterObserver observer) {
-//        RegisterTask registerTask = new RegisterTask(firstName.getText().toString(), lastName.getText().toString(),
-//                alias.getText().toString(), password.getText().toString(), imageBytesBase64, new RegisterHandler(observer));
-//
-//        BackgroundTaskUtils.runTask(registerTask);
-//    }
 
 //    public void getUser(AuthToken authToken, TextView userAlias, StatusObserver observer) {
 //        GetUserTask getUserTask = new GetUserTask(authToken,
@@ -104,6 +94,10 @@ public class UserService extends Service {
      */
     LoginTask getLoginTask(String username, String password, AuthenticateObserver observer) {
         return new LoginTask(this, username, password, new LoginTaskHandler(observer));
+    }
+
+    private RegisterTask getRegisterTask(String username, String password, String email, String firstName, String lastName, RegisterObserver observer) {
+        return new RegisterTask(this, username, password, email, firstName, lastName, new RegisterHandler(observer));
     }
 }
 

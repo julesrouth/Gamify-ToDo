@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.example.todofromscratch.model.net.ServerFacade;
 import com.example.todofromscratch.model.service.UserService;
-import com.example.todofromscratch.model.domain.AuthToken;
+import com.example.todofromscratch.model.domain.authtoken;
 import com.example.todofromscratch.model.domain.User;
 import com.example.todofromscratch.model.net.request.LoginRequest;
 import com.example.todofromscratch.model.net.response.LoginResponse;
@@ -38,7 +38,7 @@ public class LoginTask extends BackgroundTask {
     /**
      * The auth token returned by the server.
      */
-    protected AuthToken authToken;
+    protected authtoken authtoken;
 
     private ServerFacade serverFacade;
 
@@ -59,7 +59,8 @@ public class LoginTask extends BackgroundTask {
             if (response.isSuccess()) {
                 System.out.println("It was a success");
                 this.user = response.getUser();
-                this.authToken = response.getAuthToken();
+                this.authtoken = response.getAuthtoken();
+
                 sendSuccessMessage();
             } else {
                 System.out.println("It was not a success");
@@ -73,7 +74,7 @@ public class LoginTask extends BackgroundTask {
 
     protected void loadSuccessBundle(Bundle msgBundle) {
         msgBundle.putSerializable(USER_KEY, this.user);
-        msgBundle.putSerializable(AUTH_TOKEN_KEY, this.authToken);
+        msgBundle.putSerializable(AUTH_TOKEN_KEY, this.authtoken);
     }
 
     /**

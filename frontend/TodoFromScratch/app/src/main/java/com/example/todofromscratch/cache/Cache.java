@@ -1,7 +1,7 @@
 package com.example.todofromscratch.cache;
 
 
-import com.example.todofromscratch.model.domain.AuthToken;
+import com.example.todofromscratch.model.domain.authtoken;
 import com.example.todofromscratch.model.domain.User;
 
 /**
@@ -21,7 +21,7 @@ public class Cache {
     /**
      * The auth token for the current user session.
      */
-    private AuthToken currUserAuthToken;
+    private authtoken currUserAuthtoken;
 
     private Cache() {
         initialize();
@@ -29,7 +29,7 @@ public class Cache {
 
     private void initialize() {
         currUser = new User(null, null, null, null, null);
-        currUserAuthToken = null;
+        currUserAuthtoken = null;
     }
 
     public void clearCache() {
@@ -44,12 +44,12 @@ public class Cache {
         this.currUser = currUser;
     }
 
-    public AuthToken getCurrUserAuthToken() {
-        return currUserAuthToken;
+    public authtoken getCurrUserAuthToken() {
+        return currUserAuthtoken;
     }
 
-    public void setCurrUserAuthToken(AuthToken currUserAuthToken) {
-        this.currUserAuthToken = currUserAuthToken;
+    public void setCurrUserAuthToken(authtoken currUserAuthtoken) {
+        this.currUserAuthtoken = currUserAuthtoken;
     }
 
     public static void setInstance(Cache instance) {

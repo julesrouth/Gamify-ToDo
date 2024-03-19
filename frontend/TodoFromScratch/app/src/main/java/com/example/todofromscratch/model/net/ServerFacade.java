@@ -3,7 +3,6 @@ package com.example.todofromscratch.model.net;
 
 import java.io.IOException;
 
-import com.example.todofromscratch.model.net.TweeterRemoteException;
 //import edu.byu.cs.tweeter.model.net.request.FeedRequest;
 //import edu.byu.cs.tweeter.model.net.request.FollowRequest;
 //import edu.byu.cs.tweeter.model.net.request.FollowerCountRequest;
@@ -25,10 +24,14 @@ import com.example.todofromscratch.model.net.request.RegisterRequest;
 //import edu.byu.cs.tweeter.model.net.response.FollowingCountResponse;
 //import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
 //import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
+import com.example.todofromscratch.model.net.request.AddTaskRequest;
+import com.example.todofromscratch.model.net.request.TasksRequest;
+import com.example.todofromscratch.model.net.response.AddTaskResponse;
 import com.example.todofromscratch.model.net.response.LoginResponse;
 //import edu.byu.cs.tweeter.model.net.response.LogoutResponse;
 //import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 import com.example.todofromscratch.model.net.response.RegisterResponse;
+import com.example.todofromscratch.model.net.response.TasksResponse;
 //import edu.byu.cs.tweeter.model.net.response.StoryResponse;
 //import edu.byu.cs.tweeter.model.net.response.UnFollowResponse;
 //import edu.byu.cs.tweeter.model.net.response.UserResponse;
@@ -44,10 +47,11 @@ public class ServerFacade {
 //    private static final String SERVER_URL = "https://q8mr6p52na.execute-api.us-west-2.amazonaws.com/Test";
 //    private static final String SERVER_URL = "http://127.0.0.1:5000";
 
-    private static final String SERVER_URL = "http://192.168.1.106:5000";
+//    private static final String SERVER_URL = "http://192.168.1.106:5000";
 //    private static final String SERVER_URL = "http://192.168.39.105:5001";
 //    private static final String SERVER_URL = "http://10.37.103.182:5001";
-
+//    private static final String SERVER_URL = "http://10.37.137.246:5001";
+    private static final String SERVER_URL = "http://10.37.48.61:5001";
 
 
     private final ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
@@ -120,13 +124,24 @@ public class ServerFacade {
         return clientCommunicator.doPost(urlPath, request, null, RegisterResponse.class);
     }
 
-//    public StoryResponse getStory(StoryRequest request, String urlPath) throws IOException, TweeterRemoteException {
-//        System.out.println("urlPath serverFacade storyResponse" + urlPath);
-//        System.out.println("request serverFacade storyResponse" + request);
-//        StoryResponse response = clientCommunicator.doPost(urlPath, request, null, StoryResponse.class);
-////        System.out.println(response);
-////        System.out.println(response.getStory());
-////        System.out.println(response.getStory().size());
+    public TasksResponse getTasks(TasksRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        System.out.println("urlPath serverFacade storyResponse" + urlPath);
+        System.out.println("request serverFacade storyResponse" + request);
+        TasksResponse response = clientCommunicator.doPost(urlPath, request, null, TasksResponse.class);
+        System.out.println(response);
+        System.out.println(response.getTasks());
+//        System.out.println(response.getStory().size());
+        return response;
+    }
+
+    public AddTaskResponse addTask(AddTaskRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        System.out.println("Completed in serverFacade: " + request.getTask().completed);
+        AddTaskResponse response = clientCommunicator.doPost(urlPath, request, null, AddTaskResponse.class);
+        return response;
+    }
+//
+//    public TaskResponse updateTask(TaskRequest request, String urlPath) throws IOException, TweeterRemoteException {
+//        TasksResponse response = clientCommunicator.doPost(urlPath, request, null, TasksResponse.class);
 //        return response;
 //    }
 

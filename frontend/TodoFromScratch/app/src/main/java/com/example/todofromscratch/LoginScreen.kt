@@ -52,7 +52,7 @@ fun LoginScreen(
     onRegisterClicked: () -> Unit
 ) {
     var username by remember { mutableStateOf("username1") }
-    var password by remember { mutableStateOf("password2") }
+    var password by remember { mutableStateOf("password3") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 

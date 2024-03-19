@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Represents an auth token in the system.
  */
-public class AuthToken implements Serializable {
+public class authtoken implements Serializable {
     /**
      * Value of the auth token.
      */
@@ -13,18 +13,18 @@ public class AuthToken implements Serializable {
     /**
      * String representation of date/time at which the auth token was created.
      */
-    public long timestamp;
+    public String userId;
 
-    public AuthToken() {
+    public authtoken() {
     }
 
-    public AuthToken(String token) {
+    public authtoken(String token) {
         this.token = token;
     }
 
-    public AuthToken(String token, long timestamp) {
+    public authtoken(String token, String userId) {
         this.token = token;
-        this.timestamp = timestamp;
+        this.userId = userId;
     }
 
     public String getToken() {
@@ -35,7 +35,7 @@ public class AuthToken implements Serializable {
         this.token = token;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public String getUserId() {
+        return userId;
     }
 }

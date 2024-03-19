@@ -1,6 +1,6 @@
 package com.example.todofromscratch.model.net.response;
 
-import com.example.todofromscratch.model.domain.AuthToken;
+import com.example.todofromscratch.model.domain.authtoken;
 import com.example.todofromscratch.model.domain.User;
 import com.example.todofromscratch.model.net.request.LoginRequest;
 
@@ -12,7 +12,7 @@ public class LoginResponse extends Response {
     private User user;
     private String username;
     private String token;
-    private AuthToken authToken;
+    private authtoken authtoken;
 
     public LoginResponse(String username, String token) {
         super(true, null);
@@ -37,10 +37,10 @@ public class LoginResponse extends Response {
      * @param user the now logged in user.
      * @param authToken the auth token representing this user's session with the server.
      */
-    public LoginResponse(User user, AuthToken authToken) {
+    public LoginResponse(User user, authtoken authtoken) {
         super(true, null);
         this.user = user;
-        this.authToken = authToken;
+        this.authtoken = authtoken;
         System.out.println("In login response constructor");
     }
 
@@ -58,7 +58,7 @@ public class LoginResponse extends Response {
      *
      * @return the auth token.
      */
-    public AuthToken getAuthToken() {
-        return authToken;
+    public authtoken getAuthtoken() {
+        return authtoken;
     }
 }

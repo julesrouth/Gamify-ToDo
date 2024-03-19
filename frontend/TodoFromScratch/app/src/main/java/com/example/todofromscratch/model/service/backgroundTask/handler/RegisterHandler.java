@@ -7,7 +7,7 @@ import com.example.todofromscratch.cache.Cache;
 import com.example.todofromscratch.model.service.backgroundTask.BackgroundTask;
 import com.example.todofromscratch.model.service.backgroundTask.RegisterTask;
 import com.example.todofromscratch.model.service.backgroundTask.observer.RegisterObserver;
-import com.example.todofromscratch.model.domain.AuthToken;
+import com.example.todofromscratch.model.domain.authtoken;
 import com.example.todofromscratch.model.domain.User;
 
 public class RegisterHandler extends MainHandler {
@@ -28,14 +28,16 @@ public class RegisterHandler extends MainHandler {
     @Override
     protected void success(Message msg) {
         User registeredUser = (User) msg.getData().getSerializable(RegisterTask.USER_KEY);
-        AuthToken authToken = (AuthToken) msg.getData().getSerializable(RegisterTask.AUTH_TOKEN_KEY);
+        authtoken authtoken = (authtoken) msg.getData().getSerializable(RegisterTask.AUTH_TOKEN_KEY);
 
         Cache.getInstance().setCurrUser(registeredUser);
-        Cache.getInstance().setCurrUserAuthToken(authToken);
+        Cache.getInstance().setCurrUserAuthToken(authtoken);
+        System.out.println("Current user in register User: " + registeredUser.getFirstName());
+        System.out.println("Current authtoken in register user: " + authtoken.token);
         observer.hideErrorMessage();
         observer.showInfoMessage("Hello " + Cache.getInstance().getCurrUser().getName());
         try {
-            observer.authenticationSucceeded(authToken, registeredUser);
+            observer.authenticationSucceeded(authtoken, registeredUser);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

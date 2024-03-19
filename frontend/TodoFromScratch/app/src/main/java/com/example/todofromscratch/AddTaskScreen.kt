@@ -69,16 +69,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.todofromscratch.cache.Cache
+import com.example.todofromscratch.model.domain.User
+import com.example.todofromscratch.presenter.TaskPresenter
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 import kotlin.properties.ReadWriteProperty
+import com.example.todofromscratch.model.domain.Task
+import com.example.todofromscratch.model.net.Difficulty
+import com.example.todofromscratch.model.net.TaskType
+import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTaskScreen(onNextButtonClicked: () -> Unit, ) {
+fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
+    onNextButtonClicked: () -> Unit, ) {
     val context = LocalContext.current
     val dateState =
         rememberDatePickerState(initialSelectedDateMillis = Instant.now().toEpochMilli())
@@ -86,8 +94,8 @@ fun AddTaskScreen(onNextButtonClicked: () -> Unit, ) {
     val openDateDialog = remember { mutableStateOf(false) }
     val openTimeDialog = remember { mutableStateOf(false) }
     var pickTime by remember { mutableStateOf(false) }
-    var dateStr by remember { mutableStateOf("") }
-    var timeStr by remember {mutableStateOf("")}
+//    var dateStr by remember { mutableStateOf("") }
+//    var timeStr by remember {mutableStateOf("")}
     val formatter = remember { SimpleDateFormat("hh:mm a", Locale.getDefault()) }
 
     val cal = Calendar.getInstance()
@@ -95,8 +103,54 @@ fun AddTaskScreen(onNextButtonClicked: () -> Unit, ) {
     cal.set(Calendar.MINUTE, timeState.minute)
     cal.isLenient = false
 
+    class TaskView : TaskPresenter.View {
+
+        override fun displayMessage(message: String?) {
+            Toast.makeText(
+                context,
+                message,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        override fun setLoadingFooter(value: Boolean) {
+            if (value) {
+                // Add loading footer logic here
+                // storyRecyclerViewAdapter.addLoadingFooter()
+            } else {
+                // Remove loading footer logic here
+                // storyRecyclerViewAdapter.removeLoadingFooter()
+            }
+        }
+
+        override fun addMoreItems(tasks: MutableList<com.example.todofromscratch.model.domain.Task>?) {
+//            tasks?.let { storyRecyclerViewAdapter.addItems(it) }
+        }
+
+        override fun startUserActivity(user: User?) {
+//            user?.let { startActivity(Intent(context, MainActivity::class.java).apply { putExtra(MainActivity.CURRENT_USER_KEY, it) }) }
+        }
+
+    }
+
+    val taskPresenter = TaskPresenter(TaskView())
+
+//    var name by remember {
+//        mutableStateOf("")
+//    }
+
     var name by remember {
-        mutableStateOf("")
+        mutableStateOf(taskToUpdate?.taskName ?: "")
+    }
+
+    // Populate date and time fields if in edit mode
+    var dateStr by remember { mutableStateOf(taskToUpdate?.dueDate ?: "") }
+    var timeStr by remember { mutableStateOf("") }
+    if (taskToUpdate != null && taskToUpdate.dueDate.isNotBlank()) {
+        dateStr = taskToUpdate.dueDate
+        // Extract time from due date if available
+        val dateTime = LocalDateTime.parse(taskToUpdate.dueDate)
+        timeStr = dateTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
     }
 
     Scaffold(
@@ -256,12 +310,37 @@ fun AddTaskScreen(onNextButtonClicked: () -> Unit, ) {
                     .align(Alignment.CenterHorizontally)
                     .padding(5.dp),
                 onClick = {
-                    Tasks.getInstance().addTask(Task(name, dateStr))
+//                    val difficulty = Difficulty.EASY.value
+//                    val type = TaskType.TASK.value
+//                    var completed: Boolean = false
+//                    println("UserID in addtaskscreen: " + Cache.getInstance().currUserAuthToken.userId)
+//                    println("Completed in AddTaskScreen: " + completed)
+//                    val task = Task(name, "test 2", dateStr, difficulty, type, Cache.getInstance().currUserAuthToken.userId, completed)
+//                    Tasks.getInstance().addTask(task)
+//                    taskPresenter.addTask(task);
+                    // If taskToUpdate is null, it means we're in add mode
+                    if (taskToUpdate == null) {
+                        // Add new task logic
+                        val difficulty = Difficulty.EASY.value
+                        val type = TaskType.TASK.value
+                        var completed: Boolean = false
+                        println("UserID in addtaskscreen: " + Cache.getInstance().currUserAuthToken.userId)
+                        println("Completed in AddTaskScreen: " + completed)
+                        val task = Task(name, "test 2", dateStr, difficulty, type, Cache.getInstance().currUserAuthToken.userId, completed)
+                        //TODO GET THR
+                        Tasks.getInstance().addTask(task)
+                        taskPresenter.addTask(task)
+                    } else {
+                        // Update task logic
+                        taskToUpdate.taskName = name
+                        taskToUpdate.dueDate = dateStr
+                        // TODO:: Update the task using the presenter or any appropriate method
+                    }
                     onNextButtonClicked()
                 },
                 enabled = (name.isNotBlank())
             ) {
-                Text(text = "Add")
+                Text(text = if (taskToUpdate == null) "Add" else "Update")
             }
         }
     }
