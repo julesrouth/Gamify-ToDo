@@ -12,6 +12,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
@@ -41,6 +50,9 @@ import com.example.todofromscratch.model.domain.User
 import com.example.todofromscratch.presenter.TaskPresenter
 import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 import java.time.LocalDate
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import java.time.LocalTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -127,6 +139,9 @@ fun MainScreen(
                             "This is not yet implemented",
                             Toast.LENGTH_SHORT
                         ).show()
+                        onMenuButtonClicked()
+//                        NavController.navigate(Screen.NewTaskScreen.route)
+
                     }) {
                         Icon(
                             imageVector = Icons.Filled.Menu,
@@ -209,7 +224,8 @@ fun MainScreenPreview() {
     TodoFromScratchTheme {
         MainScreen(
             onAddTaskButtonClicked = {},
-            onTaskClicked = {} // Dummy implementation for onTaskClicked
+            onTaskClicked = {}, // Dummy implementation for onTaskClicked
+            onMenuButtonClicked = {}
         )
     }
 }

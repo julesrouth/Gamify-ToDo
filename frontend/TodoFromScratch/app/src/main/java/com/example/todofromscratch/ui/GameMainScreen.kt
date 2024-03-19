@@ -34,10 +34,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todofromscratch.R
+import com.example.todofromscratch.game.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameMainScreen(
+    game: Game,
     onAdventureClicked : () -> Unit,
     onShopClicked : () -> Unit,
     onCharacterClicked : () -> Unit,
@@ -85,13 +87,13 @@ fun GameMainScreen(
                     Column() {
                         Text("Character Info placeholder",
                             fontSize=30.sp)
-                        Text("Name:",
+                        Text("Name: ",
                             fontSize=30.sp)
-                        Text("Level:",
+                        Text("Level: ${game.getLevel()}",
                             fontSize=30.sp)
                         Text("Experience:",
                             fontSize=30.sp)
-                        Text("Gold:",
+                        Text("Gold: ${game.getGold()}",
                             fontSize=30.sp)
                     }
                 }
@@ -193,7 +195,8 @@ fun GameMainScreenPreview() {
             onAdventureClicked = {},
             onShopClicked = {},
             onCharacterClicked = {},
-            onExitClicked = {}
+            onExitClicked = {},
+            game = Game()
         )
     }
 }

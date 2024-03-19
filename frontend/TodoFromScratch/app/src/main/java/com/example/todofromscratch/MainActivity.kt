@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.todofromscratch.ui.GameMainScreen
 import com.example.todofromscratch.ui.ShopScreen
 import androidx.navigation.navArgument
+import com.example.todofromscratch.game.Game
 import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 
 /*
@@ -42,7 +43,6 @@ class MainActivity : ComponentActivity() {
         NavHost(
             navController = navController,
             startDestination = Screen.LoginScreen.route
-
         ) {
             composable(route = Screen.LoginScreen.route) {
                 LoginScreen(
@@ -74,6 +74,9 @@ class MainActivity : ComponentActivity() {
                     onTaskClicked = { task ->
                         // Navigate to AddTaskScreen with task information
                         navController.navigate("${Screen.AddTaskScreen.route}/${task.taskName}")
+                    },
+                    onMenuButtonClicked = {
+                        navController.navigate(Screen.GameMainScreen.route)
                     }
                 )
             }
@@ -98,6 +101,7 @@ class MainActivity : ComponentActivity() {
                     onExitClicked = {
                         navController.navigate(Screen.MainScreen.route)
                     }
+                    game = Game()
                 )
             }
             composable(
