@@ -17,7 +17,7 @@ CREATE TABLE "Authtokens"
 
 CREATE TABLE "Tasks"
 (
-    taskId INT not null primary key,
+    taskId INT not null,
     taskName VARCHAR(255) not null,
     description VARCHAR(255) not null,
     dueDate VARCHAR(255) not null,

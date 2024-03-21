@@ -1,5 +1,5 @@
 import random
-from database.Model import StoreItem
+from Model import StoreItem
 
 
 gold_table = {"easy": {"daily": 10, "weekly": 12, "task": 15}, 
