@@ -1,4 +1,4 @@
-from database.Model import Authtoken
+from Model import Authtoken
 
 class AuthtokenDAO:
     def __init__(self, conn):

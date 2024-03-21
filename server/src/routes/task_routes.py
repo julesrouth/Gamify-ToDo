@@ -3,7 +3,7 @@ import sys
 
 sys.path.append('..')
 
-from database.Model import Authtoken, Task
+from Model import Authtoken, Task
 from database.TaskDAO import TaskDAO
 from database.AuthtokenDAO import AuthtokenDAO
 from database.PlayerDAO import PlayerDAO
@@ -294,6 +294,9 @@ def checkTask():
         if task == None:
             return jsonify({'success': False, 'message': 'Task not found'})
         
+        if task.completed == completed:
+            return jsonify({'success': False, 'message': 'Task already checked'})
+
         task.completed = completed
 
         try:

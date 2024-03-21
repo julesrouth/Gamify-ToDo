@@ -3,7 +3,7 @@ import sys
 
 sys.path.append('..')
 
-from database.Model import Authtoken, PlayerItem, Player
+from Model import Authtoken, PlayerItem, Player
 from database.PlayerItemDAO import PlayerItemDAO
 from database.AuthtokenDAO import AuthtokenDAO
 from database.PlayerDAO import PlayerDAO
@@ -53,11 +53,6 @@ def addPlayerItem():
         
         if count == None:
             count = 0
-
-        try:
-            player_item_dao.insert(count+1, player_item)
-        except Exception as e:
-            return jsonify({'success': False, 'message': str(e)})
         
         cost = 0
 
@@ -77,6 +72,11 @@ def addPlayerItem():
         print(f'Gold: {player.gold}')
 
         new_gold = player.gold - cost
+
+        try:
+            player_item_dao.insert(count+1, player_item)
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)})
 
         try:
             result = player_dao.updateGold(authtoken.userId, new_gold)
