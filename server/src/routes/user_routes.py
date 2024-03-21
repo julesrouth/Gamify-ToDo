@@ -5,8 +5,9 @@ import sys
 
 sys.path.append('..')
 
-from database.Model import Authtoken, User, LoginResponse
+from Model import Authtoken, User, Player, LoginResponse, RegisterResponse
 from database.AuthtokenDAO import AuthtokenDAO
+from database.PlayerDAO import PlayerDAO
 from database.UserDAO import UserDAO
 from database.TaskDAO import TaskDAO
 from database.conn import create_connection
@@ -26,13 +27,13 @@ def register():
                     json_data["user"]['firstName'],
                     json_data["user"]['lastName'])
     except Exception as e:
-        login_response = LoginResponse(False, "Invalid Request Format", None, None)
+        login_response = RegisterResponse(False, "Invalid Request Format", None, None, None)
         return jsonify(login_response.__dict__)
 
     try:
         conn = create_connection("database/todo_data.db")
     except Exception as e:
-        login_response = LoginResponse(False, str(e), None, None)
+        login_response = RegisterResponse(False, str(e), None, None, None)
         return jsonify(login_response.__dict__)
     
     with conn:
@@ -40,20 +41,28 @@ def register():
         try:
             user_dao.insert(user)
         except Exception as e:
-            login_response = LoginResponse(False, str(e), None, None)
+            login_response = RegisterResponse(False, str(e), None, None, None)
             return jsonify(login_response.__dict__)
     
-    token = ''.join(random.choices(string.ascii_lowercase +
-                             string.digits, k=12))
-    authtoken = Authtoken(token, user.uuid)
-    auth_dao = AuthtokenDAO(conn)
-    try:
-        auth_dao.insert(authtoken)
-    except Exception as e:
-        login_response = LoginResponse(False, str(e), None, None)
-        return jsonify(login_response.__dict__)       
+        token = ''.join(random.choices(string.ascii_lowercase +
+                                string.digits, k=12))
+        authtoken = Authtoken(token, user.uuid)
+        auth_dao = AuthtokenDAO(conn)
+        try:
+            auth_dao.insert(authtoken)
+        except Exception as e:
+            login_response = RegisterResponse(False, str(e), None, None, None)
+            return jsonify(login_response.__dict__)
     
-    login_response = LoginResponse(True, "Registration successful", authtoken, user)
+        player = Player("Mr. Default", authtoken.userId, 1, 0, 0)
+        player_dao = PlayerDAO(conn)
+        try:
+            player_dao.insert(player)
+        except Exception as e:
+            login_response = RegisterResponse(False, str(e), None, None, None)
+            return jsonify(login_response.__dict__)
+    
+    login_response = RegisterResponse(True, "Registration successful", authtoken, user, player)
     return jsonify(login_response.__dict__)
 
 

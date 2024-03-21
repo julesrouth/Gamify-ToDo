@@ -1,4 +1,4 @@
-from database.Model import Player
+from Model import Player
 
 class PlayerDAO:
     def __init__(self, conn):

@@ -3,9 +3,10 @@ import sys
 
 sys.path.append('..')
 
-from database.Model import Authtoken, PlayerItem, StoreItem
+from Model import Authtoken, PlayerItem, Player
 from database.PlayerItemDAO import PlayerItemDAO
 from database.AuthtokenDAO import AuthtokenDAO
+from database.PlayerDAO import PlayerDAO
 from database.conn import create_connection
 from tables import get_store_table
 
@@ -35,6 +36,15 @@ def addPlayerItem():
         if auth.userId != authtoken.userId:
             return jsonify({'success': False, 'message': 'Invalid token'})
         
+        player_dao = PlayerDAO(conn)
+        try:
+            player = player_dao.find_by_userId(authtoken.userId)
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)})
+        
+        if player == None:
+            return jsonify({'success': False, 'message': 'Player not found'})
+        
         player_item_dao = PlayerItemDAO(conn)
         try:
             count = player_item_dao.get_highest_count(player_item.itemName, player_item.userId)
@@ -43,11 +53,38 @@ def addPlayerItem():
         
         if count == None:
             count = 0
+        
+        cost = 0
+
+        store_table = get_store_table()
+        for item in store_table:
+            if item.itemName == player_item.itemName:
+                cost = item.cost
+
+        if cost == 0:
+            return jsonify({'success': False, 'message': 'Item not found in store'})
+        
+        if player.gold < cost:
+            return jsonify({'success': False, 'message': 'Not enough gold'})
+
+
+        print(f'Cost: {cost}')
+        print(f'Gold: {player.gold}')
+
+        new_gold = player.gold - cost
 
         try:
             player_item_dao.insert(count+1, player_item)
         except Exception as e:
             return jsonify({'success': False, 'message': str(e)})
+
+        try:
+            result = player_dao.updateGold(authtoken.userId, new_gold)
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)})
+        
+        if result == 0:
+            return jsonify({'success': False, 'message': 'Gold failed to updated'})
         
     return jsonify({'success': True, 'message': 'Item added'})
         
@@ -77,8 +114,6 @@ def removePlayerItem():
         
         if auth.userId != authtoken.userId:
             return jsonify({'success': False, 'message': 'Invalid token'})
-        
-
         
         player_item_dao = PlayerItemDAO(conn)
         try:
