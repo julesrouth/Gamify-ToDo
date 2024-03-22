@@ -4,12 +4,14 @@ package com.example.todofromscratch.model.net;
 import java.io.IOException;
 
 import com.example.todofromscratch.model.net.request.AddItemRequest;
+import com.example.todofromscratch.model.net.request.GetPlayerRequest;
 import com.example.todofromscratch.model.net.request.ListPlayerItemsRequest;
 import com.example.todofromscratch.model.net.request.ListStoreItemsRequest;
 import com.example.todofromscratch.model.net.request.LoginRequest;
 
 import com.example.todofromscratch.model.net.request.RegisterRequest;
 import com.example.todofromscratch.model.net.response.AddItemResponse;
+import com.example.todofromscratch.model.net.response.GetPlayerResponse;
 import com.example.todofromscratch.model.net.response.ListPlayerItemsResponse;
 import com.example.todofromscratch.model.net.response.ListStoreItemsResponse;
 import com.example.todofromscratch.model.net.request.AddTaskRequest;
@@ -36,6 +38,7 @@ public class ServerFacade {
 //    private static final String SERVER_URL = "http://172.20.10.10:5000";
     private static final String SERVER_URL = "http://192.168.1.106:5000";
 //    private static final String SERVER_URL = "http://192.168.39.105:5001";
+//    private static final String SERVER_URL = "http://192.168.10.23:5000";
 //    private static final String SERVER_URL = "http://10.37.103.182:5001";
 //    private static final String SERVER_URL = "http://10.37.137.246:5001";
     // private static final String SERVER_URL = "http://10.37.48.61:5001";
@@ -86,6 +89,10 @@ public class ServerFacade {
         System.out.println("Completed in serverFacade: " + request.getTask().completed);
         AddTaskResponse response = clientCommunicator.doPost(urlPath, request, null, AddTaskResponse.class);
         return response;
+    }
+
+    public GetPlayerResponse getPlayer(GetPlayerRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        return clientCommunicator.doPost(urlPath, request, null, GetPlayerResponse.class);
     }
 //
 //    public TaskResponse updateTask(TaskRequest request, String urlPath) throws IOException, TweeterRemoteException {

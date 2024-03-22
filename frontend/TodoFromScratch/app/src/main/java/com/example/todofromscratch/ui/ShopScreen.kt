@@ -248,7 +248,7 @@ fun ShopScreen(
                                     .align(Alignment.CenterVertically),
                                 tint = Color.Unspecified
                             )
-                            Text("x" + 500,
+                            Text("x" + Cache.getInstance().currPlayer.gold,
                                 fontSize = 15.sp,
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically))

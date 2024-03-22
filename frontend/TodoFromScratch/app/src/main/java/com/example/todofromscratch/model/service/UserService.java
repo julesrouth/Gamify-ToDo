@@ -2,16 +2,20 @@ package com.example.todofromscratch.model.service;
 
 import com.example.todofromscratch.model.service.backgroundTask.BackgroundTaskUtils;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetUserTask;
+import com.example.todofromscratch.model.service.backgroundTask.GetPlayerTask;
 import com.example.todofromscratch.model.service.backgroundTask.LoginTask;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.LogoutTask;
 import com.example.todofromscratch.model.service.backgroundTask.RegisterTask;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.handler.GetUserHandler;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.handler.GetUserStatusHandler;
+import com.example.todofromscratch.model.service.backgroundTask.handler.GetPlayerHandler;
+import com.example.todofromscratch.model.service.backgroundTask.handler.ListPlayerItemsHandler;
 import com.example.todofromscratch.model.service.backgroundTask.handler.LoginTaskHandler;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.handler.LogoutHandler;
 import com.example.todofromscratch.model.service.backgroundTask.handler.RegisterHandler;
 import com.example.todofromscratch.model.service.backgroundTask.observer.AuthenticateObserver;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.observer.LogoutObserver;
+import com.example.todofromscratch.model.service.backgroundTask.observer.GeneralObserver;
 import com.example.todofromscratch.model.service.backgroundTask.observer.RegisterObserver;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.observer.StatusObserver;
 import com.example.todofromscratch.model.domain.AuthToken;
@@ -26,6 +30,8 @@ public class UserService extends Service {
     public static final String LOGOUT_URL_PATH = "/logout";
     public static final String GETUSER_URL_PATH = "/getuser";
     public static final String REGISTER_URL_PATH = "/register";
+
+    public static final String GET_PLAYER_URL_PATH = "/getPlayer";
 
     /**
      * An observer interface to be implemented by observers who want to be notified when
@@ -65,6 +71,12 @@ public class UserService extends Service {
                 email, firstName, lastName, observer);
 
         BackgroundTaskUtils.runTask(registerTask);
+    }
+
+    public void getPlayer(GeneralObserver observer) {
+        System.out.println("In user service and getting player");
+        GetPlayerTask task = new GetPlayerTask(new GetPlayerHandler(observer));
+        BackgroundTaskUtils.runTask(task);
     }
 
 //    public void getUser(AuthToken authToken, TextView userAlias, StatusObserver observer) {
