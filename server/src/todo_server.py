@@ -3,17 +3,18 @@ import routes.user_routes as user_routes
 import routes.task_routes as task_routes
 import routes.player_routes as player_routes
 import routes.item_routes as item_routes
-import routes.notifications as notifications
+import routes.notifications as Notifications
+from globals import app, notifications
+
+
 
 # set configuration values
 class Config:
     SCHEDULER_API_ENABLED = True
 
-app = Flask(__name__)
 app.config.from_object(Config())
 
-#init scheduler
-notifications.init_scheduler(app)
+
 
 @app.route("/")
 def hello_world():

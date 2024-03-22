@@ -7,7 +7,7 @@ from database.Model import Authtoken, Task
 from database.TaskDAO import TaskDAO
 from database.AuthtokenDAO import AuthtokenDAO
 from database.PlayerDAO import PlayerDAO
-from notifications import Notifications
+from routes.notifications import Notifications
 from database.conn import create_connection
 from tables import get_gold
 
@@ -71,14 +71,15 @@ def createTask():
             return jsonify({'success': False, 'message': str(e), 'task': None})
         
         #schedule task
+        notifications = Notifications()
         try:
             match json_data['task']['type']:
                 case "task":
-                    Notifications.schedule_notification_task(task)
+                    notifications.schedule_notification_task(task)
                 case "daily":
-                    Notifications.schedule_notification_daily(task)
+                    notifications.schedule_notification_daily(task)
                 case "weekly":
-                    Notifications.schedule_notification_weekly(task)
+                    notifications.schedule_notification_weekly(task)
                 case _:
                     return jsonify({'success': False, 'message': 'Invalid task type', 'task': None})
         except Exception as e:
