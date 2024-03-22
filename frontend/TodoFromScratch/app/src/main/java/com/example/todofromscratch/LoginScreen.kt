@@ -51,8 +51,8 @@ fun LoginScreen(
     onLoginButtonClicked: () -> Unit,
     onRegisterClicked: () -> Unit
 ) {
-    var username by remember { mutableStateOf("username1") }
-    var password by remember { mutableStateOf("password2") }
+    var username by remember { mutableStateOf("joe1") }
+    var password by remember { mutableStateOf("stuff") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -80,11 +80,6 @@ fun LoginScreen(
         }
 
         override fun openMainView(user: User?) {
-            Toast.makeText(
-                context,
-                "opening main view",
-                Toast.LENGTH_SHORT
-            ).show()
             onLoginButtonClicked()
         }
 

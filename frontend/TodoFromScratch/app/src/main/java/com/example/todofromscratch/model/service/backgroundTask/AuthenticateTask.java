@@ -16,7 +16,7 @@ public abstract class AuthenticateTask extends BackgroundTask {
 
     private User authenticatedUser;
 
-    private AuthToken authToken;
+    private AuthToken authtoken;
 
     /**
      * The user's username (or "alias" or "handle"). E.g., "@susan".
@@ -40,7 +40,7 @@ public abstract class AuthenticateTask extends BackgroundTask {
         Pair<User, AuthToken> loginResult = runAuthenticationTask();
 
         authenticatedUser = loginResult.getFirst();
-        authToken = loginResult.getSecond();
+        authtoken = loginResult.getSecond();
 
         // Call sendSuccessMessage if successful
         sendSuccessMessage();
@@ -53,7 +53,7 @@ public abstract class AuthenticateTask extends BackgroundTask {
     @Override
     protected void loadSuccessBundle(Bundle msgBundle) {
         msgBundle.putSerializable(USER_KEY, authenticatedUser);
-        msgBundle.putSerializable(AUTH_TOKEN_KEY, authToken);
+        msgBundle.putSerializable(AUTH_TOKEN_KEY, authtoken);
     }
 }
 

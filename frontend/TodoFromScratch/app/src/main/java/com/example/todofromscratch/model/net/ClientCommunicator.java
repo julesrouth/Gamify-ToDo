@@ -10,6 +10,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.example.todofromscratch.model.net.TweeterRemoteException;
 
@@ -42,7 +45,7 @@ class ClientCommunicator {
                 connection.setRequestProperty("Content-Type", "application/json");
 
                 String entityBody = JsonSerializer.serialize(requestInfo);
-                System.out.println(entityBody);
+                System.out.println("printing entityBody: " + entityBody);
                 try (DataOutputStream os = new DataOutputStream(connection.getOutputStream())) {
                     os.writeBytes(entityBody);
                     os.flush();
@@ -93,7 +96,8 @@ class ClientCommunicator {
             switch (connection.getResponseCode()) {
                 case HttpURLConnection.HTTP_OK:
                     String responseString = getResponse(connection.getInputStream());
-//                    System.out.println(responseString);
+                    System.out.println("ResponseString in ClientCommunicator: " + responseString);
+
                     return JsonSerializer.deserialize(responseString, returnType);
                 case HttpURLConnection.HTTP_BAD_REQUEST:
                     ErrorResponse errorResponse = getErrorResponse(connection);

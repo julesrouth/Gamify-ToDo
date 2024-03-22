@@ -30,14 +30,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todofromscratch.R
+import com.example.todofromscratch.game.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameMainScreen(
+    game: Game,
     onAdventureClicked : () -> Unit,
     onShopClicked : () -> Unit,
     onCharacterClicked : () -> Unit,
@@ -75,30 +78,35 @@ fun GameMainScreen(
 
             Box(
                 modifier = Modifier
-                    .weight(1f)
+//                    .weight(1f)
             ) {
                 Surface(
                     modifier = Modifier
-                        .fillMaxSize(),
-                    color = MaterialTheme.colorScheme.tertiaryContainer
+                        .fillMaxWidth(),
+//                    color = MaterialTheme.colorScheme.tertiaryContainer
+                    color = Color.LightGray,
                 ) {
-                    Column() {
-                        Text("Character Info placeholder",
+                    Column(
+                        modifier = Modifier
+                            .padding(7.dp)
+                    ) {
+                        Text("Player Info",
                             fontSize=30.sp)
-                        Text("Name:",
-                            fontSize=30.sp)
-                        Text("Level:",
-                            fontSize=30.sp)
+                        Text("Name: ",
+                            fontSize=20.sp)
+                        Text("Level: ${game.level}",
+                            fontSize=20.sp)
                         Text("Experience:",
-                            fontSize=30.sp)
-                        Text("Gold:",
-                            fontSize=30.sp)
+                            fontSize=20.sp)
+                        Text("Gold: ${game.gold}",
+                            fontSize=20.sp)
                     }
                 }
             }
             Spacer(
                 modifier = Modifier
                     .size(55.dp)
+                    .weight(1f)
             )
 
             Row(
@@ -114,6 +122,7 @@ fun GameMainScreen(
             Spacer(
                 modifier = Modifier
                     .size(25.dp)
+
             )
 
             Row(
@@ -129,6 +138,7 @@ fun GameMainScreen(
             Spacer (
                 modifier = Modifier
                     .size(65.dp)
+                    .weight(1f)
             )
 
             Row(
@@ -167,12 +177,12 @@ fun ShowButton(
     onClickAction : () -> Unit,
     textString : String
 ) {
-    val buttonWidth = 175.dp
-    val buttonHeight = 150.dp
-    val buttonFontSize = 25.sp
+    val buttonWidth = 130.dp //175.dp
+    val buttonHeight = 60.dp //150.dp
+    val buttonFontSize = 15.sp //25.sp
     Button(
         modifier = Modifier
-            .requiredSize(buttonWidth, buttonHeight)
+//            .requiredSize(buttonWidth, buttonHeight)
             .padding(5.dp),
         onClick = {
             onClickAction()
@@ -180,7 +190,9 @@ fun ShowButton(
     ) {
         Text(
             textString,
-            fontSize = buttonFontSize
+            fontSize = buttonFontSize,
+            modifier = Modifier
+                .padding(5.dp)
         )
     }
 }
@@ -193,7 +205,8 @@ fun GameMainScreenPreview() {
             onAdventureClicked = {},
             onShopClicked = {},
             onCharacterClicked = {},
-            onExitClicked = {}
+            onExitClicked = {},
+            game = Game()
         )
     }
 }

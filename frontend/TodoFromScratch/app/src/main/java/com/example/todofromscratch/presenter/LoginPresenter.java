@@ -1,13 +1,7 @@
 package com.example.todofromscratch.presenter;
 
-import android.util.Log;
-
-import com.example.todofromscratch.cache.Cache;
 import com.example.todofromscratch.model.service.UserService;
 import com.example.todofromscratch.model.service.backgroundTask.observer.AuthenticateObserver;
-import com.example.todofromscratch.model.domain.AuthToken;
-import com.example.todofromscratch.model.domain.User;
-import com.example.todofromscratch.model.net.request.LoginRequest;
 
 /**
  * The presenter for the login functionality of the application.

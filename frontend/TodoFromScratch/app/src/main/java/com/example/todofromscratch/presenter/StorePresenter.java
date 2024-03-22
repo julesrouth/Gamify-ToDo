@@ -30,7 +30,7 @@ public class StorePresenter implements GeneralObserver {
     }
 
     public void getStoreItems() {
-        view.showInfoMessage("Getting store items...");
+        // view.showInfoMessage("Getting store items...");
         Log.i("STORE_PRESENTER", "Getting list of store items");
         StoreService storeService = new StoreService();
         storeService.getStoreItems(this);

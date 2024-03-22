@@ -6,11 +6,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.todofromscratch.ui.GameMainScreen
 import com.example.todofromscratch.ui.ShopScreen
+import androidx.navigation.navArgument
+import com.example.todofromscratch.game.Game
 import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 import android.app.Application
 import kotlinx.coroutines.CoroutineScope
@@ -67,6 +70,7 @@ class MainActivity : ComponentActivity() {
                 LoginScreen(
                     onLoginButtonClicked = {
                         navController.navigate(Screen.MainScreen.route)
+//                           navController.navigate(Screen.GameMainScreen.route)
                     },
                     onRegisterClicked = {
                         navController.navigate(Screen.RegisterScreen.route)
@@ -88,15 +92,24 @@ class MainActivity : ComponentActivity() {
                 MainScreen(
                     onAddTaskButtonClicked = {
                         navController.navigate(Screen.AddTaskScreen.route)
-                    })
+                    },
+                    onTaskClicked = { task ->
+                        // Navigate to AddTaskScreen with task information
+                        navController.navigate("${Screen.AddTaskScreen.route}/${task.taskName}")
+                    },
+                    onMenuButtonClicked = {
+                        navController.navigate(Screen.GameMainScreen.route)
+                    }
+                )
             }
             composable(
-                route = Screen.AddTaskScreen.route,
+                route = Screen.AddTaskScreen.route
             ) {
                 AddTaskScreen(
                     onNextButtonClicked = {
-                        navController.navigate(Screen.MainScreen.route)
-                })
+                        navController.popBackStack()
+                    }
+                )
             }
             composable(
                 route = Screen.GameMainScreen.route
@@ -107,14 +120,43 @@ class MainActivity : ComponentActivity() {
                         navController.navigate(Screen.ShopScreen.route)
                     },
                     onCharacterClicked = {},
-                    onExitClicked = {}
+                    onExitClicked = {
+                        navController.navigate(Screen.MainScreen.route)
+                    },
+                    game = Game()
                 )
             }
             composable(
                 route = Screen.ShopScreen.route
             ) {
-                ShopScreen()
+                ShopScreen(
+                    onBackClicked = {
+                        navController.popBackStack()
+                    }
+                )
             }
+
+            composable(
+                route = "${Screen.AddTaskScreen.route}/{taskName}",
+                arguments = listOf(navArgument("taskName") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val taskName = backStackEntry.arguments?.getString("taskName")
+                val task = taskName?.let { Tasks.getInstance().getTaskbyName(it) }
+                AddTaskScreen(
+                    taskToUpdate = task,
+                    onNextButtonClicked = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+//            composable(
+//                route = Screen.AddTaskScreen.route,
+//            ) {
+//                AddTaskScreen(
+//                    onNextButtonClicked = {
+//                        navController.navigate(Screen.MainScreen.route)
+//                })
+//            }
         }
     }
 }
