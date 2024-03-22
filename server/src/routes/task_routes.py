@@ -7,7 +7,7 @@ from database.Model import Authtoken, Task
 from database.TaskDAO import TaskDAO
 from database.AuthtokenDAO import AuthtokenDAO
 from database.PlayerDAO import PlayerDAO
-from routes.notifications import Notifications
+from notifications import Notifications
 from database.conn import create_connection
 from tables import get_gold
 

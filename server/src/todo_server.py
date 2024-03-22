@@ -3,7 +3,7 @@ import routes.user_routes as user_routes
 import routes.task_routes as task_routes
 import routes.player_routes as player_routes
 import routes.item_routes as item_routes
-import routes.notifications as Notifications
+import notifications as Notifications
 from globals import app, notifications
 
 
