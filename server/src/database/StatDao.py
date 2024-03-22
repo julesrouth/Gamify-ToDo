@@ -1,4 +1,4 @@
-from database.Model import Stat
+from Model import Stat
 
 class StatDao:
     def __init__(self, conn):

@@ -1,4 +1,4 @@
-from database.Model import User
+from Model import User
 
 class UserDAO:
     def __init__(self, conn):

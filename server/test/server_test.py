@@ -134,7 +134,7 @@ def send_createTask(dest, userId, token):
             'taskName': "dishes",
             'description': "clean all of the dishes",
             'dueDate': "1/2/13,12:00,pm",
-            'difficulty' : "easy",
+            'difficulty' : "hard",
             'type': "daily",
             'userId': userId,
             'completed': False

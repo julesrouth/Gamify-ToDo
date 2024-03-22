@@ -3,7 +3,7 @@ import sys
 
 sys.path.append('..')
 
-from database.Model import Authtoken, Player
+from Model import Authtoken, Player
 from database.PlayerDAO import PlayerDAO
 from database.AuthtokenDAO import AuthtokenDAO
 from database.conn import create_connection

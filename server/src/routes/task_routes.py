@@ -3,7 +3,7 @@ import sys
 
 sys.path.append('..')
 
-from database.Model import Authtoken, Task
+from Model import Authtoken, Task
 from database.TaskDAO import TaskDAO
 from database.AuthtokenDAO import AuthtokenDAO
 from database.PlayerDAO import PlayerDAO
@@ -85,6 +85,11 @@ def createTask():
         except Exception as e:
             return jsonify({'success': False, 'message': str(e), 'task': None})
 
+    if task.completed == True:
+        task.completed = "true"
+    else:
+        task.completed = "false"
+
     return jsonify({'success': True, 'message': 'Task created', 'task': task.__dict__})
 
 
@@ -123,6 +128,11 @@ def getTask():
         if auth.userId != task.userId:
             return jsonify({'success': False, 'message': 'Token does not match user', 'task': None})
         
+    if task.completed == True:
+        task.completed = "true"
+    else:
+        task.completed = "false"
+        
     return jsonify({'success': True, 'message': 'Task found', 'task': task.__dict__})
 
 
@@ -156,6 +166,12 @@ def listTasksForUser():
             tasks = task_dao.find_by_userId(authtoken.userId)
         except Exception as e:
             return jsonify({'success': False, 'message': str(e), 'tasks': None})
+        
+    for task in tasks:
+        if task.completed == True:
+            task.completed = "true"
+        else:
+            task.completed = "false"
         
     return jsonify({'success': True, 'message': 'Tasks found', 'tasks': [task.__dict__ for task in tasks]})
 
@@ -250,6 +266,11 @@ def updateTask():
         except Exception as e:
             return jsonify({'success': False, 'message': str(e), 'task': None})
         
+    if new_task.completed == True:
+        new_task.completed = "true"
+    else:
+        new_task.completed = "false"
+        
     return jsonify({'success': True, 'message': 'Task updated', 'task': new_task.__dict__})
 
 
@@ -289,6 +310,9 @@ def checkTask():
         if task == None:
             return jsonify({'success': False, 'message': 'Task not found'})
         
+        if task.completed == completed:
+            return jsonify({'success': False, 'message': 'Task already checked'})
+
         task.completed = completed
 
         try:

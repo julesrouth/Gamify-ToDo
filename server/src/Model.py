@@ -25,6 +25,23 @@ class LoginResponse:
         else:
             self.user = None
 
+class RegisterResponse:
+    def __init__(self, success, message, authtoken, user, player):
+        self.success = success
+        self.message = message
+        if authtoken is not None:
+            self.authtoken = authtoken.__dict__
+        else:
+            self.authtoken = None
+        if user is not None:
+            self.user = user.__dict__
+        else:
+            self.user = None
+        if player is not None:
+            self.player = player.__dict__
+        else:
+            self.player = None
+
 class Task:
     def __init__(self, taskId, taskName, description, dueDate, difficulty, type, userId, completed):
         self.taskId = taskId

@@ -1,4 +1,4 @@
-from database.Model import Task
+from Model import Task
 
 class TaskDAO:
     def __init__(self, conn):
