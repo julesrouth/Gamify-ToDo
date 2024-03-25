@@ -6,13 +6,15 @@ import Item
 import Move
 import Statuses
 import Stat
+import Stances
 
 class Enemy():
+    stance = Stances.Stance.DEFEND
     stat = 0
     shielding = 0
     lastMoveInit = 0
     status = Statuses.Statuses()
-    moves = [Move.Move(GameEnum.MoveType.ATTACK, 2, 100), Move.Move(GameEnum.MoveType.DEFEND, 2, 75)]
+    moves = [Move.Move(GameEnum.MoveType.ATTACK, 2, 100, name="Slash"), Move.Move(GameEnum.MoveType.DEFEND, 2, 75, name="Shield")]
     def __init__(self):
         self.stat = Stat.Stat()
         self.initiative = 10

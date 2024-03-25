@@ -59,7 +59,7 @@ class Statuses():
             if i[1] <= time:
                 self.clear.remove(i)
                 self.setStatus(i[0], 0)
-                tempList.append("Cleared: " + str(i[0]) + "\n")
+                tempList.append("Cleared: " + str(i[0]) + "")
                  
         return tempList
     

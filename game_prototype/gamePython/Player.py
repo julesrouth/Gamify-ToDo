@@ -6,6 +6,7 @@ import GameEnum
 import math
 import copy
 import Map
+import Stances
 
 class Inventory():
     items = []
@@ -24,6 +25,7 @@ class Inventory():
 
 
 class Player:
+    stance = Stances.Stance.ATTACK
     gold = 100
     location = [0, 0]
     stat = 0

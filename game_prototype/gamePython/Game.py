@@ -9,9 +9,11 @@ from collections import deque
 import time
 import Global
 import math
-
+import Stances
+LOG_LENGTH = 4
 class Game():
-    message_log =  deque(maxlen=4)
+    stances = Stances.StanceGrid()
+    message_log =  deque(maxlen=LOG_LENGTH)
     combatTime = 0
 
     player = 0
@@ -22,6 +24,8 @@ class Game():
         self.map = Map.Map()
         self.currentEnemy = Enemy.Enemy()
         self.shop = Shop.Shop()
+        for i in range(LOG_LENGTH):
+            self.message_log.append("")
     
     def userInputShop(self):
         while True:
@@ -41,8 +45,10 @@ class Game():
             print("Invalid item")
             time.sleep(.5)
 
+
+
     def moveOnMap(self):
-            (Global.printColoredString(map.getSurrounding(player.location[0], player.location[1])))
+            (Global.printColoredString(map.getSurrounding(self.player.location[0], self.player.location[1])))
             print("\n\n")
             print("Input gameElements.Direction\n")
             inputDir = input()
@@ -85,10 +91,10 @@ class Game():
         return 1
     
 
-    def damageCalc(self, attack, defense, attackerLevel = 1, defenderLevel = 1):
+    def damageCalc(self, attack, defense, adv = 1, attackerLevel = 1, defenderLevel = 1):
         attackDefenseRatio = attack/( defense/2)
         levelRatio = attackerLevel/defenderLevel
-        adv = self.typeAdvantage(0, 0)
+        # adv = self.typeAdvantage(0, 0)
         randomValue = random.randint(90, 110)/100
         return math.ceil(attackDefenseRatio * levelRatio * adv * randomValue)
     
@@ -100,9 +106,18 @@ class Game():
         # print("YAH: ", damage)
         self.currentEnemy.stat.health -= damage
 
+
+    def getStanceValue(self , player = 1):
+        print("Player: ", self.player.stance)
+        print("STR: ", int(self.player.stance))
+        print("Enemy: ", self.currentEnemy.stance)
+        if player:
+            return self.stances.getStance(self.player.stance, self.currentEnemy.stance)
+        else:
+            return self.stances.getStance(self.currentEnemy.stance, self.player.stance)
     def resolvePlayerMove(self, playerMove):
         if playerMove.moveType == GameEnum.MoveType.ATTACK:
-            damage = self.damageCalc(self.player.getAttack() * playerMove.power, self.currentEnemy.getDefense())
+            damage = self.damageCalc(self.player.getAttack() * playerMove.power, self.currentEnemy.getDefense(), self.getStanceValue())
             # print("DAMAGE: ", damage)
             #action str
             actionStr = "Player used " + playerMove.name + " for " + str(damage) + " damage"
@@ -171,7 +186,7 @@ class Game():
         if enemyMove.moveType == GameEnum.MoveType.ATTACK:
             # print("ENEMY ATTACKED")
             
-            damage = self.damageCalc(self.currentEnemy.getAttack() * enemyMove.power, self.player.getDefense())
+            damage = self.damageCalc(self.currentEnemy.getAttack() * enemyMove.power, self.player.getDefense(), self.getStanceValue(0))
             # print("Enemy DAMAGE: ", damage)
 
             self.damagePlayer(damage)

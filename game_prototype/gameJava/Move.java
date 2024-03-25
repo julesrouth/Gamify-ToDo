@@ -21,6 +21,7 @@ public class Move {
         this(moveType, power, speed, "", name);
     }
 
+
     public String getName() {
         return name;
     }

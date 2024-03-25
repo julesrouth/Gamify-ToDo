@@ -1,0 +1,10 @@
+potion
+attack
+attack
+use an item
+potion
+defend
+defend
+use an item
+potion
+defend

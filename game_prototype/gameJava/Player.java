@@ -14,7 +14,7 @@ class Player {
     private int[] location;
     private Stat stat;
     private int shielding;
-    private int lastMoveInit;
+    private int lastMoveInit = -1;
     private Inventory inventory;
     private List<Move> moves;
     private int initiative;

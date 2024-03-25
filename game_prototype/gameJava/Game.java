@@ -9,11 +9,15 @@ public class Game {
     private Stances.StanceGrid stances;
     private Deque<String> messageLog;
     private int combatTime;
+    private int printCnt;
 
     private Player player;
     private Map map;
     private Enemy currentEnemy;
     private Shop shop;
+    private boolean needPlayerInput = true;
+    private Move nextPlayerMove = null;
+
 
     public static final int LOG_LENGTH = 5;
 
@@ -27,7 +31,11 @@ public class Game {
 
         this.player = new Player(0, 0);
         this.map = new Map();
+        // this.currentEnemy = new Enemy();
         this.currentEnemy = new Enemy();
+        this.currentEnemy.initEnemyList();
+        this.currentEnemy = this.currentEnemy.getRandomEnemy();
+
         this.shop = new Shop();
 
         for (int i = 0; i < LOG_LENGTH; i++) {
@@ -192,11 +200,71 @@ public class Game {
         }
     }
 
+    public void resetCombat(){
+        this.combatTime = 0;
+        this.player.setInitiative(0);
+        this.currentEnemy.setInitiative(0);
+        this.printCnt = 0;
+    }
 
-        public void combat() {
+    public void combatTick(){
+        Global.clearScreen();
+        // this.combatTime = 0;
+        // int printCnt = 0;
+
+            this.printCombatStatus();
+            List<String> tempStatus = this.player.getStatus().checkStatus(this.combatTime);
+            if (tempStatus != null) {
+                for (String i : tempStatus) {
+                    this.messageLog.addLast(i);
+                }
+            }
+
+            this.printCnt++;
+            
+
+            if(this.needPlayerInput == true){
+                System.out.println("Need player input");
+                return;
+            }
+            if (this.combatTime >= this.player.getInitiative()) {
+                System.out.println("Resolving Move");
+                // Move playerMove = this.player.getMove();
+                System.out.println(this.nextPlayerMove.getName());
+                this.resolvePlayerMove(this.nextPlayerMove);
+                this.nextPlayerMove = null;
+                this.needPlayerInput = true;
+            }
+
+            if (this.combatTime >= this.currentEnemy.getInitiative()) {
+                Move enemyMove = this.currentEnemy.getMove();
+                this.resolveEnemyMove(enemyMove);
+            }
+
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (this.player.getStat().getHealth() <= 0) {
+                System.out.println("You lose");
+                return;
+            }
+
+            if (this.currentEnemy.getStat().getHealth() <= 0) {
+                System.out.println("You win");
+                return;
+            }
+
+            this.combatTime++;
+    
+    }
+
+    public void combat() {
         Global.clearScreen();
         this.combatTime = 0;
-        int printCnt = 0;
+        this.printCnt = 0;
 
         while (true) {
             this.printCombatStatus();
@@ -207,7 +275,7 @@ public class Game {
                 }
             }
 
-            printCnt++;
+            this.printCnt++;
             
             if (this.combatTime >= this.player.getInitiative()) {
                 Move playerMove = this.player.getMove();
@@ -215,7 +283,7 @@ public class Game {
             }
 
             if (this.combatTime >= this.currentEnemy.getInitiative()) {
-                Move enemyMove = this.currentEnemy.move();
+                Move enemyMove = this.currentEnemy.getMove();
                 this.resolveEnemyMove(enemyMove);
             }
 
@@ -285,6 +353,12 @@ public class Game {
         System.out.println('\n');
     }
 
+
+    public void setPlayerMove(Move move){
+        this.needPlayerInput = false;
+        this.nextPlayerMove = move;
+    }
+
     public void resolveEnemyMove(Move enemyMove) {
         if (enemyMove.getMoveType() == GameEnum.MoveType.ATTACK) {
             int damage = this.damageCalc(
@@ -313,7 +387,14 @@ public class Game {
         }
 
         Global.clearScreen();
-        String tempStr = "Player:";
+        
+        String tempStr = currentEnemy.getName();
+        //Print out the moves
+        tempStr += "  Moves: ";
+        for (Move i : this.currentEnemy.getMoves()) {
+            tempStr += i.getName() + " ";
+        }
+        tempStr += "\nPlayer:";
         double tempHealthRatio = (double)(this.player.getStat().getHealth()) / (double)(this.player.getStat().getMaxHealth());
         tempHealthRatio = Math.ceil(tempHealthRatio * 10.0) / 10.0;
         tempStr += "Health Bar[" + "X".repeat((int) (tempHealthRatio * 10)) + " ".repeat(10 - (int) (tempHealthRatio * 10)) + "]\n";
@@ -326,6 +407,8 @@ public class Game {
             tempStr += "Action [" + "X".repeat(percentInitPlayer) + " ".repeat(10 - percentInitPlayer) + "]\n\n";
         } catch (Exception e) {
             e.printStackTrace();
+            tempStr += "Action [" + "X".repeat(10) + " ".repeat(0) + "]\n\n";
+
         }
 
         tempStr += "Enemy:";
@@ -341,6 +424,8 @@ public class Game {
             tempStr += "Action [" + "X".repeat(percentInitEnemy) + " ".repeat(10 - percentInitEnemy) + "]\n\n";
         } catch (Exception e) {
             e.printStackTrace();
+            tempStr += "Action [" + "X".repeat(10) + " ".repeat(0) + "]\n\n";
+
         }
 
         for (String i : this.messageLog) {
@@ -350,9 +435,24 @@ public class Game {
         System.out.println(tempStr);
     }
 
-
+    public boolean getNeedPlayerInput() {
+        return this.needPlayerInput;
+    }
     public static void main(String[] args) {
         Game game = new Game();
+        game.resetCombat();
+        int counter = 0;
+        while(true){
+            counter++;
+            if(counter > 10000){
+                break;
+            }
+            game.combatTick();
+            if(game.getNeedPlayerInput() == true){
+                Move tempMove = game.player.getMove();
+                game.setPlayerMove(tempMove);
+            }
+        }
         game.combat();
     }
 }
