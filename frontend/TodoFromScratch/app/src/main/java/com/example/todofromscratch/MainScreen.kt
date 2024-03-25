@@ -181,6 +181,14 @@ fun MainScreen(
                         onCheckedChange = {
                             checkedState.value = it
                             task.completed = checkedState.value
+                            println("Completed: " + task.completed);
+                            if (checkedState.value) {
+                                // Call your function here
+                                taskPresenter.checkTask(task)
+                                println("in checkedState.value!!")
+                                println("task.completed value in if statement: " + task.completed)
+//                                task.completed = "true";
+                            }
                         },
                         modifier = Modifier.padding(5.dp)
                     )

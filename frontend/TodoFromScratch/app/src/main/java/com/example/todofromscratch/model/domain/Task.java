@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class Task implements Serializable {
 
+    public int taskId;
     public String taskName;
     public String description;
     public String dueDate;
@@ -19,9 +20,9 @@ public class Task implements Serializable {
     public Task() {
     }
 
-    public Task(String taskName, String description, String dueDate,
+    public Task(int taskId, String taskName, String description, String dueDate,
                 String difficulty, String type, String userId, Boolean completed) {
-//        this.taskId = taskId;
+        this.taskId = taskId;
         this.taskName = taskName;
         this.description = description;
         this.dueDate = dueDate;
@@ -37,7 +38,7 @@ public class Task implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
         return
-//                Objects.equals(taskName, task.taskName) &&
+                Objects.equals(taskName, task.taskName) &&
                 Objects.equals(description, task.description) &&
                 Objects.equals(dueDate, task.dueDate) &&
                 Objects.equals(difficulty, task.difficulty) &&
@@ -53,8 +54,8 @@ public class Task implements Serializable {
 
     @Override
     public String toString() {
-        return "Status{" +
-//                "taskId='" + taskId + '\'' +
+        return "Task{" +
+                "taskId='" + taskId + '\'' +
                 ", taskName=" + taskName +
                 ", description=" + description +
                 ", dueDate=" + dueDate +
@@ -65,4 +66,67 @@ public class Task implements Serializable {
                 '}';
     }
 
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
+    }
 }
