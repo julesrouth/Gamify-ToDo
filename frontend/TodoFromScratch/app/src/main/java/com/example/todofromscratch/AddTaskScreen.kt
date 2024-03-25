@@ -327,7 +327,6 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                         // Update task logic
                         taskToUpdate.taskName = name
                         taskToUpdate.dueDate = dateStr
-                        // TODO:: Update the task using the presenter or any appropriate method
                     }
                     onNextButtonClicked()
                 },
