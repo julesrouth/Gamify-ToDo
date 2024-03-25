@@ -46,8 +46,12 @@ def updatePlayerStat():
     try:
         json_data = request.get_json()
         stat = Stat(json_data['stat']['userId'], 
-                    json_data['stat']['health'], 
-                    # add more fields here
+                    json_data['stat']['attack'], 
+                    json_data['stat']['defense'],
+                    json_data['stat']['level'],
+                    json_data['stat']['speed'],
+                    json_data['stat']['maxHealth'],
+                    json_data['stat']['maxMana']
                     )
         authtoken  = Authtoken(json_data['authtoken']['token'], json_data['authtoken']['userId'])
     except Exception as e:
