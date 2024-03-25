@@ -94,8 +94,8 @@
 - attack INT
 - defence INT
 ### Methods
-- getPlayerStats(AuthToken)
-- updatePlayerStats(Stat, Authtoken)
+- getPlayerStat(AuthToken)
+- updatePlayerStat(Stat, Authtoken)
 
 ![alt text](https://github.com/julesrouth/Gamify-ToDo/blob/main/images/Tables.png)
 ![alt text](https://github.com/julesrouth/Gamify-ToDo/blob/main/images/Flow.png)
