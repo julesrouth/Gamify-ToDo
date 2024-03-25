@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.todofromscratch.ui.AdventureScreen
+import com.example.todofromscratch.ui.CharacterScreen
 import com.example.todofromscratch.ui.GameMainScreen
 import com.example.todofromscratch.ui.ShopScreen
 import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
@@ -39,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
         NavHost(
             navController = navController,
-            startDestination = Screen.LoginScreen.route
+            startDestination = Screen.GameMainScreen.route
         ) {
             composable(route = Screen.LoginScreen.route) {
                 LoginScreen(
@@ -80,18 +82,41 @@ class MainActivity : ComponentActivity() {
                 route = Screen.GameMainScreen.route
             ) {
                 GameMainScreen(
-                    onAdventureClicked = {},
+                    onAdventureClicked = {
+                        navController.navigate(Screen.AdventureScreen.route)
+
+                    },
                     onShopClicked = {
                         navController.navigate(Screen.ShopScreen.route)
                     },
-                    onCharacterClicked = {},
-                    onExitClicked = {}
+                    onCharacterClicked = {
+                        navController.navigate(Screen.CharacterScreen.route)
+                    },
+                    onExitClicked = {
+                        navController.navigateUp()
+                    }
+
                 )
             }
             composable(
                 route = Screen.ShopScreen.route
             ) {
                 ShopScreen()
+            }
+            composable(
+                route = Screen.CharacterScreen.route
+            ) {
+                CharacterScreen(
+                    onBackButtonClicked = {
+                        navController.navigateUp()
+                    }
+                )
+        }
+            composable(
+                route = Screen.AdventureScreen.route
+            ) {
+                AdventureScreen(
+                )
             }
         }
     }

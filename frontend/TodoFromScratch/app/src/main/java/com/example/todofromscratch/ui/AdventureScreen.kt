@@ -1,6 +1,6 @@
 package com.example.todofromscratch.ui
 
-import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,12 +32,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,87 +43,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todofromscratch.R
 import com.example.todofromscratch.cache.Cache
-import com.example.todofromscratch.model.domain.StoreItem
-import com.example.todofromscratch.presenter.StorePresenter
 import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
+import com.example.todofromscratch.model.domain.Player
+import com.example.todofromscratch.model.domain.Stat
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShopScreen() {
+fun AdventureScreen(
 
-    /* TODO next.
-    *   Update gold when item is purchased.
-    * */
-
+) {
+    //Set up Variables
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val context = LocalContext.current
-    val storeItems = remember {mutableStateListOf<StoreItem>()}
-    val playerItemsMap = remember { mutableMapOf<String, Int>()}
-    val recomposeToggleState = remember { mutableStateOf(false) } // used to force recompose
+    val stat = Cache.getInstance().currPlayer.getStat()
+    val imageSize = 50.dp
+    val textSize = 30.sp
+    val smallTextSize = 25.sp
+    val boxSize = 55.dp
+    val game = Cache.getInstance().game
 
-    class GeneralView (onSuccess : () -> Unit) : StorePresenter.View {
 
-        var onSuccess: (() -> Unit)? = onSuccess
-
-        override fun showInfoMessage(message: String?) {
-            Toast.makeText(
-                context,
-                message,
-                Toast.LENGTH_LONG
-            ).show()
-        }
-
-        override fun taskSuccess(message: String?) {
-            Toast.makeText(
-                context,
-                message,
-                Toast.LENGTH_SHORT
-            ).show()
-            onSuccess?.invoke()
-        }
-
-        override fun taskFail(message: String?) {
-            Toast.makeText(
-                context,
-                message,
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-
-    val storePresenter = StorePresenter(GeneralView {for (item in Cache.getInstance().storeItems.items) {
-        storeItems.add(item);
-    }})
-
-    if (Cache.getInstance().storeItems.items == null) {
-        // get storeItems from database
-        println("Store items is null. So getting them");
-        storePresenter.getStoreItems();
-    }
-
-    if (Cache.getInstance().playerItems.isEmpty()) {
-        // get storeItems from database
-        println("Player items is null. So getting them");
-        val listPlayerItemsPresenter = StorePresenter(GeneralView {
-            println("In general view success for listing player items")
-            for (item in Cache.getInstance().playerItems) {
-                if (playerItemsMap.containsKey(item.itemName)) {
-                    playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
-                } else {
-                    playerItemsMap[item.itemName] = 1
-                }
-            }
-            for (item in Cache.getInstance().storeItems.items) {
-                if (playerItemsMap.containsKey(item.itemName)) {
-                    continue;
-                }
-                playerItemsMap[item.itemName] = 0
-            }
-        })
-        listPlayerItemsPresenter.listPlayerItems();
-    }
-
-    val purchaseItemPresenter = StorePresenter(GeneralView {})
+    // Your blank screen UI goes here
 
     Scaffold(
         topBar = {
@@ -136,10 +74,9 @@ fun ShopScreen() {
                 ),
                 title = {
                     Text(
-                        "Shop",
+                        "Adventure",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
-
 
                     )
                 },
@@ -158,84 +95,79 @@ fun ShopScreen() {
         },
     ) { paddingValues ->
 
+
+        Spacer(modifier = Modifier.height(40.dp))
+
         Column(
             modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
+                .padding(50.dp)
+
         ) {
-            Row(
+            val textContent = remember { mutableStateOf(
+                "Health: ${game.playerStat.health}\n" +
+                        "Enemy Health: ${game.getEnemyStat().health}\n" +
+                        "Player Initiative: ${game.getPlayerInitiative()}\n" +
+                        "Enemy Initiative: ${game.getEnemyInitiative()}"
+            )}
+
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-            ) {
-                Spacer(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
+                    .padding(paddingValues)
+                    .size(width = 250.dp, height = 175.dp)
+                    .clickable(onClick = {
+                        println("Advancing Combat")
+                        game.combatTick()
+                        println(game.playerStat.health)
+                    val newText = "Health: ${game.playerStat.health}\n" +
+                                "Enemy Health: ${game.getEnemyStat().health}\n" +
+                                "Player Initiative: ${game.getPlayerInitiative()}\n" +
+                                "Enemy Initiative: ${game.getEnemyInitiative()}"
+                        // Set the new text
+                        // This assumes you have access to the Text composable and can update its content
+                        // You may need to modify this part based on your actual implementation
+                        textContent.value = "Health: ${game.playerStat.health}\n" +
+                                "Enemy Health: ${game.getEnemyStat().health}\n" +
+                                "Player Initiative: ${game.getPlayerInitiative()}\n" +
+                                "Enemy Initiative: ${game.getEnemyInitiative()}"
+
+                    }),
+
+                ){
+                Text(
+                    textContent.value,
+                     fontSize = 20.sp,
+                    modifier = Modifier.padding(8.dp).align(Alignment.Center)
+
                 )
-                Box(
-                    modifier=Modifier
-                        .width(150.dp)
-                        .height(50.dp)
-                ) {
-                    Surface(
-                        color = MaterialTheme.colorScheme.tertiaryContainer,
-                        modifier = Modifier
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(5.dp, 1.dp)
-                        ) {
-                            Text("Gold",
-                                fontSize = 25.sp,
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                            )
-                            Spacer(Modifier.weight(1f))
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_android_gold_24dp),
-                                contentDescription = "Localized description",
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                            )
-                            Text("x" + 500,
-                                fontSize = 15.sp,
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically))
-                        }
-                    }
-                }
+
             }
 
-            Icon(
-                painter = painterResource(id = R.drawable.baseline_warehouse_24),
-                contentDescription = "Item",
+            Box(
                 modifier = Modifier
-                    .size(105.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
+                    .padding(paddingValues),
+            ){
+
+            }
+
+
 
             LazyColumn (
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                items(storeItems) { item ->
+                items(Cache.getInstance().game.getPlayerMoves()) { move ->
                     Card(
                         modifier = Modifier
                             .padding(15.dp, 10.dp)
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
                         elevation = CardDefaults.cardElevation(
-                            defaultElevation = 6.dp
+                            defaultElevation = 6.dp,
+
                         ),
                         onClick = {
-                            purchaseItemPresenter.addItem(item.itemName)
-                            playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
-                            recomposeToggleState.value = !recomposeToggleState.value
-
-                            // TODO update gold
-//                            Cache.getInstance().currPlayer.gold = Cache.getInstance().currPlayer.gold - item.cost
+                            println(move.getName())
+                            game.setPlayerMove(move);
                         }
                     )
                     {
@@ -244,32 +176,26 @@ fun ShopScreen() {
                                 .fillMaxWidth()
                                 .padding(15.dp, 1.dp),
                         ) {
-                            Icon(
-                                imageVector = Icons.Filled.AddCircle,
-                                contentDescription = "Item",
-                                modifier = Modifier
-                                    .size(35.dp)
-                                    .align(Alignment.CenterVertically)
-                            )
+
                             Column(
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
                                     .weight(1f)
                             ) {
                                 Text(
-                                    item.itemName,
+                                    move.getName(),
                                     modifier = Modifier
                                         .padding(15.dp, 1.dp),
                                     fontSize = 30.sp
                                 )
                                 Text(
-                                    item.effects,
+                                    "Something",
                                     modifier = Modifier
                                         .padding(15.dp, 1.dp),
                                     fontSize = 15.sp
                                 )
                                 Text(
-                                    "You currently have ${playerItemsMap[item.itemName]}",
+                                    "You currently have ",
                                     modifier = Modifier
                                         .padding(15.dp, 1.dp),
                                     fontSize = 10.sp
@@ -278,7 +204,7 @@ fun ShopScreen() {
 //                            Spacer(Modifier.weight(0.5f))
                             Spacer(Modifier)
                             Text(
-                                "${item.cost} Gold",
+                                " Gold",
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
                                     .padding(5.dp, 1.dp)
@@ -297,14 +223,21 @@ fun ShopScreen() {
             }
         }
 
-        LaunchedEffect(recomposeToggleState.value) {} // used to force recompose
     }
 }
 
+
+
+
+
 @Preview
 @Composable
-fun ShopScreenPreview() {
+fun AdventureScreenPreview() {
     TodoFromScratchTheme {
-        ShopScreen()
+        AdventureScreen(
+
+        )
+
     }
 }
+

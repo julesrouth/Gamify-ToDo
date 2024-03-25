@@ -109,6 +109,7 @@ fun GameMainScreen(
             ) {
                 ShowButton(onAdventureClicked, "Adventure")
                 ShowButton(onShopClicked, "Shop")
+
             }
 
             Spacer(

@@ -10,16 +10,8 @@ import com.example.todofromscratch.model.net.request.LoginRequest;
 public class LoginResponse extends Response {
 
     private User user;
-    private String username;
-    private String token;
-    private AuthToken authToken;
+    private AuthToken authtoken;
 
-    public LoginResponse(String username, String token) {
-        super(true, null);
-        System.out.println("In login response constructor");
-        this.username = username;
-        this.token = token;
-    }
 
     /**
      * Creates a response indicating that the corresponding request was unsuccessful.
@@ -28,7 +20,6 @@ public class LoginResponse extends Response {
      */
     public LoginResponse(String message) {
         super(false, message);
-        System.out.println("In login response constructor");
     }
 
     /**
@@ -40,8 +31,7 @@ public class LoginResponse extends Response {
     public LoginResponse(User user, AuthToken authToken) {
         super(true, null);
         this.user = user;
-        this.authToken = authToken;
-        System.out.println("In login response constructor");
+        this.authtoken = authToken;
     }
 
     /**
@@ -59,6 +49,6 @@ public class LoginResponse extends Response {
      * @return the auth token.
      */
     public AuthToken getAuthToken() {
-        return authToken;
+        return authtoken;
     }
 }
