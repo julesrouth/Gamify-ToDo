@@ -80,10 +80,11 @@ class StoreItem:
         self.cost = cost
 
 class Stat:
-    def __init__(self, userId, health,  defense, attack, speed, strength):
+    def __init__(self, userId, attack, defense, level, speed, maxHealth, maxMana):
         self.userId = userId
-        self.health = health
-        self.defense = defense
         self.attack = attack
+        self.defense = defense
+        self.level = level
         self.speed = speed
-        self.strength = strength
+        self.maxHealth = maxHealth
+        self.maxMana = maxMana
