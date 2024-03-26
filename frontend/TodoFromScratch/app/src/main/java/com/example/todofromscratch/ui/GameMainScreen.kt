@@ -26,8 +26,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
@@ -54,12 +56,12 @@ fun GameMainScreen(
     onCharacterClicked : () -> Unit,
     onExitClicked : () -> Unit,
 ) {
+    println("Composing. Player is ${Cache.getInstance().currPlayer?.characterName}")
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val context = LocalContext.current
-    val gettingPlayer = remember { mutableStateOf(false) }
-    val recomposeToggleState = remember { mutableStateOf(false) } // used to force recompose
-
+    var gettingPlayer by remember { mutableStateOf(false) }
+    var playerToDisplay by remember { mutableStateOf(Cache.getInstance().currPlayer)}
 
     open class GeneralView (onSuccess : () -> Unit) : PlayerPresenter.View {
 
@@ -69,7 +71,7 @@ fun GameMainScreen(
             Toast.makeText(
                 context,
                 message,
-                Toast.LENGTH_LONG
+                Toast.LENGTH_SHORT
             ).show()
         }
 
@@ -87,13 +89,14 @@ fun GameMainScreen(
     }
 
     if (Cache.getInstance().currPlayer == null) {
-        if (!gettingPlayer.value) {
-            gettingPlayer.value = true;
+        if (!gettingPlayer) {
+            gettingPlayer = true;
             println("Player is null so getting player")
 
             val playerPresenter = PlayerPresenter(GeneralView {
                 println(Cache.getInstance().currPlayer.characterName)
-                recomposeToggleState.value = !recomposeToggleState.value
+                gettingPlayer = false
+                playerToDisplay = Cache.getInstance().currPlayer
             })
             playerPresenter.getPlayer();
         }
@@ -138,16 +141,15 @@ fun GameMainScreen(
                         modifier = Modifier
                             .padding(7.dp)
                     ) {
-                        val player = Cache.getInstance().currPlayer
                         Text("Player Info",
                             fontSize=30.sp)
-                        Text("Name: ${player?.characterName}",
+                        Text("Name: ${playerToDisplay?.characterName}",
                             fontSize=20.sp)
-                        Text("Level: ${game.level}",
+                        Text("Level: ${playerToDisplay?.level}",
                             fontSize=20.sp)
-                        Text("Experience: ${player?.experience}",
+                        Text("Experience: ${playerToDisplay?.experience}",
                             fontSize=20.sp)
-                        Text("Gold: ${game.gold}",
+                        Text("Gold: ${playerToDisplay?.gold}",
                             fontSize=20.sp)
                     }
                 }
@@ -219,7 +221,6 @@ fun GameMainScreen(
             }
         }
     }
-    LaunchedEffect(recomposeToggleState.value) {} // used to force recompose
 }
 
 @Composable

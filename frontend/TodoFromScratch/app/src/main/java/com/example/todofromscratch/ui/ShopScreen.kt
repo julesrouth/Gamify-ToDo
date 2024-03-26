@@ -32,9 +32,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,11 +58,6 @@ import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 fun ShopScreen(
     onBackClicked: () -> Unit
 ) {
-
-    /* TODO next.
-    *   Update gold when item is purchased.
-    * */
-
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val context = LocalContext.current
     val storeItems = remember {mutableStateListOf<StoreItem>()}
@@ -67,6 +65,7 @@ fun ShopScreen(
     val recomposeToggleState = remember { mutableStateOf(false) } // used to force recompose
     val gettingStoreItems = remember { mutableStateOf(false) }
     val gettingPlayerItems = remember { mutableStateOf(false) }
+    var goldDisplayed by remember { mutableIntStateOf(Cache.getInstance().currPlayer.gold) }
 
     open class GeneralView (onSuccess : () -> Unit) : StorePresenter.View {
 
@@ -132,7 +131,7 @@ fun ShopScreen(
                     }
                     playerItemsMap[item.itemName] = 0
                 }
-                recomposeToggleState.value = !recomposeToggleState.value
+//                recomposeToggleState.value = !recomposeToggleState.value
             })
             listPlayerItemsPresenter.listPlayerItems()
         }
@@ -151,15 +150,15 @@ fun ShopScreen(
             }
             playerItemsMap[item.itemName] = 0
         }
-        recomposeToggleState.value = !recomposeToggleState.value
+//        recomposeToggleState.value = !recomposeToggleState.value
     }
 
-    class PurchaseItemView (onSuccess : (String) -> Unit, val itemName: String) : StorePresenter.View {
+    class PurchaseItemView (onSuccess : (StoreItem) -> Unit, val item: StoreItem) : StorePresenter.View {
 
-        var onSuccess: ((String) -> Unit)? = onSuccess
+        var onSuccess: ((StoreItem) -> Unit)? = onSuccess
 
         override fun taskSuccess(message: String?) {
-            onSuccess?.invoke(itemName)
+            onSuccess?.invoke(item)
         }
         override fun showInfoMessage(message: String?) {
             Toast.makeText(
@@ -250,7 +249,8 @@ fun ShopScreen(
                                     .align(Alignment.CenterVertically),
                                 tint = Color.Unspecified
                             )
-                            Text("x" + Cache.getInstance().currPlayer.gold,
+                            Text(
+                                "x$goldDisplayed",
                                 fontSize = 15.sp,
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically))
@@ -282,18 +282,17 @@ fun ShopScreen(
                         ),
                         onClick = {
                             val purchaseItemPresenter = StorePresenter(PurchaseItemView(
-                                itemName = item.itemName,
-                                onSuccess = { itemName ->
-                                    playerItemsMap[itemName] = playerItemsMap[itemName]!! + 1
-                                    recomposeToggleState.value = !recomposeToggleState.value
+                                item = item,
+                                onSuccess = { item ->
+                                    playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
+                                    println("Player gold is ${Cache.getInstance().currPlayer.gold}")
+                                    println("Item cost is ${item.cost}")
+                                    Cache.getInstance().currPlayer.gold = Cache.getInstance().currPlayer.gold - item.cost
+                                    println("Player gold is now ${Cache.getInstance().currPlayer.gold}")
+                                    goldDisplayed -= item.cost
                                 }
                             ))
                             purchaseItemPresenter.addItem(item.itemName)
-//                            playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
-//                            recomposeToggleState.value = !recomposeToggleState.value
-
-                            // TODO update gold
-//                            Cache.getInstance().currPlayer.gold = Cache.getInstance().currPlayer.gold - item.cost
                         }
                     )
                     {
@@ -355,7 +354,6 @@ fun ShopScreen(
                 }
             }
         }
-
         LaunchedEffect(recomposeToggleState.value) {} // used to force recompose
     }
 }

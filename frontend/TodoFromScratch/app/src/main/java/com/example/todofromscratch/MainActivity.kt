@@ -77,6 +77,7 @@ class MainActivity : ComponentActivity() {
                         navController.navigate("${Screen.AddTaskScreen.route}/${task.taskName}")
                     },
                     onMenuButtonClicked = {
+                        Cache.getInstance().currPlayer = null;
                         navController.navigate(Screen.GameMainScreen.route)
                     },
                     onLogoutClicked = {
@@ -105,7 +106,6 @@ class MainActivity : ComponentActivity() {
                     onCharacterClicked = {},
                     onExitClicked = {
                         navController.navigate(Screen.MainScreen.route)
-                        Cache.getInstance().currPlayer = null;
                     },
                     game = Game()
                 )
