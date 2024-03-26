@@ -170,13 +170,22 @@ public class Game {
     public int damageCalc(int attack, int defense) {
         return damageCalc(attack, defense, 1);
     }
-    public boolean spellDoSomething(Move spell) {
-        if ("fireball".equals(spell.getName())) {
-            if (this.player.getStat().getMana() < spell.getManaCost()) {
+
+
+    public boolean enoughMana(Move spell){
+        if(this.player.getStat().getMana() < spell.getManaCost()){
                 this.messageLog.addLast(
-                        "Not enough mana for fireball, you need " + spell.getManaCost() +
+                        "Not enough mana for " + spell.getName() + ", you need " + spell.getManaCost() +
                                 " mana, you have " + this.player.getStat().getMana() + " mana"
-                );
+                );            
+                return false;
+        }
+        return true;
+    }
+    public boolean spellDoSomething(Move spell) {
+        
+        if ("fireball".equals(spell.getName())) {
+            if (!enoughMana(spell)) {
                 return false;
             }
             this.player.getStat().setMana(this.player.getStat().getMana() - spell.getManaCost());
@@ -188,7 +197,67 @@ public class Game {
             this.damageEnemy(damage);
             String actionStr = "Player used " + spell.getName() + " for " + damage + " damage";
             this.messageLog.addLast(actionStr);
-        } else {
+        } 
+        else if("heal".equals(spell.getName())){
+            if (!enoughMana(spell)) {
+                return false;
+            }
+            this.player.getStat().setMana(this.player.getStat().getMana() - spell.getManaCost());
+            int heal = spell.getPower();
+            this.player.getStat().setHealth(this.player.getStat().getHealth() + heal);
+            if(this.player.getStat().getHealth() > this.player.getStat().getMaxHealth()){
+                this.player.getStat().setHealth(this.player.getStat().getMaxHealth());
+            }
+            String actionStr = "Player used " + spell.getName() + " for " + heal + " heal";
+            this.messageLog.addLast(actionStr);
+        }
+        else if("shield".equals(spell.getName())){
+            if (this.player.getStat().getMana() < spell.getManaCost()) {
+                this.messageLog.addLast(
+                        "Not enough mana for shield, you need " + spell.getManaCost() +
+                                " mana, you have " + this.player.getStat().getMana() + " mana"
+                );
+                return false;
+            }
+            this.player.getStat().setMana(this.player.getStat().getMana() - spell.getManaCost());
+            int shield = spell.getPower();
+            this.player.setShielding(shield);
+            String actionStr = "Player used " + spell.getName() + " for " + shield + " shield";
+            this.messageLog.addLast(actionStr);
+        }
+        else if("enrage".equals(spell.getName())){
+            if (this.player.getStat().getMana() < spell.getManaCost()) {
+                this.messageLog.addLast(
+                        "Not enough mana for enrage, you need " + spell.getManaCost() +
+                                " mana, you have " + this.player.getStat().getMana() + " mana"
+                );
+                return false;
+            }
+            this.player.getStat().setMana(this.player.getStat().getMana() - spell.getManaCost());
+            this.player.getStatus().addStatus(spell.getStatus(), spell.getStatusDuration());
+            String actionStr = "Player used " + spell.getName();
+            this.messageLog.addLast(actionStr);
+        }
+        else if("necrotic touch".equals(spell.getName())){
+            if (!enoughMana(spell)) {
+                return false;
+            }
+            this.player.getStat().setMana(this.player.getStat().getMana() - spell.getManaCost());
+            int damage = this.damageCalc(
+                    this.player.getAttack() * spell.getPower(),
+                    this.currentEnemy.getDefense()
+            );
+            this.damageEnemy(damage);
+        
+            this.player.getStat().setHealth(this.player.getStat().getHealth() + damage);
+            if(this.player.getStat().getHealth() > this.player.getStat().getMaxHealth()){
+                this.player.getStat().setHealth(this.player.getStat().getMaxHealth());
+            }
+            String actionStr = "Player used " + spell.getName() + " for " + damage + " damage and healed for " + damage;
+            this.messageLog.addLast(actionStr);
+        }
+        
+        else {
             this.messageLog.addLast("Invalid spell");
             return false;
         }
@@ -226,6 +295,7 @@ public class Game {
 
         this.printCombatStatus();
         List<String> tempStatus = this.player.getStatus().checkStatus(this.combatTime);
+
         if (tempStatus != null) {
             for (String i : tempStatus) {
                 this.messageLog.addLast(i);
@@ -360,6 +430,19 @@ public class Game {
             this.messageLog.addLast("Invalid item");
             return;
         }
+        else if(playerMove.getMoveType() == GameEnum.MoveType.STATUS){
+            this.messageLog.addLast("Player used " + playerMove.getName());
+            if(playerMove.effectsSelf()){
+                this.player.getStatus().addStatus(playerMove.getStatus(), playerMove.getStatusDuration());
+            }
+            else{
+                this.currentEnemy.getStatus().addStatus(playerMove.getStatus(), playerMove.getStatusDuration());
+            }
+        }
+        else {
+            this.messageLog.addLast("Invalid move");
+            return;
+        }
         this.player.setLastMoveInit(this.player.getInitiative());
         this.player.setInitiative(this.player.getInitiative() + (int) Math.ceil(playerMove.getSpeed() * this.player.getSpeed()));
         System.out.println('\n');
@@ -418,8 +501,26 @@ public class Game {
         tempStr += "\nPlayer:";
         double tempHealthRatio = (double)(this.player.getStat().getHealth()) / (double)(this.player.getStat().getMaxHealth());
         tempHealthRatio = Math.ceil(tempHealthRatio * 10.0) / 10.0;
-        tempStr += "Health Bar[" + "X".repeat((int) (tempHealthRatio * 10)) + " ".repeat(10 - (int) (tempHealthRatio * 10)) + "]\n";
-
+        try{
+            tempStr += "Health Bar[" + "X".repeat((int) (tempHealthRatio * 10)) + " ".repeat(10 - (int) (tempHealthRatio * 10)) + "]\n"; 
+        }   
+        catch(Exception e){
+            e.printStackTrace();
+            tempStr += "Health Bar[" + "X".repeat(10) + " ".repeat(0) + "]\n";
+        }
+        //print mana bar
+        double tempManaRatio = (double)(this.player.getStat().getMana()) / (double)(this.player.getStat().getMaxMana());
+        tempManaRatio = Math.ceil(tempManaRatio * 10.0) / 10.0;
+        try{
+            tempStr += "Mana Bar[" + "X".repeat((int) (tempManaRatio * 10)) + " ".repeat(10 - (int) (tempManaRatio * 10)) + "]\n";
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            tempStr += "Mana Bar[" + "X".repeat(10) + " ".repeat(0) + "]\n";
+        }
+        //Print statuses
+        tempStr += "Statuses: ";
+        tempStr += this.player.getStatus().getStatusString();
         try {
             int percentInitPlayer = (int) Math.ceil(
                     10 * (this.combatTime - this.player.getLastMoveInit()) /
@@ -432,11 +533,17 @@ public class Game {
 
         }
 
-        tempStr += "Enemy:";
+        tempStr += "Enemy:\n";
+        tempStr +="Enemy Stats: " + this.currentEnemy.getStat().toString() + "\n";
         tempHealthRatio = (double)this.currentEnemy.getStat().getHealth() / (double)this.currentEnemy.getStat().getMaxHealth();
         tempHealthRatio = Math.round(tempHealthRatio * 10) / 10.0;
+        try{
         tempStr += "Health Bar[" + "X".repeat((int) (tempHealthRatio * 10)) + " ".repeat(10 - (int) (tempHealthRatio * 10)) + "]\n";
-
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            tempStr += "Health Bar[" + "X".repeat(10) + " ".repeat(0) + "]\n";
+        }
         try {
             int percentInitEnemy = (int) Math.ceil(
                     10 * (this.combatTime - this.currentEnemy.getLastMoveInit()) /

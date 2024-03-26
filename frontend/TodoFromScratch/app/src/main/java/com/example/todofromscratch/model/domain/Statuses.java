@@ -37,7 +37,7 @@ public class Statuses {
     }
 
     public void addStatus(String status, int length) {
-        setStatus(status, 1);
+        setStatus(status, length);
         clear.add(new String[]{status, Integer.toString(length)});
     }
 
@@ -79,17 +79,50 @@ public class Statuses {
         return attack;
     }
 
+    public String getStatusString(){
+        StringBuilder tempStr = new StringBuilder();
+        if (rage != 0) {
+            tempStr.append("Rage: ").append(rage).append(" ");
+        }
+        if (poison != 0) {
+            tempStr.append("Poison: ").append(poison).append(" ");
+        }
+        if (burn != 0) {
+            tempStr.append("Burn: ").append(burn).append(" ");
+        }
+        if (frozen != 0) {
+            tempStr.append("Frozen: ").append(frozen).append(" ");
+        }
+        if (frightened != 0) {
+            tempStr.append("Frightened: ").append(frightened).append(" ");
+        }
+        if (confused != 0) {
+            tempStr.append("Confused: ").append(confused).append(" ");
+        }
+        if (paralyzed != 0) {
+            tempStr.append("Paralyzed: ").append(paralyzed).append(" ");
+        }
+        return tempStr.toString();
+    }
+
     public List<String> checkStatus(int time) {
         List<String> tempList = new ArrayList<>();
         Iterator<String[]> iterator = clear.iterator();
 
         while (iterator.hasNext()) {
             String[] i = iterator.next();
-            if (Integer.parseInt(i[1]) <= time) {
+            if (Integer.parseInt(i[1]) == 0) {
                 iterator.remove();
                 setStatus(i[0], 0);
-                tempList.add("Cleared: " + i[0]);
+                tempList.add("Cleared status: " + i[0]);
             }
+            else if(Integer.parseInt(i[1]) > 0) {
+                setStatus(i[0], Integer.parseInt(i[1]) - 1);
+                //Change the value in clear
+                i[1] = Integer.toString(Integer.parseInt(i[1]) - 1);
+            }
+
+
         }
         return tempList;
     }

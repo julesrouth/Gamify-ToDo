@@ -29,7 +29,8 @@ class Player {
 
     public Player(int x, int y) {
         this.location = new int[]{x, y};
-        this.stat = new Stat();
+        // this.stat = new Stat();
+        this.stat = new Stat(50, 25, 25 ,25 , 5);
         this.inventory = new Inventory();
         this.moves = new ArrayList<Move>();
         this.initiative = 5;
@@ -37,10 +38,13 @@ class Player {
 
         // Initialize moves
         moves.add(new Move(GameEnum.MoveType.USEITEM, 0, 0, "Use an Item"));
-        moves.add(new Move(GameEnum.MoveType.ATTACK, 2, 100, "attack"));
+        moves.add(new Move(GameEnum.MoveType.ATTACK, 2, 108, "attack"));
         moves.add(new Move(GameEnum.MoveType.DEFEND, 2, 75, "defend"));
-        moves.add(new Move(GameEnum.MoveType.ATTACK, 4, 150, "strong attack"));
-        moves.add(new Move(GameEnum.MoveType.SPELL, 4, 50,"5", "fireball"));
+        moves.add(new Move(GameEnum.MoveType.ATTACK, 3, 150, "strong attack"));
+        moves.add(new Move(GameEnum.MoveType.SPELL, 4, 50, "5", "fireball"));
+        moves.add(new Move(GameEnum.MoveType.STATUS, 0, 70, "Enrage"));
+        moves.add(new Move(GameEnum.MoveType.SPELL, 10, 50, "3", "heal"));
+        moves.add(new Move(GameEnum.MoveType.SPELL, 2, 75, "5", "necrotic touch"));
     }
 
     public void addItem(Item item) {

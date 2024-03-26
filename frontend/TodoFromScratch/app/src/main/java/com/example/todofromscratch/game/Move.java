@@ -1,4 +1,5 @@
 package com.example.todofromscratch.game;
+import com.example.todofromscratch.model.domain.Statuses;
 
 public class Move {
 
@@ -31,6 +32,35 @@ public class Move {
     }
     public int getSpeed() {
         return speed;
+    }
+
+    public String getStatus(){
+        //Do something
+        switch(this.name) {
+            case "Enrage":
+                return "rage";
+            default:
+                return "error";
+        }
+    }
+    public int getStatusDuration(){
+        //Do something
+        switch(this.name) {
+            case "Enrage":
+                return 170;
+            default:
+                return 0;
+        }
+    }
+    public boolean effectsSelf(){
+        //Do something
+        switch(this.name) {
+            case "Enrage":
+                return true;
+            default:
+              return false;
+
+        }
     }
     public String getEffect() {
         return effect;

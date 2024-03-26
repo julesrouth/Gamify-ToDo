@@ -35,20 +35,23 @@ public class Enemy {
     public void initEnemyList(){
         enemyList = new ArrayList<Enemy>();
         enemyList.add(new Enemy());
-        ArrayList<Move> tempMoveList = new ArrayList<Move>();
+        ArrayList<Move> attackMoveList = new ArrayList<Move>();
+        ArrayList<Move> defendMoveList = new ArrayList<Move>();
+
         //Add 10 unique moves to the list
-        tempMoveList.add(new Move(GameEnum.MoveType.ATTACK, 1, 50, "Poke"));
-        tempMoveList.add(new Move(GameEnum.MoveType.DEFEND, 1, 25, "Block"));
-        tempMoveList.add(new Move(GameEnum.MoveType.ATTACK, 2, 100, "Slash"));
-        tempMoveList.add(new Move(GameEnum.MoveType.DEFEND, 2, 75, "Shield"));
-        tempMoveList.add(new Move(GameEnum.MoveType.ATTACK, 3, 150, "Stab"));
-        tempMoveList.add(new Move(GameEnum.MoveType.DEFEND, 3, 100, "Block"));
-        tempMoveList.add(new Move(GameEnum.MoveType.ATTACK, 4, 200, "Punch"));
-        tempMoveList.add(new Move(GameEnum.MoveType.DEFEND, 4, 150, "Parry"));
-        tempMoveList.add(new Move(GameEnum.MoveType.ATTACK, 5, 250, "Kick"));
-        tempMoveList.add(new Move(GameEnum.MoveType.DEFEND, 5, 200, "Dodge"));
-        tempMoveList.add(new Move(GameEnum.MoveType.ATTACK, 6, 300, "Bite"));
-        tempMoveList.add(new Move(GameEnum.MoveType.DEFEND, 6, 250, "Evade"));
+        attackMoveList.add(new Move(GameEnum.MoveType.ATTACK, 1, 60, "Poke"));
+        attackMoveList.add(new Move(GameEnum.MoveType.ATTACK, 2, 108, "Slash"));
+        attackMoveList.add(new Move(GameEnum.MoveType.ATTACK, 3, 150, "Stab"));
+        attackMoveList.add(new Move(GameEnum.MoveType.ATTACK, 4, 190, "Punch"));
+        attackMoveList.add(new Move(GameEnum.MoveType.ATTACK, 5, 220, "Kick"));
+        attackMoveList.add(new Move(GameEnum.MoveType.ATTACK, 6, 250, "Bite"));
+        
+        defendMoveList.add(new Move(GameEnum.MoveType.DEFEND, 1, 30, "Block"));
+        defendMoveList.add(new Move(GameEnum.MoveType.DEFEND, 2, 54, "Shield"));
+        defendMoveList.add(new Move(GameEnum.MoveType.DEFEND, 3, 75, "Block"));
+        defendMoveList.add(new Move(GameEnum.MoveType.DEFEND, 4, 95, "Parry"));
+        defendMoveList.add(new Move(GameEnum.MoveType.DEFEND, 5, 110, "Dodge"));
+        defendMoveList.add(new Move(GameEnum.MoveType.DEFEND, 6, 125, "Evade"));
 
 
         ArrayList<String> nameList = new ArrayList<String>();
@@ -63,21 +66,42 @@ public class Enemy {
         for(int i = 0; i < 5; i ++){
             ArrayList<Move> tempMoveList2 = new ArrayList<Move>();
             Random random = new Random();
-            for (int j = 0; j < 2; j++) {
-                int temp = random.nextInt(tempMoveList.size());
-                tempMoveList2.add(tempMoveList.get(temp));
-            }
+            tempMoveList2.add(attackMoveList.get(random.nextInt(attackMoveList.size())));
+            tempMoveList2.add(defendMoveList.get(random.nextInt(defendMoveList.size())));
+            // for (int j = 0; j < 2; j++) {
+            //     int temp = random.nextInt(tempMoveList.size());
+            //     tempMoveList2.add(tempMoveList.get(temp));
+            // }
 
             //Get a random name from the list
             int temp = random.nextInt(nameList.size());
             String tempName = nameList.get(temp);
 
             //Add the enemy to the list
-            enemyList.add(new Enemy(new Stat(100, 10, 10, 10, 1), 10, tempMoveList2, tempName));
+            Enemy tempEnemy = new Enemy(new Stat(50, 10, 10, 10, 1), 10, tempMoveList2, tempName);
+            tempEnemy.stat = generateRandomEnemyStat(5);
+            enemyList.add(tempEnemy);
         }
 
     }
 
+public Stat generateRandomEnemyStat(int level){
+    Random random = new Random();
+    
+    float randomValueHealth = 1 + random.nextFloat() * 3;
+    int health = 20 + Math.round(2 * level * randomValueHealth);
+    
+    float randomValueAttack = 1 + random.nextFloat() * 3;
+    int attack = 10 + Math.round(level * randomValueAttack);
+    
+    float randomValueDefense = 1 + random.nextFloat() * 3;
+    int defense = 10 + Math.round(level * randomValueDefense);
+    
+    float randomValueSpeed = 1 + random.nextFloat() * 3;
+    int speed = 10 + Math.round(level * randomValueSpeed);
+    
+    return new Stat(health, attack, defense, speed, level);
+}
 
     public Enemy() {
         this.stat = new Stat();
@@ -187,6 +211,22 @@ public class Enemy {
     }
 
     public static void main(String[] args) {
+        Enemy temp = new Enemy();
+        System.out.println("Testing Enemy Sstat Generation");
+        System.out.println(temp.generateRandomEnemyStat(1));
+        System.out.println(temp.generateRandomEnemyStat(1));
+        System.out.println(temp.generateRandomEnemyStat(1));
+
+        System.out.println(temp.generateRandomEnemyStat(10));
+        System.out.println(temp.generateRandomEnemyStat(10));
+        System.out.println(temp.generateRandomEnemyStat(10));
+
+
+
+        System.out.println(temp.generateRandomEnemyStat(100));
+        System.out.println(temp.generateRandomEnemyStat(100));
+        System.out.println(temp.generateRandomEnemyStat(100));
+
         Enemy enemy = new Enemy();
         System.out.println(enemy.getAttack());
         enemy.getMove();
