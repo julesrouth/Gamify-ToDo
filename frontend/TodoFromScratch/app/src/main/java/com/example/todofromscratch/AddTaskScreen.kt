@@ -81,6 +81,7 @@ import kotlin.properties.ReadWriteProperty
 import com.example.todofromscratch.model.domain.Task
 import com.example.todofromscratch.model.net.Difficulty
 import com.example.todofromscratch.model.net.TaskType
+import java.sql.Types.NULL
 import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -325,7 +326,7 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                         var completed: Boolean = false
                         println("UserID in addtaskscreen: " + Cache.getInstance().currUserAuthToken.userId)
                         println("Completed in AddTaskScreen: " + completed)
-                        val task = Task(name, "test 2", dateStr, difficulty, type, Cache.getInstance().currUserAuthToken.userId, completed)
+                        val task = Task(NULL, name, "test 2", dateStr, difficulty, type, Cache.getInstance().currUserAuthToken.userId, completed)
                         //TODO GET THR
                         Tasks.getInstance().addTask(task)
                         taskPresenter.addTask(task)
@@ -333,7 +334,6 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                         // Update task logic
                         taskToUpdate.taskName = name
                         taskToUpdate.dueDate = dateStr
-                        // TODO:: Update the task using the presenter or any appropriate method
                     }
                     onNextButtonClicked()
                 },

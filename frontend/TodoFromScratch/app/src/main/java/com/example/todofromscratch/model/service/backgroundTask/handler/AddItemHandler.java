@@ -9,7 +9,7 @@ import com.example.todofromscratch.model.service.backgroundTask.BackgroundTask;
 import com.example.todofromscratch.model.service.backgroundTask.ListStoreItemsTask;
 import com.example.todofromscratch.model.service.backgroundTask.observer.GeneralObserver;
 
-public class AddItemHandler  extends MainHandler {
+public class AddItemHandler extends MainHandler {
 
     private GeneralObserver observer;
     private AddItemTask task;

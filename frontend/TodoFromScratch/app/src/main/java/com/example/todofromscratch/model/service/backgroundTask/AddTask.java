@@ -41,7 +41,11 @@ public class AddTask extends AuthenticatedTask {
             AddTaskRequest request = new AddTaskRequest(authtoken, task);
             System.out.println("Authtoken in AddTask: " + authtoken);
             System.out.println("Task in AddTask: " + task.taskName);
+            System.out.println("TaskID in ADDTASK: " + task.taskId);
             AddTaskResponse response = getServerFacade().addTask(request, TaskService.GET_ADDTASK_URL);
+            System.out.println("TaskID in ADDTASK response: " + response.getTask().taskId);
+            task.setTaskId(response.getTask().taskId);
+            System.out.println("TaskID after setting from response: " + task.taskId);
 
             if (response.isSuccess()) {
                 sendSuccessMessage();

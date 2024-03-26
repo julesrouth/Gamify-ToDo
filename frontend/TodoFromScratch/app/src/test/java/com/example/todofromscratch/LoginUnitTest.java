@@ -45,7 +45,7 @@ public class LoginUnitTest {
         try{
             LoginResponse response = serverFacade.login(request, UserService.URL_PATH);
             assertTrue(response.isSuccess());
-            assertNotNull(response.getAuthToken());
+            assertNotNull(response.getAuthtoken());
         } catch (IOException | TweeterRemoteException e) {
             throw new RuntimeException(e);
         }

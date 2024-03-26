@@ -39,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,6 +58,7 @@ import java.time.LocalDate
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import java.time.LocalTime
+import kotlinx.coroutines.flow.collect
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,22 +106,56 @@ fun MainScreen(
 
     }
 
-    val taskPresenter = TaskPresenter(TaskView())
+    // Boolean state to trigger page refresh
+    var refreshPage by remember { mutableStateOf(false) }
 
     // Call getTasks method from TaskPresenter
-    taskPresenter.getTasks() //Load all tasks
+    val taskPresenter = TaskPresenter(TaskView())
 
-    val tasks = Tasks.getInstance().getTasks();
-    tasks.forEach { task ->
+    // Inside your LazyColumn, use LaunchedEffect to trigger a recomposition when refreshPage changes
+    LaunchedEffect(refreshPage) {
+        println("in launched effect!!!!!!!!!");
+//        // Call getTasks method from TaskPresenter
+//        val taskPresenter = TaskPresenter(TaskView())
+
+        taskPresenter.getTasks() // Load all tasks
+    }
+
+//    val taskPresenter = TaskPresenter(TaskView())
+
+    // Call getTasks method from TaskPresenter
+//    taskPresenter.getTasks() //Load all tasks
+
+    val tasks = Tasks.getInstance().getTasks()
+    var uncompletedTasks = mutableListOf<Task>()
+    val completedTasks = mutableListOf<Task>()
+
+    for (task in tasks) {
+        if (!task.completed) {
+            uncompletedTasks.add(task)
+        }
+    }
+    for (task in tasks) {
+        if (task.completed) {
+            completedTasks.add(task)
+        }
+    }
+    println("tasks at beginning: $tasks")
+    println("tasks not completed: $uncompletedTasks")
+    println("tasks completed: $completedTasks")
+    uncompletedTasks.forEach { task ->
         // Perform operations with each task here
         println("Task description in mainScreen: ${task.description}")
-    }
-    if (tasks == null) {
-        populateExampleTasks()
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 //    val context = LocalContext.current
+
+    // Function to handle checkbox click
+    val onCheckboxClicked: () -> Unit = {
+//        taskPresenter.checkTask(task)
+        refreshPage = !refreshPage // Toggle refreshPage to trigger recomposition
+    }
 
     // Scaffold with top app bar and floating action button
     Scaffold(
@@ -195,14 +231,26 @@ fun MainScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            items(tasks) { task ->
-                val checkedState = remember { mutableStateOf(task.completed) }
+            items(uncompletedTasks) { task ->
+                var checkedState = remember { mutableStateOf(task.completed) }
                 Row() {
                     Checkbox(
                         checked = checkedState.value,
                         onCheckedChange = {
                             checkedState.value = it
                             task.completed = checkedState.value
+                            if (checkedState.value) {
+                                taskPresenter.checkTask(task)
+                                println("in checkedState.value!!")
+                                onCheckboxClicked()
+//                                tasks.remove(task)
+//                                println("tasks after remove: $tasks");
+//                                onTaskCompleted(task, checkedState.value)
+//                                if (it) {
+//                                    taskPresenter.checkTask(task)
+//                                }
+                            }
+//                            refreshPage = true
                         },
                         modifier = Modifier.padding(5.dp)
                     )
@@ -233,13 +281,6 @@ fun MainScreen(
             }
         }
     }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-fun populateExampleTasks() {
-//    Tasks.getInstance().addTask(Task("Task 1", ""))
-//    Tasks.getInstance().addTask(Task("Task 2", LocalDate.now().toString()))
-//    Tasks.getInstance().addTask(Task("Task 3", ""))
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

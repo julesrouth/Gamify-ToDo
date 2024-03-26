@@ -4,6 +4,7 @@ package com.example.todofromscratch.model.net;
 import java.io.IOException;
 
 import com.example.todofromscratch.model.net.request.AddItemRequest;
+import com.example.todofromscratch.model.net.request.CheckTaskRequest;
 import com.example.todofromscratch.model.net.request.GetPlayerRequest;
 import com.example.todofromscratch.model.net.request.ListPlayerItemsRequest;
 import com.example.todofromscratch.model.net.request.ListStoreItemsRequest;
@@ -11,6 +12,7 @@ import com.example.todofromscratch.model.net.request.LoginRequest;
 
 import com.example.todofromscratch.model.net.request.RegisterRequest;
 import com.example.todofromscratch.model.net.response.AddItemResponse;
+import com.example.todofromscratch.model.net.response.CheckTaskResponse;
 import com.example.todofromscratch.model.net.response.GetPlayerResponse;
 import com.example.todofromscratch.model.net.response.ListPlayerItemsResponse;
 import com.example.todofromscratch.model.net.response.ListStoreItemsResponse;
@@ -20,6 +22,7 @@ import com.example.todofromscratch.model.net.response.AddTaskResponse;
 import com.example.todofromscratch.model.net.response.LoginResponse;
 import com.example.todofromscratch.model.net.response.RegisterResponse;
 import com.example.todofromscratch.model.net.response.TasksResponse;
+import com.example.todofromscratch.model.service.backgroundTask.CheckTask;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -36,7 +39,7 @@ public class ServerFacade {
 //    private static final String SERVER_URL = "http://10.37.103.182:5001";
 //    private static final String SERVER_URL = "http://10.37.196.176:5000";
 //    private static final String SERVER_URL = "http://172.20.10.10:5000";
-    private static final String SERVER_URL = "http://192.168.1.106:5000";
+//    private static final String SERVER_URL = "http://192.168.1.106:5000";
 //    private static final String SERVER_URL = "http://192.168.39.105:5001";
 //    private static final String SERVER_URL = "http://192.168.10.23:5000";
 //    private static final String SERVER_URL = "http://10.37.103.182:5001";
@@ -45,6 +48,8 @@ public class ServerFacade {
     // private static final String SERVER_URL = "http://172.22.246.171:8080";
 //    private static final String SERVER_URL = "http://192.168.39.105:5001";
 //    private static final String SERVER_URL = "http://10.37.103.182:5001";
+    private static final String SERVER_URL = "http://10.37.107.154:5001";
+
 
 
 
@@ -99,6 +104,16 @@ public class ServerFacade {
 //        TasksResponse response = clientCommunicator.doPost(urlPath, request, null, TasksResponse.class);
 //        return response;
 //    }
+
+    public CheckTaskResponse checkTask(CheckTaskRequest request, String urlPath) throws IOException, TweeterRemoteException {
+//        System.out.println("Completed in serverFacade check task: " + request.getTask().completed);
+        System.out.println("Check task get task: " + request.getTaskId());
+//        System.out.println("Check task get taskname: " + request.getTask().taskName);
+        CheckTaskResponse response = clientCommunicator.doPost(urlPath, request, null, CheckTaskResponse.class);
+        System.out.println(response);
+        System.out.println(response.getMessage());
+        return response;
+    }
 
 }
 
