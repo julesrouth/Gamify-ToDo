@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import android.app.TimePickerDialog
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -258,49 +259,55 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                 }
             }
 
-            if (pickTime) {
-                Row(
+            AnimatedVisibility(pickTime) {
+                Column(
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally)
                 ) {
-                    Text(
-                        text = dateStr,
+                    Row(
                         modifier = Modifier
-                            .padding(5.dp)
-                            .align(Alignment.CenterVertically)
-                    )
-
-                    Button(
-                        modifier = Modifier
-                            .padding(5.dp),
-                        onClick = {
-                            openDateDialog.value = true
-                        }
+                            .align(Alignment.CenterHorizontally),
+                        horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        Text(text = "Select Due Date")
+                        Text(
+                            text = dateStr,
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .align(Alignment.CenterVertically)
+                        )
+
+                        Button(
+                            modifier = Modifier
+                                .padding(5.dp),
+                            onClick = {
+                                openDateDialog.value = true
+                            }
+                        ) {
+                            Text(text = "Select Due Date")
+                        }
                     }
-                }
 
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Text(
-                        text = timeStr,
+                    Row(
                         modifier = Modifier
-                            .padding(5.dp)
-                            .align(Alignment.CenterVertically)
-                    )
-                    Button(
-                        modifier = Modifier
-                            .padding(5.dp),
-                        onClick = {
-                            openTimeDialog.value = true
-                        }
+                            .align(Alignment.CenterHorizontally),
+                        horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        Text(text = "Select Time")
+                        Text(
+                            text = timeStr,
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .align(Alignment.CenterVertically)
+                        )
+                        Button(
+                            modifier = Modifier
+                                .padding(5.dp),
+                            onClick = {
+                                openTimeDialog.value = true
+                            }
+                        ) {
+                            Text(text = "Select Time")
+                        }
                     }
                 }
             }
