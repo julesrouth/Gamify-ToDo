@@ -132,8 +132,9 @@ fun ShopScreen(
                     }
                     playerItemsMap[item.itemName] = 0
                 }
+                recomposeToggleState.value = !recomposeToggleState.value
             })
-            listPlayerItemsPresenter.listPlayerItems();
+            listPlayerItemsPresenter.listPlayerItems()
         }
     }
     else if (playerItemsMap.isEmpty()) {
@@ -150,6 +151,7 @@ fun ShopScreen(
             }
             playerItemsMap[item.itemName] = 0
         }
+        recomposeToggleState.value = !recomposeToggleState.value
     }
 
     class PurchaseItemView (onSuccess : (String) -> Unit, val itemName: String) : StorePresenter.View {
