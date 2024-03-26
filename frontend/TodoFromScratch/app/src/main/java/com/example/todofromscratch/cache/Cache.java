@@ -39,6 +39,9 @@ public class Cache {
     private void initialize() {
         currUser = new User(null, null, null, null, null);
         currUserAuthtoken = null;
+        currPlayer = null;
+        storeItems = new StoreItemsList(null);
+        playerItems.clear();
     }
 
     public void clearCache() {

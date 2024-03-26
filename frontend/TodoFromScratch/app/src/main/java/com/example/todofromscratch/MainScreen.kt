@@ -22,6 +22,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Start
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -62,7 +64,8 @@ import java.time.LocalTime
 fun MainScreen(
     onMenuButtonClicked: () -> Unit,
     onAddTaskButtonClicked: () -> Unit,
-    onTaskClicked: (Task) -> Unit // Callback to handle task clicks
+    onTaskClicked: (Task) -> Unit, // Callback to handle task clicks
+    onLogoutClicked : () -> Unit
 ) {
 
     val context = LocalContext.current
@@ -133,6 +136,25 @@ fun MainScreen(
                         overflow = TextOverflow.Ellipsis
                     )
                 },
+                navigationIcon = {
+                    Row(
+                        modifier = Modifier
+                            .clickable {onLogoutClicked()}
+                            .padding(5.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBackIos,
+                            contentDescription = "Localized description",
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .padding(2.dp)
+                        )
+                        Text("Logout",
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                        )
+                    }
+                },
                 actions = {
                     Row(
                         modifier = Modifier
@@ -145,7 +167,7 @@ fun MainScreen(
                                 .padding(2.dp)
                         )
                         Icon(
-                            imageVector = Icons.Filled.Start,
+                            imageVector = Icons.Filled.ArrowForwardIos,
                             contentDescription = "Localized description",
                             modifier = Modifier
                                 .align(Alignment.CenterVertically)
@@ -228,7 +250,8 @@ fun MainScreenPreview() {
         MainScreen(
             onAddTaskButtonClicked = {},
             onTaskClicked = {}, // Dummy implementation for onTaskClicked
-            onMenuButtonClicked = {}
+            onMenuButtonClicked = {},
+            onLogoutClicked = {}
         )
     }
 }

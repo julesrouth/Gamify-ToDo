@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.todofromscratch.ui.GameMainScreen
 import com.example.todofromscratch.ui.ShopScreen
 import androidx.navigation.navArgument
+import com.example.todofromscratch.cache.Cache
 import com.example.todofromscratch.game.Game
 import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 
@@ -77,6 +78,10 @@ class MainActivity : ComponentActivity() {
                     },
                     onMenuButtonClicked = {
                         navController.navigate(Screen.GameMainScreen.route)
+                    },
+                    onLogoutClicked = {
+                        navController.popBackStack(Screen.LoginScreen.route, false)
+                        Cache.getInstance().clearCache()
                     }
                 )
             }
@@ -100,6 +105,7 @@ class MainActivity : ComponentActivity() {
                     onCharacterClicked = {},
                     onExitClicked = {
                         navController.navigate(Screen.MainScreen.route)
+                        Cache.getInstance().currPlayer = null;
                     },
                     game = Game()
                 )
