@@ -224,8 +224,9 @@ fun ShopScreen(
                 )
                 Box(
                     modifier= Modifier
-                        .width(150.dp)
+//                        .width(150.dp)
                         .height(50.dp)
+                        .weight(0.8f)
                 ) {
                     Surface(
 //                        color = MaterialTheme.colorScheme.tertiaryContainer,
@@ -241,14 +242,16 @@ fun ShopScreen(
                                 fontSize = 25.sp,
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
+//                                    .weight(1f)
                             )
-                            Spacer(Modifier.weight(1f))
+                            Spacer(Modifier.weight(0.5f))
                             Icon(
                                 painter = painterResource(id = R.drawable.gold_ingots_gold_svgrepo_com),
                                 contentDescription = "Localized description",
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
-                                    .padding(5.dp, 1.dp),
+                                    .padding(5.dp, 1.dp)
+                                    .weight(1f),
                                 tint = Color.Unspecified
                             )
                             Text(
