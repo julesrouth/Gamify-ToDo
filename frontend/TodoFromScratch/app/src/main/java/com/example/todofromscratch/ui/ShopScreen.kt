@@ -35,6 +35,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -61,7 +62,7 @@ fun ShopScreen(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val context = LocalContext.current
     val storeItems = remember {mutableStateListOf<StoreItem>()}
-    val playerItemsMap = remember { mutableMapOf<String, Int>()}
+    val playerItemsMap = remember { mutableStateMapOf<String, Int>()}
     val recomposeToggleState = remember { mutableStateOf(false) } // used to force recompose
     val gettingStoreItems = remember { mutableStateOf(false) }
     val gettingPlayerItems = remember { mutableStateOf(false) }
@@ -75,7 +76,7 @@ fun ShopScreen(
             Toast.makeText(
                 context,
                 message,
-                Toast.LENGTH_LONG
+                Toast.LENGTH_SHORT
             ).show()
         }
 
@@ -243,10 +244,11 @@ fun ShopScreen(
                             )
                             Spacer(Modifier.weight(1f))
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_android_gold_24dp),
+                                painter = painterResource(id = R.drawable.gold_ingots_gold_svgrepo_com),
                                 contentDescription = "Localized description",
                                 modifier = Modifier
-                                    .align(Alignment.CenterVertically),
+                                    .align(Alignment.CenterVertically)
+                                    .padding(5.dp, 1.dp),
                                 tint = Color.Unspecified
                             )
                             Text(
@@ -335,13 +337,13 @@ fun ShopScreen(
 //                            Spacer(Modifier.weight(0.5f))
                             Spacer(Modifier)
                             Text(
-                                "${item.cost} Gold",
+                                "${item.cost}",
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
                                     .padding(5.dp, 1.dp)
                             )
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_android_gold_24dp),
+                                painter = painterResource(id = R.drawable.gold_ingots_gold_svgrepo_com),
                                 contentDescription = "Localized description",
                                 modifier = Modifier
                                     .size(15.dp)
