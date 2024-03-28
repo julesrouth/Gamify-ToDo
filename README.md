@@ -91,7 +91,7 @@
 ### Attributes
 - userId PRIMARY KEY
 - attack INT
-- defence INT
+- defense INT
 - level INT
 - speed INT
 - maxHealth INT
