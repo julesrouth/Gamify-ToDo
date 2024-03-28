@@ -540,6 +540,71 @@ def send_listStoreItems(dest, userId, token):
     except requests.RequestException as e:
         print(f"An error occurred: {e}")
 
+def send_getPlayerStat(dest, userId, token):
+    url = f"http://{dest}/getPlayerStat"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    data = {
+        "authtoken": authtoken,
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
+def send_updatePlayerStat(dest, userId, token):
+    url = f"http://{dest}/updatePlayerStat"
+
+    authtoken = {"token":token,
+                 "userId":userId}
+    
+    stat = {
+        "userId": userId,
+        "attack": 5,
+        "defense": 5,
+        "level": 5,
+        "speed": 5,
+        "maxHealth": 5,
+        "maxMana": 5
+    }
+    
+    data = {
+        "authtoken": authtoken,
+        "stat": stat
+    }
+
+    json_data = json.dumps(data)
+
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(url, data=json_data, headers=headers)
+
+        if response.status_code == 200:
+            print("Request sent")
+            print("Response:", response.text)
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            print("Response:", response.text)
+
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+
 def main():
     parser = argparse.ArgumentParser(description="Send a request to the server")
     parser.add_argument("request", help="The request to send (register, login, or updateUser)")
@@ -586,6 +651,10 @@ def main():
         send_listPlayerItems(args.dest, args.userId, args.token)
     elif args.request == "listStoreItems":
         send_listStoreItems(args.dest, args.userId, args.token)
+    elif args.request == "getPlayerStat":
+        send_getPlayerStat(args.dest, args.userId, args.token)
+    elif args.request == "updatePlayerStat":
+        send_updatePlayerStat(args.dest, args.userId, args.token)
     else:
         print("Invalid request")
 

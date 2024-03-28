@@ -45,3 +45,31 @@ CREATE TABLE "PlayerItems"
     userId VARCHAR(255) not null,
     FOREIGN KEY(userId) REFERENCES Users(uuid)
 );
+
+
+CREATE TABLE "Stats"
+(
+    userId VARCHAR(255) not null primary key,
+    attack INT  not null,
+    defense INT not null,
+    level INT not null,
+    speed INT not null,
+    maxHealth INT not null,
+    maxMana INT not null
+);
+
+
+
+////////////////////////
+CODE TO CLEAR ALL TABLES
+////////////////////////
+
+DELETE FROM Tasks;
+DELETE FROM Players;
+DELETE FROM PlayerItems;
+DELETE FROM Authtokens;
+DELETE FROM Stats;
+DELETE FROM Users;
+
+
+

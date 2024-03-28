@@ -3,6 +3,7 @@ import routes.user_routes as user_routes
 import routes.task_routes as task_routes
 import routes.player_routes as player_routes
 import routes.item_routes as item_routes
+import routes.stat_routes as stat_routes
 
 app = Flask(__name__)
 
@@ -35,3 +36,7 @@ app.route('/addPlayerItem', methods=['POST'])(item_routes.addPlayerItem)
 app.route('/removePlayerItem', methods=['POST'])(item_routes.removePlayerItem)
 app.route('/listPlayerItems', methods=['POST'])(item_routes.listPlayerItems)
 app.route('/listStoreItems', methods=['POST', 'GET'])(item_routes.listStoreItems)
+
+# Stat Routes
+app.route('/getPlayerStat', methods=['POST'])(stat_routes.getPlayerStat)
+app.route('/updatePlayerStat', methods=['POST'])(stat_routes.updatePlayerStat)
