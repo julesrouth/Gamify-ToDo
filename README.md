@@ -90,9 +90,13 @@
 ## Stat
 ### Attributes
 - userId PRIMARY KEY
-- health INT
 - attack INT
 - defence INT
+- level INT
+- speed INT
+- maxHealth INT
+- maxMana INT
+  
 ### Methods
 - getPlayerStat(AuthToken)
 - updatePlayerStat(Stat, Authtoken)
