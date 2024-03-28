@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -41,6 +42,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.todofromscratch.model.domain.User
 import com.example.todofromscratch.presenter.AuthenticatePresenter
 import com.example.todofromscratch.presenter.LoginPresenter;
@@ -93,18 +95,13 @@ fun LoginScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-//            Text(
-//                text = "Login",
-//                modifier = Modifier
-////                    .fillMaxWidth()
-//                    .align(Alignment.CenterHorizontally)
-//////                    .size(20.dp)
-////                    .padding(15.dp)
-//                    .size(20.dp)
-//            )
-            Spacer(
-                modifier = Modifier.
-                    padding(25.dp)
+            Text(
+                text = "Gamify-Todo",
+                modifier = Modifier
+                    .padding(10.dp, 30.dp)
+                    .align(Alignment.CenterHorizontally),
+                fontSize=50.sp,
+                color= MaterialTheme.colorScheme.primary
             )
             TextField(
                 value = username,
