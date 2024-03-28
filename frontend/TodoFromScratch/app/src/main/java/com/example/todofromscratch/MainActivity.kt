@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,6 +28,8 @@ class MainActivity : ComponentActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
         setContent {
             TodoFromScratchTheme {
@@ -77,7 +80,7 @@ class MainActivity : ComponentActivity() {
                         navController.navigate("${Screen.AddTaskScreen.route}/${task.taskName}")
                     },
                     onMenuButtonClicked = {
-                        Cache.getInstance().currPlayer = null;
+                        Cache.getInstance().currPlayer = null
                         navController.navigate(Screen.GameMainScreen.route)
                     },
                     onLogoutClicked = {
