@@ -3,10 +3,15 @@ package com.example.todofromscratch
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -41,15 +46,19 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.todofromscratch.model.domain.Task
 import com.example.todofromscratch.model.domain.User
 import com.example.todofromscratch.presenter.TaskPresenter
@@ -57,6 +66,7 @@ import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 import java.time.LocalDate
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.delay
 import java.time.LocalTime
 import kotlinx.coroutines.flow.collect
 
@@ -75,6 +85,11 @@ fun MainScreen(
     // State variables to track if we are adding or updating a task
     var isUpdatingTask by remember { mutableStateOf(false) }
     var taskToUpdate by remember { mutableStateOf<Task?>(null) }
+    var gettingTasksFromServer by remember {mutableStateOf(false)}
+
+    var goldVisibility by remember { mutableStateOf(false) }
+    val goldAnimationEnter : Long = 1000;
+    val goldAnimationExit : Long = 1000;
 
     class TaskView : TaskPresenter.View {
 
@@ -118,7 +133,10 @@ fun MainScreen(
 //        // Call getTasks method from TaskPresenter
 //        val taskPresenter = TaskPresenter(TaskView())
 
-        taskPresenter.getTasks() // Load all tasks
+        if (!gettingTasksFromServer) {
+            gettingTasksFromServer = true
+            taskPresenter.getTasks() // Load all tasks
+        }
     }
 
 //    val taskPresenter = TaskPresenter(TaskView())
@@ -127,7 +145,7 @@ fun MainScreen(
 //    taskPresenter.getTasks() //Load all tasks
 
     val tasks = Tasks.getInstance().getTasks()
-    var uncompletedTasks = mutableListOf<Task>()
+    val uncompletedTasks = mutableListOf<Task>()
     val completedTasks = mutableListOf<Task>()
 
     for (task in tasks) {
@@ -226,61 +244,108 @@ fun MainScreen(
             }
         }
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+        AnimatedVisibility(
+            visible = goldVisibility,
+            enter = fadeIn(animationSpec = tween(goldAnimationEnter.toInt())),
+            exit = fadeOut(animationSpec = tween(goldAnimationExit.toInt()))
         ) {
-            items(uncompletedTasks) { task ->
-                var checkedState = remember { mutableStateOf(task.completed) }
-                Row() {
-                    Checkbox(
-                        checked = checkedState.value,
-                        onCheckedChange = {
-                            checkedState.value = it
-                            task.completed = checkedState.value
-                            if (checkedState.value) {
-                                taskPresenter.checkTask(task)
-                                println("in checkedState.value!!")
-                                onCheckboxClicked()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    painter = painterResource(R.drawable.gold_ingots_gold_svgrepo_com),
+                    contentDescription = "Localized description",
+                    modifier = Modifier
+                        //                .align(Alignment.Center)
+//                        .padding(paddingValues),
+                        .weight(1f)
+                        .fillMaxSize(),
+                    tint = Color.Unspecified
+                )
+                Text(
+                    text = "Gold!",
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    fontSize = 30.sp,
+//                    color = Color.Yellow
+                    color=Color(0xF6,0xBB, 0x42,0xFF)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+
+            }
+        }
+        AnimatedVisibility(
+            visible = !goldVisibility,
+            enter = fadeIn(animationSpec = tween(goldAnimationEnter.toInt())),
+            exit = fadeOut(animationSpec = tween(goldAnimationExit.toInt()))
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                items(uncompletedTasks) { task ->
+                    var checkedState = remember { mutableStateOf(task.completed) }
+                    Row() {
+                        Checkbox(
+                            checked = checkedState.value,
+                            onCheckedChange = {
+                                checkedState.value = it
+                                task.completed = checkedState.value
+                                if (checkedState.value) {
+                                    taskPresenter.checkTask(task)
+                                    println("in checkedState.value!!")
+                                    onCheckboxClicked()
+                                    goldVisibility = true
 //                                tasks.remove(task)
 //                                println("tasks after remove: $tasks");
 //                                onTaskCompleted(task, checkedState.value)
 //                                if (it) {
 //                                    taskPresenter.checkTask(task)
 //                                }
-                            }
-//                            refreshPage = true
-                        },
-                        modifier = Modifier.padding(5.dp)
-                    )
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .align(Alignment.CenterVertically)
-                            .clickable(
-                                onClick = {
-                                    // Call the onTaskClicked callback when a task is clicked
-                                    onTaskClicked(task)
                                 }
-                            )
-                    ) {
-                        Text(
-                            text = task.taskName,
-                            modifier = Modifier.fillMaxWidth()
+//                            refreshPage = true
+                            },
+                            modifier = Modifier.padding(5.dp)
                         )
-                        if (task.dueDate.isNotBlank()) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .align(Alignment.CenterVertically)
+                                .clickable(
+                                    onClick = {
+                                        // Call the onTaskClicked callback when a task is clicked
+                                        onTaskClicked(task)
+                                    }
+                                )
+                        ) {
                             Text(
-                                text = "Due: " + task.dueDate,
+                                text = task.taskName,
                                 modifier = Modifier.fillMaxWidth()
                             )
+                            if (task.dueDate.isNotBlank()) {
+                                Text(
+                                    text = "Due: " + task.dueDate,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
                         }
                     }
+                    Divider()
                 }
-                Divider()
             }
         }
     }
+    LaunchedEffect(
+        key1=goldVisibility,
+        block= {
+            delay((goldAnimationEnter + goldAnimationExit))
+            goldVisibility = false
+        }
+    )
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
