@@ -1,5 +1,6 @@
 from flask import request
 import requests
+import os
 from flask_apscheduler import APScheduler 
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -21,13 +22,21 @@ class Notifications:
     #import config file for OneSignal api key and app id
     def import_config(self):
         import configparser
+        print("Importing OneSignal config")
         config = configparser.ConfigParser()
-        config.read('src\\routes\\notification.config') # file should be in the same directory as the server
+
+        file_path = "src\\notifications.config"
+        if os.path.exists(file_path):
+            print("File exists")
+        else:
+            print("File does not exist")
 
 
+        config.read('src\\notifications.config')
+        print("Config sections:", config.sections())
         if 'OneSignal' in config:
-            self.ONESIGNAL_API_KEY = config.get('OneSignal', 'API_KEY')
-            self.ONESIGNAL_APP_ID = config.get('OneSignal', 'APP_ID')
+            self.ONE_SIGNAL_API_KEY = config.get('OneSignal', 'API_KEY')
+            self.ONE_SIGNAL_APP_ID = config.get('OneSignal', 'APP_ID')
         else:
             print("OneSignal section not found in notifications.config")
 
@@ -42,15 +51,12 @@ class Notifications:
     def send_notification(self, user_id, message):
         # Logic to send push notification to Kotlin app
         print("Sending notification:", message, "to user:", user_id)
-        
-        # # Get the player ID and notification message from the request
-        user_id = request.json['user_id']
-        message = request.json['message']
+
 
         #Create the request payload
         payload = {
             "app_id": self.ONE_SIGNAL_APP_ID,
-            "include_player_ids": [user_id],
+            "include_player_ids": [	'046921b5-9c41-4396-a63c-7dff197edc79'], #change back to user_id
             "contents": {"en": message}
         }
 
@@ -61,6 +67,7 @@ class Notifications:
         }
 
         print("posting notification")
+        print("Request payload:", payload)
         response = requests.post("https://onesignal.com/api/v1/notifications", json=payload, headers=headers)
 
         # response = self.client.send_notification(
@@ -72,6 +79,7 @@ class Notifications:
             return 'Notification sent successfully'
         else:
             print("Failed to send notification")
+            print(response.content)
             return 'Failed to send notification'
 
     # Schedule a notification for a task

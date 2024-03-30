@@ -2,6 +2,7 @@ package com.example.todofromscratch.presenter;
 
 import static java.sql.DriverManager.println;
 
+import com.example.todofromscratch.cache.Cache;
 import com.example.todofromscratch.model.service.UserService;
 import com.example.todofromscratch.model.service.backgroundTask.observer.AuthenticateObserver;
 import com.onesignal.OneSignal;
@@ -27,7 +28,9 @@ public class LoginPresenter extends AuthenticatePresenter implements Authenticat
 
             UserService userService = new UserService();
             userService.login(username, password, this);
-
+            //String userId = Cache.getInstance().getCurrUserID();
+            //println(userId);
+            OneSignal.login(username);
         }
     }
 

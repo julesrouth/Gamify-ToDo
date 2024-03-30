@@ -321,7 +321,6 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                         println("Completed in AddTaskScreen: " + completed)
                         // val task = Task(name, "test 2", "$dateStr $timeStr", difficulty, type, Cache.getInstance().currUserAuthToken.userId, completed)
                         val task = Task(NULL, name, "test 2", "$dateStr $timeStr", difficulty, type, Cache.getInstance().currUserAuthToken.userId, completed)
-                        //TODO GET THR
                         Tasks.getInstance().addTask(task)
                         taskPresenter.addTask(task)
                     } else {

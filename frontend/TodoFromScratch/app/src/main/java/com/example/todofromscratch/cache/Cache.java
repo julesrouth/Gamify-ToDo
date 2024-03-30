@@ -25,7 +25,7 @@ public class Cache {
     /**
      * The auth token for the current user session.
      */
-    private AuthToken currUserAuthtoken;
+    private static AuthToken currUserAuthtoken;
 
     private Player currPlayer;
     private StoreItemsList storeItems = new StoreItemsList(null);
@@ -52,6 +52,8 @@ public class Cache {
     public void setCurrUser(User currUser) {
         this.currUser = currUser;
     }
+
+    public String getCurrUserID(){ return currUserAuthtoken.userId; }
 
     public AuthToken getCurrUserAuthToken() {
         return currUserAuthtoken;
