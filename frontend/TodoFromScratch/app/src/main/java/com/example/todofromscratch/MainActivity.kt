@@ -22,6 +22,8 @@ import kotlinx.coroutines.launch
 
 import com.onesignal.OneSignal
 import com.onesignal.debug.LogLevel
+//import com.onesignal.OSNotificationOpenedResult
+//import com.onesignal.OSNotification
 
 /*
 Next steps:
@@ -48,6 +50,7 @@ class MainActivity : ComponentActivity() {
 
         // OneSignal Initialization
         OneSignal.initWithContext(this, ONESIGNAL_APP_ID)
+
 
         // requestPermission will show the native Android notification permission prompt.
         // NOTE: It's recommended to use a OneSignal In-App Message to prompt instead.

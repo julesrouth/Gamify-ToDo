@@ -20,7 +20,7 @@ CREATE TABLE "Tasks"
     taskId INT not null,
     taskName VARCHAR(255) not null,
     description VARCHAR(255) not null,
-    dueDate DATETIME not null,
+    dueDate  not null,
     difficulty VARCHAR(255) CHECK(difficulty IN ('easy', 'medium', 'hard')) not null,
     type VARCHAR(255) CHECK(type IN ('daily', 'task', 'weekly')) not null,
 	userId VARCHAR(255) not null,

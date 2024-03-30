@@ -7,10 +7,9 @@ from Model import Authtoken, Task
 from database.TaskDAO import TaskDAO
 from database.AuthtokenDAO import AuthtokenDAO
 from database.PlayerDAO import PlayerDAO
-from notifications import Notifications
 from database.conn import create_connection
 from tables import get_gold
-
+from globals import app, notifications
 
 
 def createTask():
@@ -70,20 +69,20 @@ def createTask():
         except Exception as e:
             return jsonify({'success': False, 'message': str(e), 'task': None})
         
-        #schedule task
-        notifications = Notifications()
+        #schedule task notification
         try:
-            match json_data['task']['type']:
-                case "task":
-                    notifications.schedule_notification_task(task)
-                case "daily":
-                    notifications.schedule_notification_daily(task)
-                case "weekly":
-                    notifications.schedule_notification_weekly(task)
-                case _:
-                    return jsonify({'success': False, 'message': 'Invalid task type', 'task': None})
+            notifications.schedule_notification_task(task)
+            # match json_data['task']['type']:
+            #     case "task":
+            #         notifications.schedule_notification_task(task)
+            #     case "daily":
+            #         notifications.schedule_notification_daily(task)
+            #     case "weekly":
+            #         notifications.schedule_notification_weekly(task)
+            #     case _:
+            #         return jsonify({'success': False, 'message': 'Invalid task type', 'task': None})
         except Exception as e:
-            return jsonify({'success': False, 'message': str(e), 'task': None})
+            return jsonify({'success': False, 'message': 'notification fail', 'task': None})
 
     if task.completed == True:
         task.completed = "true"
