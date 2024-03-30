@@ -4,12 +4,16 @@ package com.example.todofromscratch.model.net;
 import java.io.IOException;
 
 import com.example.todofromscratch.model.net.request.AddItemRequest;
+import com.example.todofromscratch.model.net.request.CheckTaskRequest;
+import com.example.todofromscratch.model.net.request.GetPlayerRequest;
 import com.example.todofromscratch.model.net.request.ListPlayerItemsRequest;
 import com.example.todofromscratch.model.net.request.ListStoreItemsRequest;
 import com.example.todofromscratch.model.net.request.LoginRequest;
 
 import com.example.todofromscratch.model.net.request.RegisterRequest;
 import com.example.todofromscratch.model.net.response.AddItemResponse;
+import com.example.todofromscratch.model.net.response.CheckTaskResponse;
+import com.example.todofromscratch.model.net.response.GetPlayerResponse;
 import com.example.todofromscratch.model.net.response.ListPlayerItemsResponse;
 import com.example.todofromscratch.model.net.response.ListStoreItemsResponse;
 import com.example.todofromscratch.model.net.request.AddTaskRequest;
@@ -18,6 +22,7 @@ import com.example.todofromscratch.model.net.response.AddTaskResponse;
 import com.example.todofromscratch.model.net.response.LoginResponse;
 import com.example.todofromscratch.model.net.response.RegisterResponse;
 import com.example.todofromscratch.model.net.response.TasksResponse;
+import com.example.todofromscratch.model.service.backgroundTask.CheckTask;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -73,11 +78,25 @@ public class ServerFacade {
         AddTaskResponse response = clientCommunicator.doPost(urlPath, request, null, AddTaskResponse.class);
         return response;
     }
+
+    public GetPlayerResponse getPlayer(GetPlayerRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        return clientCommunicator.doPost(urlPath, request, null, GetPlayerResponse.class);
+    }
 //
 //    public TaskResponse updateTask(TaskRequest request, String urlPath) throws IOException, TweeterRemoteException {
 //        TasksResponse response = clientCommunicator.doPost(urlPath, request, null, TasksResponse.class);
 //        return response;
 //    }
+
+    public CheckTaskResponse checkTask(CheckTaskRequest request, String urlPath) throws IOException, TweeterRemoteException {
+//        System.out.println("Completed in serverFacade check task: " + request.getTask().completed);
+        System.out.println("Check task get task: " + request.getTaskId());
+//        System.out.println("Check task get taskname: " + request.getTask().taskName);
+        CheckTaskResponse response = clientCommunicator.doPost(urlPath, request, null, CheckTaskResponse.class);
+        System.out.println(response);
+        System.out.println(response.getMessage());
+        return response;
+    }
 
 }
 

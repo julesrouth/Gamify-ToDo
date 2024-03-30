@@ -4,7 +4,9 @@ import com.example.todofromscratch.model.domain.Task;
 import com.example.todofromscratch.model.domain.AuthToken;
 import com.example.todofromscratch.model.domain.User;
 import com.example.todofromscratch.model.service.backgroundTask.AddTask;
+import com.example.todofromscratch.model.service.backgroundTask.CheckTask;
 import com.example.todofromscratch.model.service.backgroundTask.TaskTask;
+import com.example.todofromscratch.model.service.backgroundTask.handler.CheckTaskHanlder;
 import com.example.todofromscratch.model.service.backgroundTask.handler.TaskHandler;
 import com.example.todofromscratch.model.service.backgroundTask.observer.PagedTaskObserver;
 
@@ -15,6 +17,7 @@ public class TaskService extends Service {
 
     public static final String GET_TASK_URL = "/listTasksForUser";
     public static final String GET_ADDTASK_URL = "/createTask";
+    public static final String GET_CHECKTASK_URL = "/checkTask";
 
     public interface GetTaskServiceObserver extends PagedTaskObserver<Task> {
         //        void handleSuccess(List<Status> statuses, AuthToken authToken);
@@ -45,4 +48,9 @@ public class TaskService extends Service {
 //        return new GetStoryTask(authToken, targetUser, limit, lastStatus, new GetStoryHandler(observer));
 //    }
 
+    public void checkTask(AuthToken currUserAuthToken, Task task, GetTaskServiceObserver observer) {
+        CheckTask getCheckTask = new CheckTask(currUserAuthToken,
+                task, new TaskHandler(observer));
+        execute(getCheckTask);
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.todofromscratch.ui
 
 import android.widget.Button
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,7 +39,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todofromscratch.R
+import com.example.todofromscratch.cache.Cache
 import com.example.todofromscratch.game.*
+import com.example.todofromscratch.model.domain.Player
+import com.example.todofromscratch.presenter.PlayerPresenter
+import com.example.todofromscratch.presenter.StorePresenter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +57,47 @@ fun GameMainScreen(
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val context = LocalContext.current
+    val gettingPlayer = remember { mutableStateOf(false) }
+    val recomposeToggleState = remember { mutableStateOf(false) } // used to force recompose
 
+
+    open class GeneralView (onSuccess : () -> Unit) : PlayerPresenter.View {
+
+        var onSuccess: (() -> Unit)? = onSuccess
+
+        override fun showInfoMessage(message: String?) {
+            Toast.makeText(
+                context,
+                message,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        override fun taskSuccess(message: String?) {
+            onSuccess?.invoke()
+        }
+
+        override fun taskFail(message: String?) {
+            Toast.makeText(
+                context,
+                message,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    if (Cache.getInstance().currPlayer == null) {
+        if (!gettingPlayer.value) {
+            gettingPlayer.value = true;
+            println("Player is null so getting player")
+
+            val playerPresenter = PlayerPresenter(GeneralView {
+                println(Cache.getInstance().currPlayer.characterName)
+                recomposeToggleState.value = !recomposeToggleState.value
+            })
+            playerPresenter.getPlayer();
+        }
+    }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -90,13 +138,14 @@ fun GameMainScreen(
                         modifier = Modifier
                             .padding(7.dp)
                     ) {
+                        val player = Cache.getInstance().currPlayer
                         Text("Player Info",
                             fontSize=30.sp)
-                        Text("Name: ",
+                        Text("Name: ${player?.characterName}",
                             fontSize=20.sp)
                         Text("Level: ${game.level}",
                             fontSize=20.sp)
-                        Text("Experience:",
+                        Text("Experience: ${player?.experience}",
                             fontSize=20.sp)
                         Text("Gold: ${game.gold}",
                             fontSize=20.sp)
@@ -170,6 +219,7 @@ fun GameMainScreen(
             }
         }
     }
+    LaunchedEffect(recomposeToggleState.value) {} // used to force recompose
 }
 
 @Composable
