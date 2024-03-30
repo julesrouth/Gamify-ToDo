@@ -28,8 +28,8 @@ public class ServerFacade {
     // TODO: Set this to the invoke URL of your API. Find it by going to your API in AWS, clicking
     //  on stages in the right-side menu, and clicking on the stage you deployed your API to.
     //private static final String SERVER_URL = "http://10.37.192.68:8080";
-    private static final String SERVER_URL = "http://192.168.15.172:8080";
-
+    //private static final String SERVER_URL = "http://192.168.15.172:8080";
+    private static final String SERVER_URL = "http://192.168.1.167:8080";
 
     private final ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
 

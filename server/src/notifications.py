@@ -4,7 +4,7 @@ from flask_apscheduler import APScheduler
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from Model import Task
-import onesignal as onesignal_sdk
+#import onesignal as onesignal_sdk
 
 class Notifications:
     
@@ -15,7 +15,7 @@ class Notifications:
         self.app = app
         self.init_scheduler()
         self.import_config()
-        self.client = onesignal_sdk.Client(app_id=self.ONE_SIGNAL_APP_ID, rest_api_key=self.ONE_SIGNAL_API_KEY)
+        #self.client = onesignal_sdk.Client(app_id=self.ONE_SIGNAL_APP_ID, rest_api_key=self.ONE_SIGNAL_API_KEY)
 
 
     #import config file for OneSignal api key and app id
@@ -44,29 +44,29 @@ class Notifications:
         print("Sending notification:", message, "to user:", user_id)
         
         # # Get the player ID and notification message from the request
-        # user_id = request.json['user_id']
-        # message = request.json['message']
+        user_id = request.json['user_id']
+        message = request.json['message']
 
-        # Create the request payload
-            # payload = {
-            #     "app_id": self.ONE_SIGNAL_APP_ID,
-            #     "include_player_ids": [user_id],
-            #     "contents": {"en": message}
-            # }
+        #Create the request payload
+        payload = {
+            "app_id": self.ONE_SIGNAL_APP_ID,
+            "include_player_ids": [user_id],
+            "contents": {"en": message}
+        }
 
-            # # Make the HTTP request to send the notification
-            # headers = {
-            #     "Authorization": "Basic " + self.ONE_SIGNAL_API_KEY,
-            #     "Content-Type": "application/json"
-            # }
+        # Make the HTTP request to send the notification
+        headers = {
+            "Authorization": "Basic " + self.ONE_SIGNAL_API_KEY,
+            "Content-Type": "application/json"
+        }
 
-            # print("posting notification")
-            # response = requests.post("https://onesignal.com/api/v1/notifications", json=payload, headers=headers)
+        print("posting notification")
+        response = requests.post("https://onesignal.com/api/v1/notifications", json=payload, headers=headers)
 
-        response = self.client.send_notification(
-            contents={"en": message},
-            include_player_ids=[user_id]
-        )
+        # response = self.client.send_notification(
+        #     contents={"en": message},
+        #     include_player_ids=[user_id]
+        # )
         if response.status_code == 200:
             print("Notification sent successfully")
             return 'Notification sent successfully'
