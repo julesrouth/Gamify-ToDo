@@ -5,10 +5,10 @@ from flask_apscheduler import APScheduler
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from Model import Task
-#import onesignal as onesignal_sdk
+# import onesignal as onesignal_sdk
 
 class Notifications:
-    
+
     def __init__(self, app):
         self.scheduler = None
         self.ONE_SIGNAL_API_KEY = ""
@@ -16,23 +16,21 @@ class Notifications:
         self.app = app
         self.init_scheduler()
         self.import_config()
-        #self.client = onesignal_sdk.Client(app_id=self.ONE_SIGNAL_APP_ID, rest_api_key=self.ONE_SIGNAL_API_KEY)
+        # self.client = onesignal_sdk.Client(app_id=self.ONE_SIGNAL_APP_ID, rest_api_key=self.ONE_SIGNAL_API_KEY)
 
-
-    #import config file for OneSignal api key and app id
+    # import config file for OneSignal api key and app id
     def import_config(self):
         import configparser
         print("Importing OneSignal config")
         config = configparser.ConfigParser()
 
-        file_path = "src\\notifications.config"
+        file_path = os.path.join('src', 'notifications.config')
         if os.path.exists(file_path):
             print("File exists")
         else:
             print("File does not exist")
 
-
-        config.read('src\\notifications.config')
+        config.read(file_path)
         print("Config sections:", config.sections())
         if 'OneSignal' in config:
             self.ONE_SIGNAL_API_KEY = config.get('OneSignal', 'API_KEY')
@@ -40,8 +38,11 @@ class Notifications:
         else:
             print("OneSignal section not found in notifications.config")
 
-    #initialize scheduler
-    #@staticmethod
+        print("OneSignal API Key:", self.ONE_SIGNAL_API_KEY)
+        print("OneSignal APP ID:", self.ONE_SIGNAL_APP_ID)
+
+    # initialize scheduler
+    # @staticmethod
     def init_scheduler(self):
         self.scheduler =  BackgroundScheduler()    #APScheduler()
         self.scheduler.start()
@@ -52,8 +53,7 @@ class Notifications:
         # Logic to send push notification to Kotlin app
         print("Sending notification:", message, "to user:", user_id)
 
-
-        #Create the request payload
+        # Create the request payload
         payload = {
             "app_id": self.ONE_SIGNAL_APP_ID,
             "include_player_ids": [	'046921b5-9c41-4396-a63c-7dff197edc79'], #change back to user_id
@@ -85,13 +85,14 @@ class Notifications:
     # Schedule a notification for a task
     def schedule_notification_task(self, task):
         print("Scheduling notification for task:", task.taskName)
-        #time will be formated like this: 2021-10-10/hh:mm a
-        
+        # time will be formated like this: 2021-10-10/hh:mm a
+
         notification_time = datetime.strptime(task.dueDate, '%Y-%m-%d %I:%M %p')
 
         message = "Task: " + task.taskName
         try:
             self.scheduler.add_job(self.send_notification, 'date', run_date=notification_time, args=[self, task.userId, message])
+            print("Task Notification scheduled successfully")
             return "Task Notification scheduled successfully"
         except Exception as e:
             print("Error scheduling notification:", str(e))
@@ -99,7 +100,7 @@ class Notifications:
 
     # Schedule a daily notification for a task
     def schedule_notification_daily(self, task):
-        #time will be formated like this: 2021-10-10 hh:mm am/pm
+        # time will be formated like this: 2021-10-10 hh:mm am/pm
         notification_time = datetime.strptime(task.dueDate, '%Y-%m-%d %I:%M %p')
         message = "Task: " + task.taskName
         self.scheduler.add_job(self.send_notification, 'interval', days=1, start_date=notification_time, args=[message])
@@ -107,7 +108,7 @@ class Notifications:
 
     # Schedule a weekly notification for a task
     def schedule_notification_weekly(self, task):
-        #parse the date and time of the task correctly
+        # parse the date and time of the task correctly
         notification_time = datetime.strptime(task.dueDate, '%Y-%m-%d %I:%M %p')
         day_of_week = notification_time.weekday() #.strftime('%A')
         message = "Task: " + task.taskName
