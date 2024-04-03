@@ -11,6 +11,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.todofromscratch.ui.AdventureScreen
+import com.example.todofromscratch.ui.CharacterScreen
 import com.example.todofromscratch.ui.GameMainScreen
 import com.example.todofromscratch.ui.ShopScreen
 import androidx.navigation.navArgument
@@ -102,15 +104,20 @@ class MainActivity : ComponentActivity() {
                 route = Screen.GameMainScreen.route
             ) {
                 GameMainScreen(
-                    onAdventureClicked = {},
+                    onAdventureClicked = {
+                        navController.navigate(Screen.AdventureScreen.route)
+                    },
                     onShopClicked = {
                         navController.navigate(Screen.ShopScreen.route)
                     },
-                    onCharacterClicked = {},
-                    onExitClicked = {
-                        navController.navigate(Screen.MainScreen.route)
+                    onCharacterClicked = {
+                        navController.navigate(Screen.CharacterScreen.route)
                     },
-                    game = Game()
+                    onExitClicked = {
+                        navController.navigateUp()
+                    },
+                    game = Cache.getInstance().game
+
                 )
             }
             composable(
@@ -120,6 +127,21 @@ class MainActivity : ComponentActivity() {
                     onBackClicked = {
                         navController.popBackStack()
                     }
+                )
+            }
+            composable(
+                route = Screen.CharacterScreen.route
+            ) {
+                CharacterScreen(
+                    onBackButtonClicked = {
+                        navController.navigateUp()
+                    }
+                )
+        }
+            composable(
+                route = Screen.AdventureScreen.route
+            ) {
+                AdventureScreen(
                 )
             }
 

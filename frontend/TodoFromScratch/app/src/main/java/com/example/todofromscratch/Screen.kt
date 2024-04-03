@@ -9,6 +9,8 @@ sealed class Screen (val route: String){
     object GameMainScreen : Screen("game_main_screen")
     object ShopScreen : Screen("shop_screen")
 
+    object AdventureScreen : Screen("adventure_screen")
+    object CharacterScreen : Screen("character_screen")
     fun withArgs(vararg args: String): String {
         return buildString {
             append(route)

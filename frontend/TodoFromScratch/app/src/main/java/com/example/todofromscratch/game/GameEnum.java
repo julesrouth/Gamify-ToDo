@@ -29,7 +29,8 @@ public class GameEnum {
         ATTACK,
         DEFEND,
         SPELL,
-        USEITEM
+        USEITEM,
+        STATUS
     }
 
     public static void main(String[] args) {
