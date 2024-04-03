@@ -14,10 +14,21 @@ public class User implements Comparable<User>, Serializable {
     private String firstName;
     private String lastName;
 
+    private String uuid;
+
     /**
      * Allows construction of the object from Json. Private so it won't be called by other code.
      */
     private User() {}
+
+    public User(String username, String password, String email, String firstName, String lastName, String uuid) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.uuid = uuid;
+    }
 
     public User(String username, String password, String email, String firstName, String lastName) {
         this.username = username;
@@ -25,6 +36,7 @@ public class User implements Comparable<User>, Serializable {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.uuid = null;
     }
 
     public String getUsername() {
@@ -69,6 +81,14 @@ public class User implements Comparable<User>, Serializable {
 
     public String getName() {
         return String.format("%s %s", firstName, lastName);
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     @Override
