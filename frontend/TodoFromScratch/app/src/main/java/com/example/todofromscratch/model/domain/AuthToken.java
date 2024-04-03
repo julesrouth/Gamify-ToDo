@@ -15,9 +15,12 @@ public class AuthToken implements Serializable {
      */
     public String userId;
 
-//    public AuthToken(String token) {
-//        this.token = token;
-//    }
+    public AuthToken() {
+    }
+
+    public AuthToken(String token) {
+        this.token = token;
+    }
 
     public AuthToken(String token, String userId) {
         this.token = token;

@@ -190,7 +190,6 @@ fun ShopScreen(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
 
-
                     )
                 },
                 scrollBehavior = scrollBehavior,

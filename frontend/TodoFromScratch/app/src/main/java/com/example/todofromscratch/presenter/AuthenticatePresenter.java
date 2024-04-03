@@ -1,7 +1,5 @@
 package com.example.todofromscratch.presenter;
 
-import android.util.Log;
-
 import com.example.todofromscratch.cache.Cache;
 import com.example.todofromscratch.model.service.backgroundTask.observer.AuthenticateObserver;
 import com.example.todofromscratch.model.domain.AuthToken;
