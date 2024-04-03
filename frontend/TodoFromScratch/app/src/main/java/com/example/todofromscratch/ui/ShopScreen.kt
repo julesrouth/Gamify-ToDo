@@ -32,11 +32,16 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -51,19 +56,19 @@ import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShopScreen() {
-
-    /* TODO next.
-    *   Update gold when item is purchased.
-    * */
-
+fun ShopScreen(
+    onBackClicked: () -> Unit
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val context = LocalContext.current
     val storeItems = remember {mutableStateListOf<StoreItem>()}
-    val playerItemsMap = remember { mutableMapOf<String, Int>()}
+    val playerItemsMap = remember { mutableStateMapOf<String, Int>()}
     val recomposeToggleState = remember { mutableStateOf(false) } // used to force recompose
+    val gettingStoreItems = remember { mutableStateOf(false) }
+    val gettingPlayerItems = remember { mutableStateOf(false) }
+    var goldDisplayed by remember { mutableIntStateOf(Cache.getInstance().currPlayer.gold) }
 
-    class GeneralView (onSuccess : () -> Unit) : StorePresenter.View {
+    open class GeneralView (onSuccess : () -> Unit) : StorePresenter.View {
 
         var onSuccess: (() -> Unit)? = onSuccess
 
@@ -71,16 +76,11 @@ fun ShopScreen() {
             Toast.makeText(
                 context,
                 message,
-                Toast.LENGTH_LONG
+                Toast.LENGTH_SHORT
             ).show()
         }
 
         override fun taskSuccess(message: String?) {
-            Toast.makeText(
-                context,
-                message,
-                Toast.LENGTH_SHORT
-            ).show()
             onSuccess?.invoke()
         }
 
@@ -98,34 +98,84 @@ fun ShopScreen() {
     }})
 
     if (Cache.getInstance().storeItems.items == null) {
-        // get storeItems from database
-        println("Store items is null. So getting them");
-        storePresenter.getStoreItems();
+        if (!gettingStoreItems.value) {        // get storeItems from database
+            gettingStoreItems.value = true;
+            println("Store items is null. So getting them");
+            storePresenter.getStoreItems();
+        }
+    }
+    else if (storeItems.isEmpty()){
+        for (item in Cache.getInstance().storeItems.items) {
+            println("Cache has ${item.itemName}")
+            storeItems.add(item)
+        }
     }
 
     if (Cache.getInstance().playerItems.isEmpty()) {
-        // get storeItems from database
-        println("Player items is null. So getting them");
-        val listPlayerItemsPresenter = StorePresenter(GeneralView {
-            println("In general view success for listing player items")
-            for (item in Cache.getInstance().playerItems) {
-                if (playerItemsMap.containsKey(item.itemName)) {
-                    playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
-                } else {
-                    playerItemsMap[item.itemName] = 1
+        if (!gettingPlayerItems.value) {
+            gettingPlayerItems.value = true;
+
+            // get storeItems from database
+            println("Player items is null. So getting them");
+            val listPlayerItemsPresenter = StorePresenter(GeneralView {
+                println("In general view success for listing player items")
+                for (item in Cache.getInstance().playerItems) {
+                    if (playerItemsMap.containsKey(item.itemName)) {
+                        playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
+                    } else {
+                        playerItemsMap[item.itemName] = 1
+                    }
                 }
-            }
-            for (item in Cache.getInstance().storeItems.items) {
-                if (playerItemsMap.containsKey(item.itemName)) {
-                    continue;
+                for (item in Cache.getInstance().storeItems.items) {
+                    if (playerItemsMap.containsKey(item.itemName)) {
+                        continue;
+                    }
+                    playerItemsMap[item.itemName] = 0
                 }
-                playerItemsMap[item.itemName] = 0
+//                recomposeToggleState.value = !recomposeToggleState.value
+            })
+            listPlayerItemsPresenter.listPlayerItems()
+        }
+    }
+    else if (playerItemsMap.isEmpty()) {
+        for (item in Cache.getInstance().playerItems) {
+            if (playerItemsMap.containsKey(item.itemName)) {
+                playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
+            } else {
+                playerItemsMap[item.itemName] = 1
             }
-        })
-        listPlayerItemsPresenter.listPlayerItems();
+        }
+        for (item in Cache.getInstance().storeItems.items) {
+            if (playerItemsMap.containsKey(item.itemName)) {
+                continue;
+            }
+            playerItemsMap[item.itemName] = 0
+        }
+//        recomposeToggleState.value = !recomposeToggleState.value
     }
 
-    val purchaseItemPresenter = StorePresenter(GeneralView {})
+    class PurchaseItemView (onSuccess : (StoreItem) -> Unit, val item: StoreItem) : StorePresenter.View {
+
+        var onSuccess: ((StoreItem) -> Unit)? = onSuccess
+
+        override fun taskSuccess(message: String?) {
+            onSuccess?.invoke(item)
+        }
+        override fun showInfoMessage(message: String?) {
+            Toast.makeText(
+                context,
+                message,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+        override fun taskFail(message: String?) {
+            Toast.makeText(
+                context,
+                message,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -146,11 +196,11 @@ fun ShopScreen() {
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(onClick = {
-                        // TODO implement this
+                        onBackClicked()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Localized description"
+                            contentDescription = "Localized description",
                         )
                     }
                 },
@@ -174,12 +224,14 @@ fun ShopScreen() {
                         .fillMaxWidth()
                 )
                 Box(
-                    modifier=Modifier
-                        .width(150.dp)
+                    modifier= Modifier
+//                        .width(150.dp)
                         .height(50.dp)
+                        .weight(0.8f)
                 ) {
                     Surface(
-                        color = MaterialTheme.colorScheme.tertiaryContainer,
+//                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        color = Color.LightGray,
                         modifier = Modifier
                     ) {
                         Row(
@@ -191,15 +243,20 @@ fun ShopScreen() {
                                 fontSize = 25.sp,
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
+//                                    .weight(1f)
                             )
-                            Spacer(Modifier.weight(1f))
+                            Spacer(Modifier.weight(0.5f))
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_android_gold_24dp),
+                                painter = painterResource(id = R.drawable.gold_ingots_gold_svgrepo_com),
                                 contentDescription = "Localized description",
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
+                                    .padding(5.dp, 1.dp)
+                                    .weight(1f),
+                                tint = Color.Unspecified
                             )
-                            Text("x" + 500,
+                            Text(
+                                "x$goldDisplayed",
                                 fontSize = 15.sp,
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically))
@@ -230,12 +287,18 @@ fun ShopScreen() {
                             defaultElevation = 6.dp
                         ),
                         onClick = {
+                            val purchaseItemPresenter = StorePresenter(PurchaseItemView(
+                                item = item,
+                                onSuccess = { item ->
+                                    playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
+                                    println("Player gold is ${Cache.getInstance().currPlayer.gold}")
+                                    println("Item cost is ${item.cost}")
+                                    Cache.getInstance().currPlayer.gold = Cache.getInstance().currPlayer.gold - item.cost
+                                    println("Player gold is now ${Cache.getInstance().currPlayer.gold}")
+                                    goldDisplayed -= item.cost
+                                }
+                            ))
                             purchaseItemPresenter.addItem(item.itemName)
-                            playerItemsMap[item.itemName] = playerItemsMap[item.itemName]!! + 1
-                            recomposeToggleState.value = !recomposeToggleState.value
-
-                            // TODO update gold
-//                            Cache.getInstance().currPlayer.gold = Cache.getInstance().currPlayer.gold - item.cost
                         }
                     )
                     {
@@ -249,7 +312,7 @@ fun ShopScreen() {
                                 contentDescription = "Item",
                                 modifier = Modifier
                                     .size(35.dp)
-                                    .align(Alignment.CenterVertically)
+                                    .align(Alignment.CenterVertically),
                             )
                             Column(
                                 modifier = Modifier
@@ -278,17 +341,18 @@ fun ShopScreen() {
 //                            Spacer(Modifier.weight(0.5f))
                             Spacer(Modifier)
                             Text(
-                                "${item.cost} Gold",
+                                "${item.cost}",
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
                                     .padding(5.dp, 1.dp)
                             )
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_android_gold_24dp),
+                                painter = painterResource(id = R.drawable.gold_ingots_gold_svgrepo_com),
                                 contentDescription = "Localized description",
                                 modifier = Modifier
                                     .size(15.dp)
-                                    .align(Alignment.CenterVertically)
+                                    .align(Alignment.CenterVertically),
+                                tint = Color.Unspecified
                             )
 
                         }
@@ -296,7 +360,6 @@ fun ShopScreen() {
                 }
             }
         }
-
         LaunchedEffect(recomposeToggleState.value) {} // used to force recompose
     }
 }
@@ -305,6 +368,8 @@ fun ShopScreen() {
 @Composable
 fun ShopScreenPreview() {
     TodoFromScratchTheme {
-        ShopScreen()
+        ShopScreen(
+            onBackClicked = {}
+        )
     }
 }

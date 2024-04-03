@@ -10,9 +10,7 @@ import java.io.IOException;
 import com.example.todofromscratch.model.service.UserService;
 import com.example.todofromscratch.model.domain.AuthToken;
 import com.example.todofromscratch.model.domain.User;
-import com.example.todofromscratch.model.net.request.LoginRequest;
 import com.example.todofromscratch.model.net.request.RegisterRequest;
-import com.example.todofromscratch.model.net.response.LoginResponse;
 import com.example.todofromscratch.model.net.response.RegisterResponse;
 import com.example.todofromscratch.util.Pair;
 
@@ -39,14 +37,14 @@ public class RegisterTask extends AuthenticateTask {
      */
 //    private final String image;
     private User registeredUser;
-    private AuthToken authToken;
+    private AuthToken authtoken;
 
-    public RegisterTask(String username, String password, String email, String firstName, String lastName,
+    public RegisterTask(UserService userService, String username, String password, String email, String firstName, String lastName,
                         Handler messageHandler) {
         super(messageHandler, username, password);
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
 //        this.image = image;
     }
 
@@ -65,7 +63,7 @@ public class RegisterTask extends AuthenticateTask {
 
             if (response.isSuccess()) {
                 this.registeredUser = response.getUser();
-                this.authToken = response.getAuthToken();
+                this.authtoken = response.getAuthtoken();
                 sendSuccessMessage();
             } else {
                 sendFailedMessage(response.getMessage());
@@ -78,12 +76,12 @@ public class RegisterTask extends AuthenticateTask {
 
     @Override
     protected Pair<User, AuthToken> runAuthenticationTask() {
-        return new Pair<>(registeredUser, authToken);
+        return new Pair<>(registeredUser, authtoken);
     }
 
     @Override
     protected void loadSuccessBundle(Bundle msgBundle) {
         msgBundle.putSerializable(USER_KEY, registeredUser);
-        msgBundle.putSerializable(AUTH_TOKEN_KEY, authToken);
+        msgBundle.putSerializable(AUTH_TOKEN_KEY, authtoken);
     }
 }

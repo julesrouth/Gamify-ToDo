@@ -6,7 +6,7 @@ import com.example.todofromscratch.model.domain.User;
 public class RegisterResponse extends Response {
 
     private User user;
-    private AuthToken authToken;
+    private AuthToken authtoken;
 
     /**
      * Creates a response indicating that the corresponding request was unsuccessful.
@@ -23,10 +23,10 @@ public class RegisterResponse extends Response {
      * @param user the now logged in user.
      * @param authToken the auth token representing this user's session with the server.
      */
-    public RegisterResponse(User user, AuthToken authToken) {
+    public RegisterResponse(User user, AuthToken authtoken) {
         super(true, null);
         this.user = user;
-        this.authToken = authToken;
+        this.authtoken = authtoken;
     }
 
     /**
@@ -43,8 +43,8 @@ public class RegisterResponse extends Response {
      *
      * @return the auth token.
      */
-    public AuthToken getAuthToken() {
-        return authToken;
+    public AuthToken getAuthtoken() {
+        return authtoken;
     }
 }
 

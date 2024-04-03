@@ -26,12 +26,12 @@ public class LoginResponse extends Response {
      * Creates a response indicating that the corresponding request was successful.
      *
      * @param user the now logged in user.
-     * @param authToken the auth token representing this user's session with the server.
+     * @param authtoken the auth token representing this user's session with the server.
      */
-    public LoginResponse(User user, AuthToken authToken) {
+    public LoginResponse(User user, AuthToken authtoken) {
         super(true, null);
         this.user = user;
-        this.authtoken = authToken;
+        this.authtoken = authtoken;
     }
 
     /**
@@ -48,7 +48,7 @@ public class LoginResponse extends Response {
      *
      * @return the auth token.
      */
-    public AuthToken getAuthToken() {
+    public AuthToken getAuthtoken() {
         return authtoken;
     }
 }

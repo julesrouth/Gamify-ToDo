@@ -10,7 +10,14 @@ public class AuthToken implements Serializable {
      * Value of the auth token.
      */
     public String token;
+    /**
+     * String representation of date/time at which the auth token was created.
+     */
     public String userId;
+
+//    public AuthToken(String token) {
+//        this.token = token;
+//    }
 
     public AuthToken(String token, String userId) {
         this.token = token;

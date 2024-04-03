@@ -1,5 +1,11 @@
 # Gamify-ToDo
 
+<details close>
+  <summary>Colors</summary>
+  
+  ![image](https://github.com/julesrouth/Gamify-ToDo/assets/99697554/fe2eb710-c43e-451b-acfb-693cefecd51c)
+</details>
+
 # Architecture
 
 ## User
@@ -13,8 +19,8 @@
 ### Methods
 - login(username, password) returns User, Authtoken
 - register(User) returns User, Authtoken
-- updateUser(User, authtoken) returns User
-- deleteUser(authtoken) return Success
+- updateUser(User, Authtoken) returns User
+- deleteUser(Authtoken) return Success
 
 ## Authtoken
 ### Attributes
@@ -32,20 +38,12 @@
 - userId VARCHAR(255) FOREIGN KEY references User(id)
 - completed BOOLEAN
 ### Methods
-- listTasksForUser(authtoken) returns Task[]
-- getTask(taskId, authtoken) returns Task
-- createTask(Task, authtoken) returns Task
-- deleteTask(taskId, authtoken) returns Success
-- updateTask(Task, authtoken) returns Task //purely for editing tasks
-- checkTask(taskId, bool completed, authtoken) return success //for finishing and unchecking tasks
-
-## Difficulty
-### Attributes
-- difficulty ENUM('easy', 'medium', 'hard')
-- type ENUM('daily', 'weekly', 'to-do')
-- gold INT
-### Methods
-- getGold(difficulty, type) returns int gold
+- listTasksForUser(Authtoken) returns Task[]
+- getTask(taskId, Authtoken) returns Task
+- createTask(Task, Authtoken) returns Task
+- deleteTask(taskId, Authtoken) returns Success
+- updateTask(Task, Authtoken) returns Task //purely for editing tasks
+- checkTask(taskId, bool completed, Authtoken) return int gold //update player gold
 
 ## Player
 ### Attributes
@@ -55,38 +53,53 @@
 - experience INT DEFAULT 0
 - gold INT DEFAULT 0
 ### Methods
-- getPlayer(authtoken) returns Player
-- createPlayer(authtoken, characterName) returns Player
-- updateExperience(authtoken, experience) returns int experience, int level
-- updateGold(authtoken, gold) returns int gold
-- updateName(authtoken, name) returns string name
+- getPlayer(Authtoken) returns Player
+- createPlayer(Authtoken, characterName) returns Player
+- updateCharacterName(Authtoken, characterName) returns Player
+- enemyKilled(Authtoken, enemyLevel) returns int experience, int level
 
 ## Enemy
 ### Attributes
 - enemyName VARCHAR(255)
 - enemyType VARCHAR(255)
-- levelType INT
-- hitPoints INT DEFAULT 0
-- experiencePoints INT
+- enemyLevel INT
+- health INT
+- attack INT
+- defence INT
+
 ### Methods
-- getRandEnemy(level) return Enemy
+- getRandEnemy(playerLevel) return Enemy
 
 ## PlayerItem
 ### Attributes
-- itemID INT FOREIGN KEY references Store(itemID)
+- itemName VARCHAR(255) FOREIGN KEY references Store(itemID)
 - userId VARCHAR(255) FOREIGN KEY references Player(userID)
 ### Methods
-- getPlayerItem(itemID, authtoken) return PlayerItems
-- listPlayerItems(authtoken) return []PlayerItems
-- removePlayerItem(itemID, authtoken) return success
+- removePlayerItem(itemName, Authtoken) return Success
+- addPlayerItem(itemName, Authtoken) return Success
 
 ## StoreItem
 ### Attributes
-- itemID INT 
+- itemName VARCHAR(255) 
 - effects VARCHAR(255)
 - cost INT
 ### Methods
-- listStoreItems() return [] StoreItems
+- listStoreItems() return [] StoreItem
+- listPlayerItems(Authtoken) return [] StoreItem
+
+## Stat
+### Attributes
+- userId PRIMARY KEY
+- attack INT
+- defense INT
+- level INT
+- speed INT
+- maxHealth INT
+- maxMana INT
+  
+### Methods
+- getPlayerStat(AuthToken)
+- updatePlayerStat(Stat, Authtoken)
 
 ![alt text](https://github.com/julesrouth/Gamify-ToDo/blob/main/images/Tables.png)
 ![alt text](https://github.com/julesrouth/Gamify-ToDo/blob/main/images/Flow.png)

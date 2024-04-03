@@ -38,7 +38,7 @@ public class LoginTask extends BackgroundTask {
     /**
      * The auth token returned by the server.
      */
-    protected AuthToken authToken;
+    protected AuthToken authtoken;
 
     private ServerFacade serverFacade;
 
@@ -57,7 +57,8 @@ public class LoginTask extends BackgroundTask {
             LoginResponse response = getServerFacade().login(request, UserService.URL_PATH);
             if (response.isSuccess()) {
                 this.user = response.getUser();
-                this.authToken = response.getAuthToken();
+                this.authtoken = response.getAuthtoken();
+
                 sendSuccessMessage();
             } else {
                 sendFailedMessage(response.getMessage());
@@ -70,7 +71,7 @@ public class LoginTask extends BackgroundTask {
 
     protected void loadSuccessBundle(Bundle msgBundle) {
         msgBundle.putSerializable(USER_KEY, this.user);
-        msgBundle.putSerializable(AUTH_TOKEN_KEY, this.authToken);
+        msgBundle.putSerializable(AUTH_TOKEN_KEY, this.authtoken);
     }
 
     /**

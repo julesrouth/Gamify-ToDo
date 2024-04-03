@@ -1,20 +1,21 @@
 package com.example.todofromscratch.model.service;
 
-import android.widget.EditText;
-import android.widget.TextView;
-
 import com.example.todofromscratch.model.service.backgroundTask.BackgroundTaskUtils;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetUserTask;
+import com.example.todofromscratch.model.service.backgroundTask.GetPlayerTask;
 import com.example.todofromscratch.model.service.backgroundTask.LoginTask;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.LogoutTask;
 import com.example.todofromscratch.model.service.backgroundTask.RegisterTask;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.handler.GetUserHandler;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.handler.GetUserStatusHandler;
+import com.example.todofromscratch.model.service.backgroundTask.handler.GetPlayerHandler;
+import com.example.todofromscratch.model.service.backgroundTask.handler.ListPlayerItemsHandler;
 import com.example.todofromscratch.model.service.backgroundTask.handler.LoginTaskHandler;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.handler.LogoutHandler;
 import com.example.todofromscratch.model.service.backgroundTask.handler.RegisterHandler;
 import com.example.todofromscratch.model.service.backgroundTask.observer.AuthenticateObserver;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.observer.LogoutObserver;
+import com.example.todofromscratch.model.service.backgroundTask.observer.GeneralObserver;
 import com.example.todofromscratch.model.service.backgroundTask.observer.RegisterObserver;
 //import edu.byu.cs.tweeter.client.model.service.backgroundTask.observer.StatusObserver;
 import com.example.todofromscratch.model.domain.AuthToken;
@@ -30,12 +31,14 @@ public class UserService extends Service {
     public static final String GETUSER_URL_PATH = "/getuser";
     public static final String REGISTER_URL_PATH = "/register";
 
+    public static final String GET_PLAYER_URL_PATH = "/getPlayer";
+
     /**
      * An observer interface to be implemented by observers who want to be notified when
      * asynchronous operations complete.
      */
     public interface LoginObserver {
-        void handleSuccess(User user, AuthToken authToken);
+        void handleSuccess(User user, AuthToken authtoken);
         void handleFailure(String message);
         void handleException(Exception exception);
     }
@@ -64,18 +67,17 @@ public class UserService extends Service {
 //    }
 
     public void register(String username, String password, String email, String firstName, String lastName,  RegisterObserver observer) {
-        RegisterTask registerTask = new RegisterTask(username, password,
-                email, firstName, lastName, new RegisterHandler(observer));
+        RegisterTask registerTask = getRegisterTask(username, password,
+                email, firstName, lastName, observer);
 
         BackgroundTaskUtils.runTask(registerTask);
     }
 
-//    public void register(EditText firstName, EditText lastName, EditText alias, EditText password, String imageBytesBase64, RegisterObserver observer) {
-//        RegisterTask registerTask = new RegisterTask(firstName.getText().toString(), lastName.getText().toString(),
-//                alias.getText().toString(), password.getText().toString(), imageBytesBase64, new RegisterHandler(observer));
-//
-//        BackgroundTaskUtils.runTask(registerTask);
-//    }
+    public void getPlayer(GeneralObserver observer) {
+        System.out.println("In user service and getting player");
+        GetPlayerTask task = new GetPlayerTask(new GetPlayerHandler(observer));
+        BackgroundTaskUtils.runTask(task);
+    }
 
 //    public void getUser(AuthToken authToken, TextView userAlias, StatusObserver observer) {
 //        GetUserTask getUserTask = new GetUserTask(authToken,
@@ -104,6 +106,10 @@ public class UserService extends Service {
      */
     LoginTask getLoginTask(String username, String password, AuthenticateObserver observer) {
         return new LoginTask(this, username, password, new LoginTaskHandler(observer));
+    }
+
+    private RegisterTask getRegisterTask(String username, String password, String email, String firstName, String lastName, RegisterObserver observer) {
+        return new RegisterTask(this, username, password, email, firstName, lastName, new RegisterHandler(observer));
     }
 }
 

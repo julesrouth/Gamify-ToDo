@@ -2,6 +2,9 @@ package com.example.todofromscratch.cache;
 
 
 import com.example.todofromscratch.game.Game;
+import com.example.todofromscratch.model.domain.PlayerItem;
+import com.example.todofromscratch.model.domain.Player;
+import com.example.todofromscratch.model.domain.StoreItemsList;
 import com.example.todofromscratch.model.domain.AuthToken;
 import com.example.todofromscratch.model.domain.PlayerItem;
 import com.example.todofromscratch.model.domain.Player;
@@ -29,7 +32,7 @@ public class Cache {
     /**
      * The auth token for the current user session.
      */
-    private AuthToken currUserAuthToken;
+    private AuthToken currUserAuthtoken;
 
     private Player currPlayer;
     private StoreItemsList storeItems = new StoreItemsList(null);
@@ -42,9 +45,12 @@ public class Cache {
 
     private void initialize() {
         currUser = new User(null, null, null, null, null);
-        currUserAuthToken = null;
         currPlayer = new Player("test", "testName", 0, 0, 0);
         game = new Game();
+        currUserAuthtoken = null;
+        currPlayer = null;
+        storeItems = new StoreItemsList(null);
+        playerItems.clear();
     }
 
     public Game getGame(){
@@ -63,11 +69,11 @@ public class Cache {
     }
 
     public AuthToken getCurrUserAuthToken() {
-        return currUserAuthToken;
+        return currUserAuthtoken;
     }
 
-    public void setCurrUserAuthToken(AuthToken currUserAuthToken) {
-        this.currUserAuthToken = currUserAuthToken;
+    public void setCurrUserAuthToken(AuthToken currUserAuthtoken) {
+        this.currUserAuthtoken = currUserAuthtoken;
     }
 
     public Player getCurrPlayer() {

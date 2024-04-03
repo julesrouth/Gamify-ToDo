@@ -201,7 +201,6 @@ public Stat generateRandomEnemyStat(int level){
         return shielding;
     }
 
-
     public int getInitiative() {
         return initiative;
     }
