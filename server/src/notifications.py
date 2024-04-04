@@ -53,11 +53,11 @@ class Notifications:
         # Logic to send push notification to Kotlin app
         print("Sending notification:", message, "to user:", user_id)
 
-        # Create the request payload
+      
         payload = {
             "app_id": self.ONE_SIGNAL_APP_ID,
-            "include_player_ids": [	'046921b5-9c41-4396-a63c-7dff197edc79'], #change back to user_id
-            "contents": {"en": message}
+            "include_external_user_ids": [user_id],
+            "contents": {"en": message},
         }
 
         # Make the HTTP request to send the notification
@@ -70,10 +70,7 @@ class Notifications:
         print("Request payload:", payload)
         response = requests.post("https://onesignal.com/api/v1/notifications", json=payload, headers=headers)
 
-        # response = self.client.send_notification(
-        #     contents={"en": message},
-        #     include_player_ids=[user_id]
-        # )
+    
         if response.status_code == 200:
             print("Notification sent successfully")
             return 'Notification sent successfully'

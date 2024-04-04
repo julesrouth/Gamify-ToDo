@@ -58,8 +58,6 @@ public class RegisterPresenter extends AuthenticatePresenter implements Register
 
             UserService userService = new UserService();
             userService.register(username, password, email, firstname, lastname, this);
-
-            OneSignal.login(username);
         }
     }
 }

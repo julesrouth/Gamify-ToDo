@@ -28,9 +28,6 @@ public class LoginPresenter extends AuthenticatePresenter implements Authenticat
 
             UserService userService = new UserService();
             userService.login(username, password, this);
-            //String userId = Cache.getInstance().getCurrUserID();
-            //println(userId);
-            OneSignal.login(username);
         }
     }
 
