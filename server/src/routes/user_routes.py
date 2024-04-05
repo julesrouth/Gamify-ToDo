@@ -5,9 +5,10 @@ import sys
 
 sys.path.append('..')
 
-from Model import Authtoken, User, Player, LoginResponse, RegisterResponse
+from Model import Authtoken, User, Player, Stat, LoginResponse, RegisterResponse
 from database.AuthtokenDAO import AuthtokenDAO
 from database.PlayerDAO import PlayerDAO
+from database.StatDao import StatDao
 from database.UserDAO import UserDAO
 from database.TaskDAO import TaskDAO
 from database.conn import create_connection
@@ -61,6 +62,15 @@ def register():
         except Exception as e:
             login_response = RegisterResponse(False, str(e), None, None, None)
             return jsonify(login_response.__dict__)
+        
+        stat = Stat(authtoken.userId, 10, 10, 1, 10, 20, 10)
+        stat_dao = StatDao(conn)
+        try:
+            stat_dao.insert(stat)
+        except Exception as e:
+            login_response = RegisterResponse(False, str(e), None, None, None)
+            return jsonify(login_response.__dict__)
+
     
     login_response = RegisterResponse(True, "Registration successful", authtoken, user, player)
     return jsonify(login_response.__dict__)
