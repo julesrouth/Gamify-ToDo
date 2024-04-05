@@ -1,5 +1,6 @@
 package com.example.todofromscratch.ui
 
+import android.text.style.BackgroundColorSpan
 import android.widget.Button
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -40,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.example.todofromscratch.R
 import com.example.todofromscratch.cache.Cache
 import com.example.todofromscratch.game.*
@@ -105,8 +108,8 @@ fun GameMainScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    containerColor = Color(ContextCompat.getColor(context, R.color.light_green)),
+                    titleContentColor = Color(ContextCompat.getColor(context, R.color.black)),
                 ),
                 title = {
                     Text(
@@ -237,7 +240,10 @@ fun ShowButton(
             .padding(5.dp),
         onClick = {
             onClickAction()
-        }
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(ContextCompat.getColor(LocalContext.current, R.color.neutral_green))
+        )
     ) {
         Text(
             textString,
