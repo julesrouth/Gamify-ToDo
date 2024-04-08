@@ -48,9 +48,8 @@ public class ServerFacade {
     // private static final String SERVER_URL = "http://172.22.246.171:8080";
 //    private static final String SERVER_URL = "http://192.168.39.105:5001";
 //    private static final String SERVER_URL = "http://10.37.103.182:5001";
-    private static final String SERVER_URL = "http://10.37.107.154:5001";
-
-
+//    private static final String SERVER_URL = "http://10.37.107.154:5001";
+    private static final String SERVER_URL = "http://10.37.14.193:5001";
 
 
     private final ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
