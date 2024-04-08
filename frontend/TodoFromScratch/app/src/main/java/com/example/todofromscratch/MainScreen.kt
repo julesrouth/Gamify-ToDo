@@ -126,11 +126,6 @@ fun MainScreen(
         taskPresenter.getTasks() // Load all tasks
     }
 
-//    val taskPresenter = TaskPresenter(TaskView())
-
-    // Call getTasks method from TaskPresenter
-//    taskPresenter.getTasks() //Load all tasks
-
     val tasks = Tasks.getInstance().getTasks()
     var uncompletedTasks = mutableListOf<Task>()
     val completedTasks = mutableListOf<Task>()
@@ -236,60 +231,6 @@ fun MainScreen(
     ) { paddingValues ->
         TodoListScreen(uncompletedTasks = uncompletedTasks, taskTasks = taskTasks, dailyTasks = dailyTasks,
             weeklyTasks = weeklyTasks, taskPresenter = taskPresenter, onCheckboxClicked = onCheckboxClicked, onTaskClicked = onTaskClicked)
-//        LazyColumn(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(paddingValues)
-//        ) {
-//            items(uncompletedTasks) { task ->
-//                var checkedState = remember { mutableStateOf(task.completed) }
-//                Row() {
-//                    Checkbox(
-//                        checked = checkedState.value,
-//                        onCheckedChange = {
-//                            checkedState.value = it
-//                            task.completed = checkedState.value
-//                            if (checkedState.value) {
-//                                taskPresenter.checkTask(task)
-//                                println("in checkedState.value!!")
-//                                onCheckboxClicked()
-////                                tasks.remove(task)
-////                                println("tasks after remove: $tasks");
-////                                onTaskCompleted(task, checkedState.value)
-////                                if (it) {
-////                                    taskPresenter.checkTask(task)
-////                                }
-//                            }
-////                            refreshPage = true
-//                        },
-//                        modifier = Modifier.padding(5.dp)
-//                    )
-//                    Column(
-//                        modifier = Modifier
-//                            .fillMaxSize()
-//                            .align(Alignment.CenterVertically)
-//                            .clickable(
-//                                onClick = {
-//                                    // Call the onTaskClicked callback when a task is clicked
-//                                    onTaskClicked(task)
-//                                }
-//                            )
-//                    ) {
-//                        Text(
-//                            text = task.taskName,
-//                            modifier = Modifier.fillMaxWidth()
-//                        )
-//                        if (task.dueDate.isNotBlank()) {
-//                            Text(
-//                                text = "Due: " + task.dueDate,
-//                                modifier = Modifier.fillMaxWidth()
-//                            )
-//                        }
-//                    }
-//                }
-//                Divider()
-//            }
-//        }
     }
 }
 
