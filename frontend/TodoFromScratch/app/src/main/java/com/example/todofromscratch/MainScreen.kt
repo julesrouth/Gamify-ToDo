@@ -170,7 +170,7 @@ fun MainScreen(
 //    val context = LocalContext.current
 
     // Function to handle checkbox click
-    val onCheckboxClicked: () -> Unit = {
+    val onCheckboxClicked: (Task) -> Unit = {
 //        taskPresenter.checkTask(task)
         refreshPage = !refreshPage // Toggle refreshPage to trigger recomposition
     }
@@ -235,7 +235,7 @@ fun MainScreen(
         }
     ) { paddingValues ->
         TodoListScreen(uncompletedTasks = uncompletedTasks, taskTasks = taskTasks, dailyTasks = dailyTasks,
-            weeklyTasks = weeklyTasks, onCheckboxClicked = { /*TODO*/ }, onTaskClicked = onTaskClicked)
+            weeklyTasks = weeklyTasks, taskPresenter = taskPresenter, onCheckboxClicked = onCheckboxClicked, onTaskClicked = onTaskClicked)
 //        LazyColumn(
 //            modifier = Modifier
 //                .fillMaxSize()
@@ -299,10 +299,12 @@ fun TodoListScreen(
     taskTasks: List<Task>,
     dailyTasks: List<Task>,
     weeklyTasks: List<Task>,
-    onCheckboxClicked: () -> Unit,
+    taskPresenter: TaskPresenter,
+    onCheckboxClicked: (Task) -> Unit,
     onTaskClicked: (Task) -> Unit
 ) {
     var tabIndex by remember { mutableStateOf(0) }
+    var refreshPage by remember { mutableStateOf(false) } // Add refreshPage state variable
 
     val tabs = listOf("All", "Task", "Daily", "Weekly")
 
@@ -315,7 +317,10 @@ fun TodoListScreen(
                 Tab(
                     text = { Text(title) },
                     selected = tabIndex == index,
-                    onClick = { tabIndex = index }
+                    onClick = { tabIndex = index
+                                refreshPage = !refreshPage
+                              },
+
                 )
             }
         }
@@ -323,20 +328,26 @@ fun TodoListScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         when (tabIndex) {
-            0 -> AllTabContent(uncompletedTasks, onCheckboxClicked, onTaskClicked)
-            1 -> TaskTabContent(taskTasks, onCheckboxClicked, onTaskClicked)
-            2 -> DailyTabContent(dailyTasks, onCheckboxClicked, onTaskClicked)
-            3 -> WeeklyTabContent(weeklyTasks, onCheckboxClicked, onTaskClicked)
+            0 -> AllTabContent(uncompletedTasks, taskPresenter, onCheckboxClicked, onTaskClicked, refreshPage)
+            1 -> TaskTabContent(taskTasks, taskPresenter, onCheckboxClicked, onTaskClicked, refreshPage)
+            2 -> DailyTabContent(dailyTasks, taskPresenter, onCheckboxClicked, onTaskClicked, refreshPage)
+            3 -> WeeklyTabContent(weeklyTasks, taskPresenter, onCheckboxClicked, onTaskClicked, refreshPage)
         }
     }
 }
 
 @Composable
-fun AllTabContent(uncompletedTasks: List<Task>, onCheckboxClicked: () -> Unit, onTaskClicked: (Task) -> Unit) {
+fun AllTabContent(uncompletedTasks: List<Task>, taskPresenter: TaskPresenter, onCheckboxClicked: (Task) -> Unit, onTaskClicked: (Task) -> Unit,
+                  refreshPage: Boolean) {
     LazyColumn {
         items(uncompletedTasks) { task ->
             var checkedState by remember { mutableStateOf(task.completed) }
 
+//            LaunchedEffect(checkedState) {
+//                taskPresenter.checkTask(task)// Trigger recomposition when checkedState changes
+//                onCheckboxClicked(task)
+//            }
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
@@ -348,7 +359,8 @@ fun AllTabContent(uncompletedTasks: List<Task>, onCheckboxClicked: () -> Unit, o
                         task.completed = isChecked
                         // Call the necessary callbacks
                         if (isChecked) {
-                            onCheckboxClicked()
+                            taskPresenter.checkTask(task)
+                            onCheckboxClicked(task)
                         }
                     },
                     modifier = Modifier.padding(end = 16.dp)
@@ -370,11 +382,17 @@ fun AllTabContent(uncompletedTasks: List<Task>, onCheckboxClicked: () -> Unit, o
 }
 
 @Composable
-fun TaskTabContent(taskTasks: List<Task>, onCheckboxClicked: () -> Unit, onTaskClicked: (Task) -> Unit) {
+fun TaskTabContent(taskTasks: List<Task>, taskPresenter: TaskPresenter, onCheckboxClicked: (Task) -> Unit, onTaskClicked: (Task) -> Unit,
+                   refreshPage: Boolean) {
     LazyColumn {
         items(taskTasks) { task ->
             var checkedState by remember { mutableStateOf(task.completed) }
 
+//            LaunchedEffect(checkedState) {
+//                taskPresenter.checkTask(task)// Trigger recomposition when checkedState changes
+//                onCheckboxClicked(task)
+//            }
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
@@ -386,7 +404,8 @@ fun TaskTabContent(taskTasks: List<Task>, onCheckboxClicked: () -> Unit, onTaskC
                         task.completed = isChecked
                         // Call the necessary callbacks
                         if (isChecked) {
-                            onCheckboxClicked()
+                            taskPresenter.checkTask(task)
+                            onCheckboxClicked(task)
                         }
                     },
                     modifier = Modifier.padding(end = 16.dp)
@@ -408,11 +427,17 @@ fun TaskTabContent(taskTasks: List<Task>, onCheckboxClicked: () -> Unit, onTaskC
 }
 
 @Composable
-fun DailyTabContent(dailyTasks: List<Task>, onCheckboxClicked: () -> Unit, onTaskClicked: (Task) -> Unit) {
+fun DailyTabContent(dailyTasks: List<Task>, taskPresenter: TaskPresenter, onCheckboxClicked: (Task) -> Unit, onTaskClicked: (Task) -> Unit,
+                    refreshPage: Boolean) {
     LazyColumn {
         items(dailyTasks) { task ->
             var checkedState by remember { mutableStateOf(task.completed) }
 
+//            LaunchedEffect(checkedState) {
+//                taskPresenter.checkTask(task)// Trigger recomposition when checkedState changes
+//                onCheckboxClicked(task)
+//            }
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
@@ -424,7 +449,8 @@ fun DailyTabContent(dailyTasks: List<Task>, onCheckboxClicked: () -> Unit, onTas
                         task.completed = isChecked
                         // Call the necessary callbacks
                         if (isChecked) {
-                            onCheckboxClicked()
+                            taskPresenter.checkTask(task)
+                            onCheckboxClicked(task)
                         }
                     },
                     modifier = Modifier.padding(end = 16.dp)
@@ -446,10 +472,16 @@ fun DailyTabContent(dailyTasks: List<Task>, onCheckboxClicked: () -> Unit, onTas
 }
 
 @Composable
-fun WeeklyTabContent(weeklyTasks: List<Task>, onCheckboxClicked: () -> Unit, onTaskClicked: (Task) -> Unit) {
+fun WeeklyTabContent(weeklyTasks: List<Task>, taskPresenter: TaskPresenter, onCheckboxClicked: (Task) -> Unit, onTaskClicked: (Task) -> Unit,
+                     refreshPage: Boolean) {
     LazyColumn {
         items(weeklyTasks) { task ->
             var checkedState by remember { mutableStateOf(task.completed) }
+
+//            LaunchedEffect(checkedState) {
+//                taskPresenter.checkTask(task)// Trigger recomposition when checkedState changes
+//                onCheckboxClicked(task)
+//            }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -462,7 +494,8 @@ fun WeeklyTabContent(weeklyTasks: List<Task>, onCheckboxClicked: () -> Unit, onT
                         task.completed = isChecked
                         // Call the necessary callbacks
                         if (isChecked) {
-                            onCheckboxClicked()
+                            taskPresenter.checkTask(task)
+                            onCheckboxClicked(task)
                         }
                     },
                     modifier = Modifier.padding(end = 16.dp)
