@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.size
 import android.app.TimePickerDialog
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -24,6 +26,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -45,6 +48,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBarDefaults
@@ -59,6 +63,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,10 +71,15 @@ import androidx.compose.ui.unit.dp
 import java.time.Instant
 import java.time.ZoneOffset
 import androidx.compose.ui.semantics.Role.Companion.Button
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.todofromscratch.cache.Cache
 import com.example.todofromscratch.model.domain.User
 import com.example.todofromscratch.presenter.TaskPresenter
@@ -88,14 +98,18 @@ import java.time.LocalDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
-    onNextButtonClicked: () -> Unit, ) {
+    onNextButtonClicked: () -> Unit, navController: NavController) {
+    println(taskToUpdate)
     val context = LocalContext.current
+
     val dateState =
         rememberDatePickerState(initialSelectedDateMillis = Instant.now().toEpochMilli())
     val timeState = rememberTimePickerState()
     val openDateDialog = remember { mutableStateOf(false) }
     val openTimeDialog = remember { mutableStateOf(false) }
     var pickTime by remember { mutableStateOf(false) }
+    var difficulty by remember { mutableStateOf("easy")}
+    var type by remember { mutableStateOf("todo")}
 //    var dateStr by remember { mutableStateOf("") }
 //    var timeStr by remember {mutableStateOf("")}
     val formatter = remember { SimpleDateFormat("hh:mm a", Locale.getDefault()) }
@@ -104,6 +118,7 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
     cal.set(Calendar.HOUR_OF_DAY, timeState.hour)
     cal.set(Calendar.MINUTE, timeState.minute)
     cal.isLenient = false
+
 
     class TaskView : TaskPresenter.View {
 
@@ -144,6 +159,9 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
     var name by remember {
         mutableStateOf(taskToUpdate?.taskName ?: "")
     }
+    var description by remember {
+        mutableStateOf("")
+    }
 
     // Populate date and time fields if in edit mode
     var dateStr by remember { mutableStateOf(taskToUpdate?.dueDate ?: "") }
@@ -153,6 +171,25 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
         // Extract time from due date if available
         val dateTime = LocalDateTime.parse(taskToUpdate.dueDate)
         timeStr = dateTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
+    }
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    var isEditting = false
+
+    val id = navBackStackEntry?.arguments?.getString("taskId")?.toIntOrNull()
+    var task: Task? = null
+    println("The id is: ")
+    println(id)
+    if (id != null) {
+        isEditting = true
+        task = Tasks.getInstance().getTaskById(id)
+        println(Tasks.getInstance().getTaskById(id))
+        if (task != null) {
+            difficulty = task.difficulty
+            type = task.type
+            name = task.taskName
+            description = task.description
+        }
     }
 
     Scaffold(
@@ -178,6 +215,36 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                 onValueChange = { text ->
                     name = text
                 },
+            )
+
+            Text(
+                    "Description:",
+                    modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(10.dp)
+            )
+
+            TextField(
+                    modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(horizontal = 16.dp)
+                            .height(120.dp)
+                            .background(Color.White),
+                    value = description,
+                    onValueChange = { text ->
+                        description = text
+                    },
+                    textStyle = TextStyle.Default.copy(
+                            lineHeight = 24.sp,
+                    ),
+                    maxLines = Int.MAX_VALUE,
+                    shape = RoundedCornerShape(8.dp),
+//                colors = TextFieldDefaults.textFieldColors(
+//                    backgroundColor = Color.LightGray,
+//                    focusedIndicatorColor = Color.Transparent,
+//                    unfocusedIndicatorColor = Color.Transparent,
+//                    cursorColor = Color.Black
+//                )
             )
 
             Row(
@@ -212,6 +279,111 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                 )
+            }
+            Row(
+                    modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                        text = "Difficulty",
+                        modifier = Modifier
+                                .size(55.dp)
+                                .align(Alignment.CenterVertically)
+                )
+                Row(
+                        modifier = Modifier
+                                .width(200.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                ) {
+                    Box(
+                            modifier = Modifier
+                                    .clickable { difficulty = "easy" }
+                                    .border(width = 2.dp, Color.Blue)
+                                    .background(if (difficulty == "easy") MaterialTheme.colorScheme.primary else Color.Transparent)
+                    ) {
+                        Text(text = "Easy",
+                                modifier = Modifier.padding(8.dp),
+                                color = if (difficulty == "easy") Color.White else Color.Black
+                        )
+                    }
+                    Box(
+                            modifier = Modifier
+                                    .clickable { difficulty = "medium" }
+                                    .border(width = 2.dp, Color.Blue)
+                                    .background(if (difficulty == "medium") MaterialTheme.colorScheme.primary else Color.Transparent)
+                    ) {
+                        Text(text = "Medium",
+                                modifier = Modifier.padding(8.dp),
+                                color = if (difficulty == "medium") Color.White else Color.Black
+                        )
+                    }
+                    Box(
+                            modifier = Modifier
+                                    .clickable { difficulty = "hard" }
+                                    .border(width = 2.dp, Color.Blue)
+                                    .background(if (difficulty == "hard") MaterialTheme.colorScheme.primary else Color.Transparent)
+                    ) {
+                        Text(text = "Hard",
+                                modifier = Modifier.padding(8.dp),
+                                color = if (difficulty == "hard") Color.White else Color.Black
+                        )
+                    }
+                }
+            }
+
+            Row(
+                    modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                        text = "Type",
+                        modifier = Modifier
+                                .size(55.dp)
+                                .align(Alignment.CenterVertically)
+                )
+                Row(
+                        modifier = Modifier
+                                .width(200.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                ) {
+                    Box(
+                            modifier = Modifier
+                                    .clickable { type = "todo" }
+                                    .border(width = 2.dp, Color.Blue)
+                                    .background(if (type == "todo") MaterialTheme.colorScheme.primary else Color.Transparent)
+                    ) {
+                        Text(text = "To-do",
+                                modifier = Modifier.padding(8.dp),
+                                color = if (type == "todo") Color.White else Color.Black
+                        )
+                    }
+                    Box(
+                            modifier = Modifier
+                                    .clickable { type = "daily" }
+                                    .border(width = 2.dp, Color.Blue)
+                                    .background(if (type == "daily") MaterialTheme.colorScheme.primary else Color.Transparent)
+                    ) {
+                        Text(text = "Daily",
+                                modifier = Modifier.padding(8.dp),
+                                color = if (type == "daily") Color.White else Color.Black
+                        )
+                    }
+                    Box(
+                            modifier = Modifier
+                                    .clickable { type = "weekly" }
+                                    .border(width = 2.dp, Color.Blue)
+                                    .background(if (type == "weekly") MaterialTheme.colorScheme.primary else Color.Transparent)
+                    ) {
+                        Text(text = "Weekly",
+                                modifier = Modifier.padding(8.dp),
+                                color = if (type == "weekly") Color.White else Color.Black
+                        )
+                    }
+                }
             }
 
             if (openDateDialog.value) {
@@ -266,48 +438,52 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                         .fillMaxWidth()
                         .align(Alignment.CenterHorizontally)
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        Text(
-                            text = dateStr,
-                            modifier = Modifier
-                                .padding(5.dp)
-                                .align(Alignment.CenterVertically)
-                        )
+                    if (pickTime) {
+                        if (type != "daily") {
+                            Row(
+                                    modifier = Modifier
+                                            .align(Alignment.CenterHorizontally),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                Text(
+                                        text = dateStr,
+                                        modifier = Modifier
+                                                .padding(5.dp)
+                                                .align(Alignment.CenterVertically)
+                                )
 
-                        Button(
-                            modifier = Modifier
-                                .padding(5.dp),
-                            onClick = {
-                                openDateDialog.value = true
+                                Button(
+                                        modifier = Modifier
+                                                .padding(5.dp),
+                                        onClick = {
+                                            openDateDialog.value = true
+                                        }
+                                ) {
+                                    Text(text = "Select Due Date")
+                                }
                             }
-                        ) {
-                            Text(text = "Select Due Date")
                         }
-                    }
 
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        Text(
-                            text = timeStr,
-                            modifier = Modifier
-                                .padding(5.dp)
-                                .align(Alignment.CenterVertically)
-                        )
-                        Button(
-                            modifier = Modifier
-                                .padding(5.dp),
-                            onClick = {
-                                openTimeDialog.value = true
-                            }
+                        Row(
+                                modifier = Modifier
+                                        .align(Alignment.CenterHorizontally),
+                                horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            Text(text = "Select Time")
+                            Text(
+                                    text = timeStr,
+                                    modifier = Modifier
+                                            .padding(5.dp)
+                                            .align(Alignment.CenterVertically)
+                            )
+                            Button(
+                                    modifier = Modifier
+                                            .padding(5.dp),
+                                    onClick = {
+                                        openTimeDialog.value = true
+                                    }
+                            ) {
+                                Text(text = "Select Time")
+                            }
                         }
                     }
                 }
@@ -319,27 +495,29 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                     .padding(5.dp),
                 onClick = {
                     // If taskToUpdate is null, it means we're in add mode
-                    if (taskToUpdate == null) {
+                    if (task == null) {
                         // Add new task logic
-                        val difficulty = Difficulty.EASY.value
-                        val type = TaskType.TASK.value
                         var completed: Boolean = false
                         println("UserID in addtaskscreen: " + Cache.getInstance().currUserAuthToken.userId)
                         println("Completed in AddTaskScreen: " + completed)
-                        val task = Task(NULL, name, "test 2", dateStr, difficulty, type, Cache.getInstance().currUserAuthToken.userId, completed)
+                        val task = Task(NULL, name, description, dateStr, difficulty, type, Cache.getInstance().currUserAuthToken.userId, completed)
                         //TODO GET THR
                         Tasks.getInstance().addTask(task)
                         taskPresenter.addTask(task)
                     } else {
+                        var completed: Boolean = false
+                        val task = task?.let { Task(it.taskId, name, description, dateStr, difficulty, type, Cache.getInstance().currUserAuthToken.userId, completed) }
+                        if (task != null) {
+                            Tasks.getInstance().updateTask(task.taskId, task)
+                        }
                         // Update task logic
-                        taskToUpdate.taskName = name
-                        taskToUpdate.dueDate = dateStr
+                        taskPresenter.updateTask(task)
                     }
                     onNextButtonClicked()
                 },
                 enabled = (name.isNotBlank())
             ) {
-                Text(text = if (taskToUpdate == null) "Add" else "Update")
+                Text(text = if (!isEditting) "Add" else "Update")
             }
         }
     }
@@ -360,7 +538,7 @@ fun showTopBar(
             ),
             title = {
                 Text(
-                    "Add Task",
+                    "Task",
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
 
@@ -455,5 +633,5 @@ fun TimePickerDialog(
 @Preview
 @Composable
 fun AddTaskScreenPreview() {
-    AddTaskScreen(onNextButtonClicked = {})
+    AddTaskScreen(onNextButtonClicked = {}, navController = rememberNavController())
 }

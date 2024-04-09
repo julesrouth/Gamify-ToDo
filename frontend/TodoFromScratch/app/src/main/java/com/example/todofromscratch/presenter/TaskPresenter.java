@@ -103,6 +103,16 @@ public class TaskPresenter extends PagedPresenters<Task>{
         taskService.addTask(Cache.getInstance().getCurrUserAuthToken(), newTask, new GetTaskObserver2());
     }
 
+    public void updateTask(Task newTask) {
+        TaskService taskService = new TaskService();
+        taskService.updateTask(Cache.getInstance().getCurrUserAuthToken(), newTask, new GetTaskObserver2());
+    }
+
+    public void deleteTask(int taskId) {
+        TaskService taskService = new TaskService();
+        taskService.deleteTask(Cache.getInstance().getCurrUserAuthToken(), taskId, new GetTaskObserver2());
+    }
+
     public void checkTask(Task task) {
         TaskService taskService = new TaskService();
         taskService.checkTask(Cache.getInstance().getCurrUserAuthToken(), task, new GetTaskObserver2());

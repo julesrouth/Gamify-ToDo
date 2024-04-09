@@ -29,6 +29,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Start
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -76,6 +78,7 @@ import kotlinx.coroutines.flow.collect
 fun MainScreen(
     onMenuButtonClicked: () -> Unit,
     onAddTaskButtonClicked: () -> Unit,
+    onEditTaskButtonClicked: (Task) -> Unit,
     onTaskClicked: (Task) -> Unit, // Callback to handle task clicks
     onLogoutClicked : () -> Unit
 ) {
@@ -144,7 +147,7 @@ fun MainScreen(
     // Call getTasks method from TaskPresenter
 //    taskPresenter.getTasks() //Load all tasks
 
-    val tasks = Tasks.getInstance().getTasks()
+    var tasks by remember { mutableStateOf(Tasks.getInstance().getTasks().toMutableList()) }
     val uncompletedTasks = mutableListOf<Task>()
     val completedTasks = mutableListOf<Task>()
 
@@ -289,7 +292,9 @@ fun MainScreen(
             ) {
                 items(uncompletedTasks) { task ->
                     var checkedState = remember { mutableStateOf(task.completed) }
-                    Row() {
+                    Row(
+                            verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Checkbox(
                             checked = checkedState.value,
                             onCheckedChange = {
@@ -313,7 +318,6 @@ fun MainScreen(
                         )
                         Column(
                             modifier = Modifier
-                                .fillMaxSize()
                                 .align(Alignment.CenterVertically)
                                 .clickable(
                                     onClick = {
@@ -324,14 +328,38 @@ fun MainScreen(
                         ) {
                             Text(
                                 text = task.taskName,
-                                modifier = Modifier.fillMaxWidth()
                             )
                             if (task.dueDate.isNotBlank()) {
                                 Text(
-                                    text = "Due: " + task.dueDate,
+                                        text = "Due: " + task.dueDate,
                                     modifier = Modifier.fillMaxWidth()
                                 )
                             }
+                        }
+                        Row(
+                                modifier = Modifier.fillMaxWidth().padding(end = 10.dp),
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "Add",
+                                    modifier = Modifier
+                                            .clickable {
+                                                onEditTaskButtonClicked(task)
+                                            }
+                                            .padding(end = 2.dp) // Optional: Add padding between icons
+                            )
+                            Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Delete",
+                                    modifier = Modifier
+                                            .clickable {
+                                                taskPresenter.deleteTask(task.taskId)
+                                                Tasks.getInstance().deleteTask(task.taskId)
+                                                tasks = Tasks.getInstance().getTasks().toMutableList()
+                                            }
+                            )
                         }
                     }
                     Divider()
@@ -355,6 +383,7 @@ fun MainScreenPreview() {
     TodoFromScratchTheme {
         MainScreen(
             onAddTaskButtonClicked = {},
+                onEditTaskButtonClicked = {},
             onTaskClicked = {}, // Dummy implementation for onTaskClicked
             onMenuButtonClicked = {},
             onLogoutClicked = {}

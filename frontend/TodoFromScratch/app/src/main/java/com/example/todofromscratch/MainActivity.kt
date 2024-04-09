@@ -79,11 +79,14 @@ class MainActivity : ComponentActivity() {
                     },
                     onTaskClicked = { task ->
                         // Navigate to AddTaskScreen with task information
-                        navController.navigate("${Screen.AddTaskScreen.route}/${task.taskName}")
+                        navController.navigate("${Screen.AddTaskScreen.route}/${task.taskId}")
                     },
                     onMenuButtonClicked = {
                         Cache.getInstance().currPlayer = null
                         navController.navigate(Screen.GameMainScreen.route)
+                    },
+                    onEditTaskButtonClicked = { task ->
+                        navController.navigate(Screen.AddTaskScreen.createRoute(task.taskId))
                     },
                     onLogoutClicked = {
                         navController.popBackStack(Screen.LoginScreen.route, false)
@@ -97,7 +100,7 @@ class MainActivity : ComponentActivity() {
                 AddTaskScreen(
                     onNextButtonClicked = {
                         navController.popBackStack()
-                    }
+                    }, navController = navController
                 )
             }
             composable(
@@ -145,19 +148,19 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            composable(
-                route = "${Screen.AddTaskScreen.route}/{taskName}",
-                arguments = listOf(navArgument("taskName") { type = NavType.StringType })
-            ) { backStackEntry ->
-                val taskName = backStackEntry.arguments?.getString("taskName")
-                val task = taskName?.let { Tasks.getInstance().getTaskbyName(it) }
-                AddTaskScreen(
-                    taskToUpdate = task,
-                    onNextButtonClicked = {
-                        navController.popBackStack()
-                    }
-                )
-            }
+//            composable(
+//                route = "${Screen.AddTaskScreen.route}/{taskId}",
+//                arguments = listOf(navArgument("taskId") { type = NavType.IntType })
+//            ) { backStackEntry ->
+//                val taskId = backStackEntry.arguments?.getInt("taskId")
+//                val task = taskId?.let { Tasks.getInstance().getTaskById(it) }
+//                AddTaskScreen(
+//                    taskToUpdate = task,
+//                    onNextButtonClicked = {
+//                        navController.popBackStack()
+//                    }, navController = navController
+//                )
+//            }
 //            composable(
 //                route = Screen.AddTaskScreen.route,
 //            ) {
