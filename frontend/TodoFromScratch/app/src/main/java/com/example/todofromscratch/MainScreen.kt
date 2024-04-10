@@ -1,5 +1,6 @@
 package com.example.todofromscratch
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -42,6 +44,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -72,6 +76,7 @@ import kotlinx.coroutines.delay
 import java.time.LocalTime
 import kotlinx.coroutines.flow.collect
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,11 +93,11 @@ fun MainScreen(
     // State variables to track if we are adding or updating a task
     var isUpdatingTask by remember { mutableStateOf(false) }
     var taskToUpdate by remember { mutableStateOf<Task?>(null) }
-    var gettingTasksFromServer by remember {mutableStateOf(false)}
+    var gettingTasksFromServer by remember { mutableStateOf(false) }
 
     var goldVisibility by remember { mutableStateOf(false) }
-    val goldAnimationEnter : Long = 1000;
-    val goldAnimationExit : Long = 1000;
+    val goldAnimationEnter: Long = 1000;
+    val goldAnimationExit: Long = 1000;
 
     class TaskView : TaskPresenter.View {
 
@@ -149,11 +154,23 @@ fun MainScreen(
 
     var tasks by remember { mutableStateOf(Tasks.getInstance().getTasks().toMutableList()) }
     val uncompletedTasks = mutableListOf<Task>()
+
     val completedTasks = mutableListOf<Task>()
+    var dailyTasks = mutableListOf<Task>()
+    var weeklyTasks = mutableListOf<Task>()
+    var taskTasks = mutableListOf<Task>()
 
     for (task in tasks) {
         if (!task.completed) {
             uncompletedTasks.add(task)
+            if (task.type == "daily") {
+                dailyTasks.add(task)
+            } else if (task.type == "weekly") {
+                weeklyTasks.add(task)
+            } else if (task.type == "task") {
+                taskTasks.add(task)
+                println("Regular task task")
+            }
         }
     }
     for (task in tasks) {
@@ -164,6 +181,9 @@ fun MainScreen(
     println("tasks at beginning: $tasks")
     println("tasks not completed: $uncompletedTasks")
     println("tasks completed: $completedTasks")
+    println("daily Tasks: $dailyTasks")
+    println("weekly Tasks: $weeklyTasks")
+    println("task Tasks: $taskTasks")
     uncompletedTasks.forEach { task ->
         // Perform operations with each task here
         println("Task description in mainScreen: ${task.description}")
@@ -173,10 +193,20 @@ fun MainScreen(
 //    val context = LocalContext.current
 
     // Function to handle checkbox click
-    val onCheckboxClicked: () -> Unit = {
+    val onCheckboxClicked: (Task) -> Unit = {
 //        taskPresenter.checkTask(task)
+        goldVisibility = true
         refreshPage = !refreshPage // Toggle refreshPage to trigger recomposition
     }
+
+    var selectedTabIndex by remember { mutableStateOf(0) }
+
+    val tabs = listOf(
+        "All Tasks" to uncompletedTasks,
+        "Task Tasks" to taskTasks,
+        "Daily Tasks" to dailyTasks,
+        "Weekly Tasks" to weeklyTasks
+    )
 
     // Scaffold with top app bar and floating action button
     Scaffold(
@@ -196,7 +226,7 @@ fun MainScreen(
                 navigationIcon = {
                     Row(
                         modifier = Modifier
-                            .clickable {onLogoutClicked()}
+                            .clickable { onLogoutClicked() }
                             .padding(5.dp)
                     ) {
                         Icon(
@@ -206,7 +236,8 @@ fun MainScreen(
                                 .align(Alignment.CenterVertically)
                                 .padding(2.dp)
                         )
-                        Text("Logout",
+                        Text(
+                            "Logout",
                             modifier = Modifier
                                 .align(Alignment.CenterVertically)
                         )
@@ -215,10 +246,11 @@ fun MainScreen(
                 actions = {
                     Row(
                         modifier = Modifier
-                            .clickable {onMenuButtonClicked()}
+                            .clickable { onMenuButtonClicked() }
                             .padding(5.dp)
                     ) {
-                        Text("Game",
+                        Text(
+                            "Game",
                             modifier = Modifier
                                 .align(Alignment.CenterVertically)
                                 .padding(2.dp)
@@ -241,9 +273,10 @@ fun MainScreen(
                 })
             {
                 Text(
-                    text="Add Task",
-                    modifier=Modifier
-                        .padding(10.dp))
+                    text = "Add Task",
+                    modifier = Modifier
+                        .padding(10.dp)
+                )
             }
         }
     ) { paddingValues ->
@@ -273,8 +306,7 @@ fun MainScreen(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     fontSize = 30.sp,
-//                    color = Color.Yellow
-                    color=Color(0xF6,0xBB, 0x42,0xFF)
+                    color = Color(0xF6, 0xBB, 0x42, 0xFF)
                 )
                 Spacer(modifier = Modifier.weight(1f))
 
@@ -285,105 +317,340 @@ fun MainScreen(
             enter = fadeIn(animationSpec = tween(goldAnimationEnter.toInt())),
             exit = fadeOut(animationSpec = tween(goldAnimationExit.toInt()))
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                items(uncompletedTasks) { task ->
-                    var checkedState = remember { mutableStateOf(task.completed) }
-                    Row(
-                            verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Checkbox(
-                            checked = checkedState.value,
-                            onCheckedChange = {
-                                checkedState.value = it
-                                task.completed = checkedState.value
-                                if (checkedState.value) {
-                                    taskPresenter.checkTask(task)
-                                    println("in checkedState.value!!")
-                                    onCheckboxClicked()
-                                    goldVisibility = true
-//                                tasks.remove(task)
-//                                println("tasks after remove: $tasks");
-//                                onTaskCompleted(task, checkedState.value)
-//                                if (it) {
-//                                    taskPresenter.checkTask(task)
-//                                }
-                                }
-//                            refreshPage = true
-                            },
-                            modifier = Modifier.padding(5.dp)
-                        )
-                        Column(
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .clickable(
-                                    onClick = {
-                                        // Call the onTaskClicked callback when a task is clicked
-                                        onTaskClicked(task)
-                                    }
-                                )
-                        ) {
-                            Text(
-                                text = task.taskName,
-                            )
-                            if (task.dueDate.isNotBlank()) {
-                                Text(
-                                        text = "Due: " + task.dueDate,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            }
-                        }
-                        Row(
-                                modifier = Modifier.fillMaxWidth().padding(end = 10.dp),
-                                horizontalArrangement = Arrangement.End,
-                                verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                    imageVector = Icons.Default.Edit,
-                                    contentDescription = "Add",
-                                    modifier = Modifier
-                                            .clickable {
-                                                onEditTaskButtonClicked(task)
-                                            }
-                                            .padding(end = 2.dp) // Optional: Add padding between icons
-                            )
-                            Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = "Delete",
-                                    modifier = Modifier
-                                            .clickable {
-                                                taskPresenter.deleteTask(task.taskId)
-                                                Tasks.getInstance().deleteTask(task.taskId)
-                                                tasks = Tasks.getInstance().getTasks().toMutableList()
-                                            }
-                            )
-                        }
-                    }
-                    Divider()
+            TodoListScreen(
+                uncompletedTasks = uncompletedTasks,
+                taskTasks = taskTasks,
+                dailyTasks = dailyTasks,
+                weeklyTasks = weeklyTasks,
+                taskPresenter = taskPresenter,
+                onCheckboxClicked = onCheckboxClicked,
+                onTaskClicked = onTaskClicked,
+                onEditTaskButtonClicked = onEditTaskButtonClicked,
+                onDeleteClicked = {
+                    taskPresenter.deleteTask(it.taskId)
+                    Tasks.getInstance().deleteTask(it.taskId)
+                    tasks = Tasks.getInstance().getTasks().toMutableList()
                 }
+            )
+        }
+        LaunchedEffect(
+            key1=goldVisibility,
+            block= {
+                delay((goldAnimationEnter + goldAnimationExit))
+                goldVisibility = false
             }
-        }
+        )
     }
-    LaunchedEffect(
-        key1=goldVisibility,
-        block= {
-            delay((goldAnimationEnter + goldAnimationExit))
-            goldVisibility = false
-        }
-    )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun DisplayEditingForTask(
+    task: Task,
+    onEditTaskButtonClicked: (Task) -> Unit,
+    onDeleteClicked: (Task) -> Unit
+) {
+    Row(
+        modifier = Modifier.padding(start = 10.dp, end = 7.dp),
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = Icons.Default.Edit,
+            contentDescription = "Add",
+            modifier = Modifier
+                .clickable {
+                    onEditTaskButtonClicked(task)
+                }
+                .padding(end = 2.dp) // Optional: Add padding between icons
+        )
+        Icon(
+            imageVector = Icons.Default.Delete,
+            contentDescription = "Delete",
+            modifier = Modifier
+                .clickable {
+                    onDeleteClicked(task);
+                }
+        )
+    }
+}
+
+@Composable
+fun TodoListScreen(
+    uncompletedTasks: List<Task>,
+    taskTasks: List<Task>,
+    dailyTasks: List<Task>,
+    weeklyTasks: List<Task>,
+    taskPresenter: TaskPresenter,
+    onCheckboxClicked: (Task) -> Unit,
+    onTaskClicked: (Task) -> Unit,
+    onEditTaskButtonClicked: (Task) -> Unit,
+    onDeleteClicked: (Task) -> Unit
+) {
+    var tabIndex by remember { mutableStateOf(0) }
+    var refreshPage by remember { mutableStateOf(false) } // Add refreshPage state variable
+
+    val tabs = listOf("All", "Task", "Daily", "Weekly")
+
+    Column(modifier = Modifier.fillMaxSize()) {
+
+        Spacer(modifier = Modifier.height(60.dp))
+
+        TabRow(selectedTabIndex = tabIndex) {
+            tabs.forEachIndexed { index, title ->
+                Tab(
+                    text = { Text(title) },
+                    selected = tabIndex == index,
+                    onClick = { tabIndex = index
+                                refreshPage = !refreshPage
+                              },
+
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        when (tabIndex) {
+            0 -> AllTabContent(uncompletedTasks, taskPresenter, onCheckboxClicked, onTaskClicked, refreshPage, onEditTaskButtonClicked, onDeleteClicked)
+            1 -> TaskTabContent(taskTasks, taskPresenter, onCheckboxClicked, onTaskClicked, refreshPage, onEditTaskButtonClicked, onDeleteClicked)
+            2 -> DailyTabContent(dailyTasks, taskPresenter, onCheckboxClicked, onTaskClicked, refreshPage, onEditTaskButtonClicked, onDeleteClicked)
+            3 -> WeeklyTabContent(weeklyTasks, taskPresenter, onCheckboxClicked, onTaskClicked, refreshPage, onEditTaskButtonClicked, onDeleteClicked)
+        }
+    }
+}
+
+@Composable
+fun AllTabContent(uncompletedTasks: List<Task>,
+                  taskPresenter: TaskPresenter,
+                  onCheckboxClicked: (Task) -> Unit,
+                  onTaskClicked: (Task) -> Unit,
+                  refreshPage: Boolean,
+                  onEditTaskButtonClicked: (Task) -> Unit,
+                  onDeleteClicked: (Task) -> Unit,
+) {
+    LazyColumn {
+        items(uncompletedTasks) { task ->
+            var checkedState by remember { mutableStateOf(task.completed) }
+
+//            LaunchedEffect(checkedState) {
+//                taskPresenter.checkTask(task)// Trigger recomposition when checkedState changes
+//                onCheckboxClicked(task)
+//            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+            ) {
+                Checkbox(
+                    checked = checkedState,
+                    onCheckedChange = { isChecked ->
+                        checkedState = isChecked
+                        task.completed = isChecked
+                        // Call the necessary callbacks
+                        if (isChecked) {
+                            taskPresenter.checkTask(task)
+                            onCheckboxClicked(task)
+                        }
+                    },
+                    modifier = Modifier.padding(end = 16.dp)
+                )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { onTaskClicked(task) }
+                ) {
+                    Text(text = task.taskName)
+                    if (task.dueDate.isNotBlank()) {
+                        Text(text = "Due: ${task.dueDate}")
+                    }
+                }
+                DisplayEditingForTask(
+                    task,
+                    onEditTaskButtonClicked,
+                    onDeleteClicked
+                )
+            }
+            Divider()
+        }
+    }
+}
+
+@Composable
+fun TaskTabContent(taskTasks: List<Task>,
+                   taskPresenter: TaskPresenter,
+                   onCheckboxClicked: (Task) -> Unit,
+                   onTaskClicked: (Task) -> Unit,
+                   refreshPage: Boolean,
+                   onEditTaskButtonClicked: (Task) -> Unit,
+                   onDeleteClicked: (Task) -> Unit,
+) {
+    LazyColumn {
+        items(taskTasks) { task ->
+            var checkedState by remember { mutableStateOf(task.completed) }
+
+//            LaunchedEffect(checkedState) {
+//                taskPresenter.checkTask(task)// Trigger recomposition when checkedState changes
+//                onCheckboxClicked(task)
+//            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+            ) {
+                Checkbox(
+                    checked = checkedState,
+                    onCheckedChange = { isChecked ->
+                        checkedState = isChecked
+                        task.completed = isChecked
+                        // Call the necessary callbacks
+                        if (isChecked) {
+                            taskPresenter.checkTask(task)
+                            onCheckboxClicked(task)
+                        }
+                    },
+                    modifier = Modifier.padding(end = 16.dp)
+                )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { onTaskClicked(task) }
+                ) {
+                    Text(text = task.taskName)
+                    if (task.dueDate.isNotBlank()) {
+                        Text(text = "Due: ${task.dueDate}")
+                    }
+                }
+                DisplayEditingForTask(
+                    task,
+                    onEditTaskButtonClicked,
+                    onDeleteClicked
+                )
+            }
+            Divider()
+        }
+    }
+}
+
+@Composable
+fun DailyTabContent(dailyTasks: List<Task>,
+                    taskPresenter: TaskPresenter,
+                    onCheckboxClicked: (Task) -> Unit,
+                    onTaskClicked: (Task) -> Unit,
+                    refreshPage: Boolean,
+                    onEditTaskButtonClicked: (Task) -> Unit,
+                    onDeleteClicked: (Task) -> Unit,
+) {
+    LazyColumn {
+        items(dailyTasks) { task ->
+            var checkedState by remember { mutableStateOf(task.completed) }
+
+//            LaunchedEffect(checkedState) {
+//                taskPresenter.checkTask(task)// Trigger recomposition when checkedState changes
+//                onCheckboxClicked(task)
+//            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+            ) {
+                Checkbox(
+                    checked = checkedState,
+                    onCheckedChange = { isChecked ->
+                        checkedState = isChecked
+                        task.completed = isChecked
+                        // Call the necessary callbacks
+                        if (isChecked) {
+                            taskPresenter.checkTask(task)
+                            onCheckboxClicked(task)
+                        }
+                    },
+                    modifier = Modifier.padding(end = 16.dp)
+                )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { onTaskClicked(task) }
+                ) {
+                    Text(text = task.taskName)
+                    if (task.dueDate.isNotBlank()) {
+                        Text(text = "Due: ${task.dueDate}")
+                    }
+                }
+                DisplayEditingForTask(
+                    task,
+                    onEditTaskButtonClicked,
+                    onDeleteClicked
+                )
+            }
+            Divider()
+        }
+    }
+}
+
+@Composable
+fun WeeklyTabContent(weeklyTasks: List<Task>,
+                     taskPresenter: TaskPresenter,
+                     onCheckboxClicked: (Task) -> Unit,
+                     onTaskClicked: (Task) -> Unit,
+                     refreshPage: Boolean,
+                     onEditTaskButtonClicked: (Task) -> Unit,
+                     onDeleteClicked: (Task) -> Unit,
+) {
+    LazyColumn {
+        items(weeklyTasks) { task ->
+            var checkedState by remember { mutableStateOf(task.completed) }
+
+//            LaunchedEffect(checkedState) {
+//                taskPresenter.checkTask(task)// Trigger recomposition when checkedState changes
+//                onCheckboxClicked(task)
+//            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+            ) {
+                Checkbox(
+                    checked = checkedState,
+                    onCheckedChange = { isChecked ->
+                        checkedState = isChecked
+                        task.completed = isChecked
+                        // Call the necessary callbacks
+                        if (isChecked) {
+                            taskPresenter.checkTask(task)
+                            onCheckboxClicked(task)
+                        }
+                    },
+                    modifier = Modifier.padding(end = 16.dp)
+                )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { onTaskClicked(task) }
+                ) {
+                    Text(text = task.taskName)
+                    if (task.dueDate.isNotBlank()) {
+                        Text(text = "Due: ${task.dueDate}")
+                    }
+                }
+                DisplayEditingForTask(
+                    task,
+                    onEditTaskButtonClicked,
+                    onDeleteClicked
+                )
+            }
+            Divider()
+        }
+    }
+}
+
 @Preview
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreenPreview() {
     TodoFromScratchTheme {
         MainScreen(
             onAddTaskButtonClicked = {},
-                onEditTaskButtonClicked = {},
+            onEditTaskButtonClicked = {},
             onTaskClicked = {}, // Dummy implementation for onTaskClicked
             onMenuButtonClicked = {},
             onLogoutClicked = {}

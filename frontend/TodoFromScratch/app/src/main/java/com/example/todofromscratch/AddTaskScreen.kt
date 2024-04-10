@@ -109,7 +109,7 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
     val openTimeDialog = remember { mutableStateOf(false) }
     var pickTime by remember { mutableStateOf(false) }
     var difficulty by remember { mutableStateOf("easy")}
-    var type by remember { mutableStateOf("todo")}
+    var type by remember { mutableStateOf("task")}
 //    var dateStr by remember { mutableStateOf("") }
 //    var timeStr by remember {mutableStateOf("")}
     val formatter = remember { SimpleDateFormat("hh:mm a", Locale.getDefault()) }
@@ -352,13 +352,13 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                 ) {
                     Box(
                             modifier = Modifier
-                                    .clickable { type = "todo" }
+                                    .clickable { type = "task" }
                                     .border(width = 2.dp, Color.Blue)
-                                    .background(if (type == "todo") MaterialTheme.colorScheme.primary else Color.Transparent)
+                                    .background(if (type == "task") MaterialTheme.colorScheme.primary else Color.Transparent)
                     ) {
                         Text(text = "To-do",
                                 modifier = Modifier.padding(8.dp),
-                                color = if (type == "todo") Color.White else Color.Black
+                                color = if (type == "task") Color.White else Color.Black
                         )
                     }
                     Box(
