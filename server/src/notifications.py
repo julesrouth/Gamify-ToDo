@@ -81,10 +81,12 @@ class Notifications:
 
     # Schedule a notification for a task
     def schedule_notification_task(self, task):
-        print("Scheduling notification for task:", task.taskName)
+        
         # time will be formated like this: 2021-10-10/hh:mm a
 
         notification_time = datetime.strptime(task.dueDate, '%Y-%m-%d %I:%M %p')
+
+        print(f"Scheduling notification for task: {task.taskName} at time {notification_time}")
 
         message = f"Reminder: {task.taskName} is due at {notification_time.strftime('%I:%M %p')}"
         try:

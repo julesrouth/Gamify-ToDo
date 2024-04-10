@@ -500,7 +500,7 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                         var completed: Boolean = false
                         println("UserID in addtaskscreen: " + Cache.getInstance().currUserAuthToken.userId)
                         println("Completed in AddTaskScreen: " + completed)
-                        val task = Task(NULL, name, description, dateStr, difficulty, type, Cache.getInstance().currUserAuthToken.userId, completed)
+                        val task = Task(NULL, name, description, "$dateStr $timeStr", difficulty, type, Cache.getInstance().currUserAuthToken.userId, completed)
                         //TODO GET THR
                         Tasks.getInstance().addTask(task)
                         taskPresenter.addTask(task)
