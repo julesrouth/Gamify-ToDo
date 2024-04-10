@@ -86,7 +86,7 @@ class Notifications:
 
         notification_time = datetime.strptime(task.dueDate, '%Y-%m-%d %I:%M %p')
 
-        message = "Task: " + task.taskName
+        message = f"Reminder: {task.taskName} is due at {notification_time.strftime('%I:%M %p')}"
         try:
             self.scheduler.add_job(self.send_notification, 'date', run_date=notification_time, args=[self, task.userId, message])
             print("Task Notification scheduled successfully")
@@ -99,7 +99,7 @@ class Notifications:
     def schedule_notification_daily(self, task):
         # time will be formated like this: 2021-10-10 hh:mm am/pm
         notification_time = datetime.strptime(task.dueDate, '%Y-%m-%d %I:%M %p')
-        message = "Task: " + task.taskName
+        message = f"Reminder: {task.taskName} is due at {notification_time.strftime('%I:%M %p')}"
         self.scheduler.add_job(self.send_notification, 'interval', days=1, start_date=notification_time, args=[message])
         return "Daily Task Notification scheduled successfully"
 
@@ -108,5 +108,5 @@ class Notifications:
         # parse the date and time of the task correctly
         notification_time = datetime.strptime(task.dueDate, '%Y-%m-%d %I:%M %p')
         day_of_week = notification_time.weekday() #.strftime('%A')
-        message = "Task: " + task.taskName
+        message = f"Reminder: {task.taskName} is due at {notification_time.strftime('%I:%M %p')}"
         self.scheduler.add_job(self.send_notification, 'cron', day_of_week=day_of_week, hour=notification_time.hour, minute=notification_time.minute, args=[message])
