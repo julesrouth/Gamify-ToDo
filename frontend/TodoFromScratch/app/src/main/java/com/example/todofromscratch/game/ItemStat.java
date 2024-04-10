@@ -1,5 +1,7 @@
 package com.example.todofromscratch.game;
 
+import com.example.todofromscratch.model.domain.Stat;
+
 public class ItemStat extends Stat {
     private int mana;
     private String features;

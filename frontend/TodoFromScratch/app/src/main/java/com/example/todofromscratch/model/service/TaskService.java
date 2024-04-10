@@ -5,7 +5,9 @@ import com.example.todofromscratch.model.domain.AuthToken;
 import com.example.todofromscratch.model.domain.User;
 import com.example.todofromscratch.model.service.backgroundTask.AddTask;
 import com.example.todofromscratch.model.service.backgroundTask.CheckTask;
+import com.example.todofromscratch.model.service.backgroundTask.DeleteTask;
 import com.example.todofromscratch.model.service.backgroundTask.TaskTask;
+import com.example.todofromscratch.model.service.backgroundTask.UpdateTask;
 import com.example.todofromscratch.model.service.backgroundTask.handler.CheckTaskHanlder;
 import com.example.todofromscratch.model.service.backgroundTask.handler.TaskHandler;
 import com.example.todofromscratch.model.service.backgroundTask.observer.PagedTaskObserver;
@@ -17,6 +19,8 @@ public class TaskService extends Service {
 
     public static final String GET_TASK_URL = "/listTasksForUser";
     public static final String GET_ADDTASK_URL = "/createTask";
+    public static final String GET_UPDATETASK_URL = "/updateTask";
+    public static final String GET_DELETETASK_URL = "/deleteTask";
     public static final String GET_CHECKTASK_URL = "/checkTask";
 
     public interface GetTaskServiceObserver extends PagedTaskObserver<Task> {
@@ -41,6 +45,17 @@ public class TaskService extends Service {
         AddTask getAddTask = new AddTask(currUserAuthToken,
                 newTask, new TaskHandler(observer));
         execute(getAddTask);
+    }
+
+    public void updateTask(AuthToken currUserAuthToken, Task newTask, GetTaskServiceObserver observer) {
+        UpdateTask getUpdateTask = new UpdateTask(currUserAuthToken,
+                newTask, new TaskHandler(observer));
+        execute(getUpdateTask);
+    }
+    public void deleteTask(AuthToken currUserAuthToken, int taskId, GetTaskServiceObserver observer) {
+        DeleteTask getDeleteTask = new DeleteTask(currUserAuthToken,
+                taskId, new TaskHandler(observer));
+        execute(getDeleteTask);
     }
 //
 //

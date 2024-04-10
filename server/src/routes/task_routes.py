@@ -277,7 +277,7 @@ def checkTask():
     try:
         json_data = request.get_json()
         taskId = json_data['taskId']
-        completed = json_data['completed']
+        completed = True
         authtoken = Authtoken(json_data['authtoken']['token'], json_data['authtoken']['userId'])
     except Exception as e:
         return jsonify({'success': False, 'message': "Invalid Request Format"})

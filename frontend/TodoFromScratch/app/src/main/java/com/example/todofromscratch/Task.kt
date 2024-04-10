@@ -5,8 +5,11 @@
 //
 //data class Task(
 //
-//    val name: String = "",
-//    val date: String = "",
+//        val name: String = "",
+//        val description: String = "",
+//        val date: String = "",
+//        val difficulty: String = "",
+//        val type: String = ""
 //
 //) {
 //    var completed: Boolean = false

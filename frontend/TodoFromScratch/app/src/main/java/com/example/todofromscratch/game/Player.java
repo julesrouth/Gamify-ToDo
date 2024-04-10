@@ -1,6 +1,9 @@
 package com.example.todofromscratch.game;
 
 
+import com.example.todofromscratch.model.domain.Stat;
+import com.example.todofromscratch.model.domain.Statuses;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -22,26 +25,44 @@ class Player {
     private List<Move> moves;
     private int initiative;
     private Statuses status;
+    private Move nextMove;
 
     public Player(int x, int y) {
         this.location = new int[]{x, y};
-        this.stat = new Stat();
+        // this.stat = new Stat();
+        this.stat = new Stat(50, 25, 25 ,25 , 5);
         this.inventory = new Inventory();
         this.moves = new ArrayList<Move>();
         this.initiative = 5;
         this.status = new Statuses();
+
         // Initialize moves
         moves.add(new Move(GameEnum.MoveType.USEITEM, 0, 0, "Use an Item"));
-        moves.add(new Move(GameEnum.MoveType.ATTACK, 2, 100, "attack"));
+        moves.add(new Move(GameEnum.MoveType.ATTACK, 2, 108, "attack"));
         moves.add(new Move(GameEnum.MoveType.DEFEND, 2, 75, "defend"));
-        moves.add(new Move(GameEnum.MoveType.ATTACK, 4, 150, "strong attack"));
-        moves.add(new Move(GameEnum.MoveType.SPELL, 4, 50,"5", "fireball"));
+        moves.add(new Move(GameEnum.MoveType.ATTACK, 3, 150, "strong attack"));
+        moves.add(new Move(GameEnum.MoveType.SPELL, 4, 50, "5", "fireball"));
+        moves.add(new Move(GameEnum.MoveType.STATUS, 0, 70, "Enrage"));
+        moves.add(new Move(GameEnum.MoveType.SPELL, 10, 50, "3", "heal"));
+        moves.add(new Move(GameEnum.MoveType.SPELL, 2, 75, "5", "necrotic touch"));
     }
 
     public void addItem(Item item) {
         inventory.add(item);
     }
 
+    public Move getNextMove(){
+        return nextMove;
+    }
+
+    public void setNextMove(Move nextMove){
+        this.nextMove = nextMove;
+    }
+
+
+    public List<Move> getMoves(){
+        return moves;
+    }
     public void removeItem(Item item) {
         inventory.remove(item);
     }
@@ -65,6 +86,8 @@ class Player {
     public void setHealth(int health) {
         stat.setHealth(health);
     }
+
+
     public String printInventory() {
         StringBuilder tempStr = new StringBuilder();
         for (Item item : inventory.getItems()) {

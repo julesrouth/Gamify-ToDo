@@ -17,7 +17,7 @@ def getPlayerStat():
     
 
     try:
-        conn = create_connection()
+        conn = create_connection("database/todo_data.db")
     except Exception as e:
         return jsonify({'success': False, 'message': str(e), 'stat': None}) 
     
@@ -45,16 +45,23 @@ def getPlayerStat():
 def updatePlayerStat():
     try:
         json_data = request.get_json()
+        print("Try to get stat")
         stat = Stat(json_data['stat']['userId'], 
-                    json_data['stat']['health'], 
-                    # add more fields here
+                    json_data['stat']['attack'], 
+                    json_data['stat']['defense'],
+                    json_data['stat']['level'],
+                    json_data['stat']['speed'],
+                    json_data['stat']['maxHealth'],
+                    json_data['stat']['maxMana']
                     )
+        print("Got Stat")
         authtoken  = Authtoken(json_data['authtoken']['token'], json_data['authtoken']['userId'])
+        print("Got Token")
     except Exception as e:
         return jsonify({'success': False, 'message': "Invalid Request Format"})
     
     try:
-        conn = create_connection()
+        conn = create_connection("database/todo_data.db")
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
     

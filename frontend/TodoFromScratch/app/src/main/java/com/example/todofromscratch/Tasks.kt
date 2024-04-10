@@ -14,8 +14,11 @@ class Tasks private constructor() {
             }
     }
 
-    private val tasks: ArrayList<Task> = ArrayList()
+    private var tasks: ArrayList<Task> = ArrayList()
 
+    fun setTasks(currentTasks: ArrayList<Task>) {
+        tasks = currentTasks
+    }
     fun addTask(newTask: Task) {
         println("adding task into Tasks in Kotlin: " + newTask.description)
         tasks.add(newTask)
@@ -25,13 +28,31 @@ class Tasks private constructor() {
         return tasks
     }
 
-    fun getTaskbyName(name: String) : Task? {
+    fun deleteTask(id: Int): ArrayList<Task> {
+        val iterator = tasks.iterator()
+        while (iterator.hasNext()) {
+            val task = iterator.next()
+            if (task.taskId == id) {
+                iterator.remove()
+            }
+        }
+        return tasks
+    }
+
+    fun updateTask(id: Int, updatedTask: Task) {
+        for (index in tasks.indices) {
+            val task = tasks[index]
+            if (task.taskId == id) {
+                tasks[index] = updatedTask
+            }
+        }
+    }
+
+    fun getTaskById(id: Int) : Task? {
         var foundTask: Task? = null
-        val searchTasks: ArrayList<Task> = ArrayList()
-        for (task in searchTasks) {
-            if (task.taskName == name) {
+        for (task in tasks) {
+            if (task.taskId == id) {
                 foundTask = task
-                break // Break the loop once the task is found
             }
         }
         return foundTask

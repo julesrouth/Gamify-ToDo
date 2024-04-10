@@ -1,5 +1,6 @@
 package com.example.todofromscratch.ui
 
+import android.text.style.BackgroundColorSpan
 import android.widget.Button
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,8 +28,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.example.todofromscratch.R
 import com.example.todofromscratch.cache.Cache
 import com.example.todofromscratch.game.*
@@ -54,12 +59,12 @@ fun GameMainScreen(
     onCharacterClicked : () -> Unit,
     onExitClicked : () -> Unit,
 ) {
+    println("Composing. Player is ${Cache.getInstance().currPlayer?.characterName}")
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val context = LocalContext.current
-    val gettingPlayer = remember { mutableStateOf(false) }
-    val recomposeToggleState = remember { mutableStateOf(false) } // used to force recompose
-
+    var gettingPlayer by remember { mutableStateOf(false) }
+    var playerToDisplay by remember { mutableStateOf(Cache.getInstance().currPlayer)}
 
     open class GeneralView (onSuccess : () -> Unit) : PlayerPresenter.View {
 
@@ -69,7 +74,7 @@ fun GameMainScreen(
             Toast.makeText(
                 context,
                 message,
-                Toast.LENGTH_LONG
+                Toast.LENGTH_SHORT
             ).show()
         }
 
@@ -87,13 +92,14 @@ fun GameMainScreen(
     }
 
     if (Cache.getInstance().currPlayer == null) {
-        if (!gettingPlayer.value) {
-            gettingPlayer.value = true;
+        if (!gettingPlayer) {
+            gettingPlayer = true;
             println("Player is null so getting player")
 
             val playerPresenter = PlayerPresenter(GeneralView {
                 println(Cache.getInstance().currPlayer.characterName)
-                recomposeToggleState.value = !recomposeToggleState.value
+                gettingPlayer = false
+                playerToDisplay = Cache.getInstance().currPlayer
             })
             playerPresenter.getPlayer();
         }
@@ -102,8 +108,8 @@ fun GameMainScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    containerColor = Color(ContextCompat.getColor(context, R.color.light_green)),
+                    titleContentColor = Color(ContextCompat.getColor(context, R.color.black)),
                 ),
                 title = {
                     Text(
@@ -138,16 +144,15 @@ fun GameMainScreen(
                         modifier = Modifier
                             .padding(7.dp)
                     ) {
-                        val player = Cache.getInstance().currPlayer
                         Text("Player Info",
                             fontSize=30.sp)
-                        Text("Name: ${player?.characterName}",
+                        Text("Name: ${playerToDisplay?.characterName}",
                             fontSize=20.sp)
-                        Text("Level: ${game.level}",
+                        Text("Level: ${playerToDisplay?.level}",
                             fontSize=20.sp)
-                        Text("Experience: ${player?.experience}",
+                        Text("Experience: ${playerToDisplay?.experience}",
                             fontSize=20.sp)
-                        Text("Gold: ${game.gold}",
+                        Text("Gold: ${playerToDisplay?.gold}",
                             fontSize=20.sp)
                     }
                 }
@@ -219,7 +224,6 @@ fun GameMainScreen(
             }
         }
     }
-    LaunchedEffect(recomposeToggleState.value) {} // used to force recompose
 }
 
 @Composable
@@ -236,7 +240,10 @@ fun ShowButton(
             .padding(5.dp),
         onClick = {
             onClickAction()
-        }
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(ContextCompat.getColor(LocalContext.current, R.color.neutral_green))
+        )
     ) {
         Text(
             textString,

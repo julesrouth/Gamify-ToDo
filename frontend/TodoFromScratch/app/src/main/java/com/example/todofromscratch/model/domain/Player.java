@@ -1,6 +1,7 @@
 package com.example.todofromscratch.model.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Player implements Comparable<Player>, Serializable {
 
@@ -10,12 +11,27 @@ public class Player implements Comparable<Player>, Serializable {
     private int experience;
     private int gold;
 
+    private Stat stat;
+
+    private ArrayList<PlayerItem> playerItems;
+
     public Player(String userId, String characterName, int level, int experience, int gold) {
         this.userId = userId;
         this.characterName = characterName;
         this.level = level;
         this.experience = experience;
         this.gold = gold;
+        this.playerItems = new ArrayList<>();
+        this.playerItems.add(new PlayerItem("Item 1"));
+        this.playerItems.add(new PlayerItem("Item 2"));
+        this.stat = new Stat();
+    }
+
+    public Stat getStat() {
+        return stat;
+    }
+    public void setStat(Stat stat){
+        this.stat = stat;
     }
 
     public String getUserId() {
@@ -56,6 +72,17 @@ public class Player implements Comparable<Player>, Serializable {
 
     public void setGold(int gold) {
         this.gold = gold;
+    }
+
+    public ArrayList<PlayerItem> getPlayerItems() {
+        return playerItems;
+    }
+
+    public void setPlayerItems(ArrayList<PlayerItem> playerItems) {
+        this.playerItems = playerItems;
+    }
+    public void addPlayerItem(PlayerItem item){
+        this.playerItems.add(item);
     }
 
     @Override
