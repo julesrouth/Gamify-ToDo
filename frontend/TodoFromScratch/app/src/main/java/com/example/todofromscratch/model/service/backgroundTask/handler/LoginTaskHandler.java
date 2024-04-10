@@ -8,6 +8,8 @@ import com.example.todofromscratch.model.service.backgroundTask.LoginTask;
 import com.example.todofromscratch.model.service.backgroundTask.observer.AuthenticateObserver;
 import com.example.todofromscratch.model.domain.AuthToken;
 import com.example.todofromscratch.model.domain.User;
+import com.onesignal.OneSignal;
+//import com.onesignal.OneSignal.User;
 
 /**
  * Handles messages from the background task indicating that the task is done, by invoking
@@ -36,6 +38,7 @@ public class LoginTaskHandler extends MainHandler {
     protected void success(Message msg) {
         User loggedInUser = (User) msg.getData().getSerializable(LoginTask.USER_KEY);
         AuthToken authtoken = (AuthToken) msg.getData().getSerializable(LoginTask.AUTH_TOKEN_KEY);
+        OneSignal.login(authtoken.userId);
 
         //Cache user session info
         Cache.getInstance().setCurrUser(loggedInUser);

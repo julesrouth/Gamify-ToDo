@@ -1,0 +1,13 @@
+__pycache__/
+env
+server/database/*.db
+server/database/*.sqbpro
+server/database/*.db-journal
+server/routes/*.config
+server/venv
+keys
+database
+
+frontend/.idea
+frontend/TodoFromScratch/.idea
+frontend/TodoFromScratch/local.properties

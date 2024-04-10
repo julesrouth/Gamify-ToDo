@@ -9,7 +9,7 @@ from database.AuthtokenDAO import AuthtokenDAO
 from database.PlayerDAO import PlayerDAO
 from database.conn import create_connection
 from tables import get_gold
-
+from globals import app, notifications
 
 
 def createTask():
@@ -39,7 +39,7 @@ def createTask():
     try:
         task = Task(highest_id + 1,
                     json_data['task']['taskName'],
-                    json_data['task']['description'],
+                    json_data['task']['description'],  
                     json_data['task']['dueDate'],
                     json_data['task']['difficulty'],
                     json_data['task']['type'],
@@ -68,6 +68,21 @@ def createTask():
             task_dao.insert(task)
         except Exception as e:
             return jsonify({'success': False, 'message': str(e), 'task': None})
+        
+        #schedule task notification
+        try:
+            notifications.schedule_notification_task(task)
+            # match json_data['task']['type']:
+            #     case "task":
+            #         notifications.schedule_notification_task(task)
+            #     case "daily":
+            #         notifications.schedule_notification_daily(task)
+            #     case "weekly":
+            #         notifications.schedule_notification_weekly(task)
+            #     case _:
+            #         return jsonify({'success': False, 'message': 'Invalid task type', 'task': None})
+        except Exception as e:
+            return jsonify({'success': False, 'message': 'notification fail', 'task': None})
 
     if task.completed == True:
         task.completed = "true"
@@ -311,5 +326,7 @@ def checkTask():
             player_dao.updateGold(authtoken.userId, player.gold + gold_added)
         except Exception as e:
             return jsonify({'success': False, 'message': str(e)})
+        
+        #delete from scheduler
         
     return jsonify({'success': True, 'message': 'Task checked'})

@@ -9,6 +9,7 @@ import com.example.todofromscratch.model.service.backgroundTask.RegisterTask;
 import com.example.todofromscratch.model.service.backgroundTask.observer.RegisterObserver;
 import com.example.todofromscratch.model.domain.AuthToken;
 import com.example.todofromscratch.model.domain.User;
+import com.onesignal.OneSignal;
 
 public class RegisterHandler extends MainHandler {
 
@@ -29,6 +30,7 @@ public class RegisterHandler extends MainHandler {
     protected void success(Message msg) {
         User registeredUser = (User) msg.getData().getSerializable(RegisterTask.USER_KEY);
         AuthToken authtoken = (AuthToken) msg.getData().getSerializable(RegisterTask.AUTH_TOKEN_KEY);
+        OneSignal.login(authtoken.userId);
 
         Cache.getInstance().setCurrUser(registeredUser);
         Cache.getInstance().setCurrUserAuthToken(authtoken);

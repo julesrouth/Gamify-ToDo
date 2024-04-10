@@ -4,8 +4,14 @@ import routes.task_routes as task_routes
 import routes.player_routes as player_routes
 import routes.item_routes as item_routes
 import routes.stat_routes as stat_routes
+from globals import app
 
-app = Flask(__name__)
+# set configuration values
+class Config:
+    SCHEDULER_API_ENABLED = True
+
+app.config.from_object(Config())
+
 
 @app.route("/")
 def hello_world():
@@ -40,3 +46,4 @@ app.route('/listStoreItems', methods=['POST', 'GET'])(item_routes.listStoreItems
 # Stat Routes
 app.route('/getPlayerStat', methods=['POST'])(stat_routes.getPlayerStat)
 app.route('/updatePlayerStat', methods=['POST'])(stat_routes.updatePlayerStat)
+

@@ -19,12 +19,24 @@ import androidx.navigation.navArgument
 import com.example.todofromscratch.cache.Cache
 import com.example.todofromscratch.game.Game
 import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
+import android.app.Application
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+import com.onesignal.OneSignal
+import com.onesignal.debug.LogLevel
+//import com.onesignal.OSNotificationOpenedResult
+//import com.onesignal.OSNotification
 
 /*
 Next steps:
     Add completion time
     Edit tasks by clicking on them
  */
+
+// NOTE: Replace the below with your own ONESIGNAL_APP_ID
+const val ONESIGNAL_APP_ID = "913ea4fc-8967-4cbb-9d67-19f7d3a25957"
 
 class MainActivity : ComponentActivity() {
 
@@ -37,6 +49,19 @@ class MainActivity : ComponentActivity() {
             TodoFromScratchTheme {
                 Navigation()
             }
+        }
+
+        // Verbose Logging set to help debug issues, remove before releasing your app.
+        OneSignal.Debug.logLevel = LogLevel.VERBOSE
+
+        // OneSignal Initialization
+        OneSignal.initWithContext(this, ONESIGNAL_APP_ID)
+
+
+        // requestPermission will show the native Android notification permission prompt.
+        // NOTE: It's recommended to use a OneSignal In-App Message to prompt instead.
+        CoroutineScope(Dispatchers.IO).launch {
+            OneSignal.Notifications.requestPermission(true)
         }
     }
 

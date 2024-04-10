@@ -14,7 +14,7 @@ def createPlayer():
         json_data = request.get_json()
         authtoken = Authtoken(json_data['authtoken']['token'], json_data["authtoken"]['userId'])
     except Exception as e:
-            return jsonify({'success': False, 'message': "Invalid Request Format poo", 'player': None})
+        return jsonify({'success': False, 'message': "Invalid Request Format poo", 'player': None})
     
     try:
         conn = create_connection("database/todo_data.db")
