@@ -11,4 +11,7 @@ public class ShopItem extends Item {
     public ShopItem(String name, ItemStat stats, int price) {
         this(name, stats, price, "");
     }
+    public int getShopItemPrice() {
+        return price;
+    }   
 }

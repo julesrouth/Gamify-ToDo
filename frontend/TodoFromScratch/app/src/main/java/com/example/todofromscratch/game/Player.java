@@ -99,7 +99,12 @@ class Player {
         return stance;
     }
     public double getSpeed() {
-        return 1 - (stat.getSpeed() / 100);
+        //go through all items and get speed
+        double tempSpeed = stat.getSpeed();
+        for(Item item : inventory.getItems()){
+            tempSpeed += item.getStats().getSpeed();
+        }
+        return 1 - ((double)tempSpeed / 100);
     }
 
     public int getAttack() {
