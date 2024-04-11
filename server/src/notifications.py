@@ -49,7 +49,7 @@ class Notifications:
 
     @staticmethod
     # Send a push notification to the Kotlin app
-    def send_notification(self, user_id, message):
+    def send_notification(self, user_id, task_name, message):
         # Logic to send push notification to Kotlin app
         print("Sending notification:", message, "to user:", user_id)
 
@@ -81,16 +81,18 @@ class Notifications:
 
     # Schedule a notification for a task
     def schedule_notification_task(self, task):
-        
-        # time will be formated like this: 2021-10-10/hh:mm a
-
+        # time will be formated like this: 2021-10-10 hh:mm a
+        # if no hh:mm a is provided, the time will be set to 09:00 am
+        print("scheduling task for: ", task.dueDate)
+        if len(task.dueDate) == 10:
+            task.dueDate += " 09:00 am"
         notification_time = datetime.strptime(task.dueDate, '%Y-%m-%d %I:%M %p')
 
         print(f"Scheduling notification for task: {task.taskName} at time {notification_time}")
 
         message = f"Reminder: {task.taskName} is due at {notification_time.strftime('%I:%M %p')}"
         try:
-            self.scheduler.add_job(self.send_notification, 'date', run_date=notification_time, args=[self, task.userId, message])
+            self.scheduler.add_job(self.send_notification, 'date', run_date=notification_time, args=[self, task.userId,task.taskName, message])
             print("Task Notification scheduled successfully")
             return "Task Notification scheduled successfully"
         except Exception as e:
@@ -100,15 +102,47 @@ class Notifications:
     # Schedule a daily notification for a task
     def schedule_notification_daily(self, task):
         # time will be formated like this: 2021-10-10 hh:mm am/pm
+        # if no hh:mm a is provided, the time will be set to 09:00 am
+        if len(task.dueDate) == 10:
+            task.dueDate += " 09:00 am"
         notification_time = datetime.strptime(task.dueDate, '%Y-%m-%d %I:%M %p')
         message = f"Reminder: {task.taskName} is due at {notification_time.strftime('%I:%M %p')}"
-        self.scheduler.add_job(self.send_notification, 'interval', days=1, start_date=notification_time, args=[message])
-        return "Daily Task Notification scheduled successfully"
+        try:
+            self.scheduler.add_job(self.send_notification, 'interval', days=1, start_date=notification_time, args=[self, task.userId, task.taskName, message])
+            print("Daily Task Notification scheduled successfully")
+            return "Daily Task Notification scheduled successfully"
+        except Exception as e:
+            print("Error scheduling notification:", str(e))
+            return str(e)
 
     # Schedule a weekly notification for a task
     def schedule_notification_weekly(self, task):
         # parse the date and time of the task correctly
+        # if no hh:mm a is provided, the time will be set to 09:00 am
+        if len(task.dueDate) == 10:
+            task.dueDate += " 09:00 am"
         notification_time = datetime.strptime(task.dueDate, '%Y-%m-%d %I:%M %p')
         day_of_week = notification_time.weekday() #.strftime('%A')
         message = f"Reminder: {task.taskName} is due at {notification_time.strftime('%I:%M %p')}"
-        self.scheduler.add_job(self.send_notification, 'cron', day_of_week=day_of_week, hour=notification_time.hour, minute=notification_time.minute, args=[message])
+        
+        try:
+            self.scheduler.add_job(self.send_notification, 'cron', day_of_week=day_of_week, hour=notification_time.hour, minute=notification_time.minute, args=[self, task.userId, task.taskName, message])
+            print("Weekly Task Notification scheduled successfully")
+            return "Weekly Task Notification scheduled successfully"
+        except Exception as e:
+            print("Error scheduling notification:", str(e))
+            return str(e)
+
+    def delete_notification(self, task):
+        print("Deleting notification for task:", task.taskName)
+        jobs = self.scheduler.get_jobs()
+        deleted = False
+        for job in jobs:
+            if job.args[1] == task.userId and job.args[2] == task.taskName:
+                self.scheduler.remove_job(job.id)
+                deleted = True
+                print("Notification deleted successfully")
+        if not deleted:
+            print("Notification not found")
+            return "Notification not found"
+        return "Notification deleted successfully"
