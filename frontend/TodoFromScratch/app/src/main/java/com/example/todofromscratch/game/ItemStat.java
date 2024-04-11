@@ -11,7 +11,7 @@ public class ItemStat extends Stat {
         this.mana = mana;
         this.features = features;
     }
-    public ItemStat(int health, int attack, int defense){
-        this(health, attack, defense, 0, 0, 0, "");
+    public ItemStat(int attack, int defense, int speed){
+        this(0, attack, defense, speed, 0, 0, "");
     }
 }

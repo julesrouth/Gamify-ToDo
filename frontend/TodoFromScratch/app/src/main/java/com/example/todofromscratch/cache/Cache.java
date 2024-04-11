@@ -70,6 +70,12 @@ public class Cache {
 
     public String getCurrUserID(){ return currUserAuthtoken.userId; }
 
+
+    // 0 == playing, 1 == won, 2 == lost    
+    public int getGameState(){
+        return game.getGameState();
+    }
+
     public AuthToken getCurrUserAuthToken() {
         return currUserAuthtoken;
     }

@@ -17,7 +17,7 @@ public class Game {
     private Deque<String> messageLog;
     private int combatTime;
     private int printCnt;
-
+    private int gameState = 0; //1 == won, 2 == Lost, 0 == playing
     private Player player;
     private Map map;
     private Enemy currentEnemy;
@@ -61,16 +61,16 @@ public class Game {
             System.out.println("Input Item to buy, you have " + this.player.getGold() + " gold");
             String inputPlayer = scanner.nextLine().toLowerCase();
 
-            for (Item i : this.shop.getItems()) {
+            for (ShopItem i : this.shop.getItems()) {
                 if (i.getName().toLowerCase().equals(inputPlayer)) {
-                    if (this.player.getGold() < i.getPrice()) {
+                    if (this.player.getGold() < i.getShopItemPrice()) {
                         System.out.println("Not enough gold");
                         return;
                     }
-                    this.player.setGold(this.player.getGold() - i.getPrice());
-                    this.player.addItem(i);
+                    this.player.setGold(this.player.getGold() - i.getShopItemPrice());
+                    this.player.addItem(new Item(i.getName(), i.getStats()));
                     this.shop.removeItem(i);
-                    System.out.println("Item " + i.getName() + " bought for " + i.getPrice() + " gold");
+                    System.out.println("Item " + i.getName() + " bought for " + i.getShopItemPrice() + " gold");
                     return;
                 }
             }
@@ -281,6 +281,10 @@ public class Game {
         }
     }
 
+    public int getGameState(){
+        return this.gameState;
+    }
+
     public void resetCombat(){
         this.combatTime = 0;
         this.player.setInitiative(0);
@@ -289,6 +293,17 @@ public class Game {
     }
 
     public void combatTick(){
+        //Check to see if game is over
+        if(this.player.getStat().getHealth() <= 0){
+            System.out.println("You lose");
+            this.gameState = 2;
+            return;
+        }
+        if(this.currentEnemy.getStat().getHealth() <= 0){
+            System.out.println("You win");
+            this.gameState = 1;
+            return;
+        }
         Global.clearScreen();
         // this.combatTime = 0;
         // int printCnt = 0;
@@ -486,6 +501,9 @@ public class Game {
         return currentEnemy.getStat();
     }
     public void printCombatStatus() {
+        if(this.gameState != 0){
+            return;
+        }
         if (messageLog.size() > LOG_LENGTH) {
             messageLog.removeFirst();
         }
@@ -526,6 +544,7 @@ public class Game {
                     10 * (this.combatTime - this.player.getLastMoveInit()) /
                             (this.player.getInitiative() - this.player.getLastMoveInit())
             );
+
             tempStr += "Action [" + "X".repeat(percentInitPlayer) + " ".repeat(10 - percentInitPlayer) + "]\n\n";
         } catch (Exception e) {
             e.printStackTrace();
@@ -570,17 +589,23 @@ public class Game {
         Game game = new Game();
         game.resetCombat();
         int counter = 0;
+        game.player.setGold(1000);
+        game.shop.addItemsShopTest(game.shop);
+        game.shop.printShop();
+        game.userInputShop();
+        game.userInputShop();
         while(true){
             counter++;
             if(counter > 10000){
                 break;
             }
             game.combatTick();
+            System.out.println("Game State: " + game.getGameState());
             if(game.getNeedPlayerInput() == true){
                 Move tempMove = game.player.getMove();
                 game.setPlayerMove(tempMove);
             }
         }
-        game.combat();
+        // game.combat();
     }
 }
