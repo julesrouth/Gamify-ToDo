@@ -1,6 +1,7 @@
 package com.example.todofromscratch.ui
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,6 +49,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.example.todofromscratch.R
 import com.example.todofromscratch.cache.Cache
 import com.example.todofromscratch.model.domain.StoreItem
@@ -181,8 +183,8 @@ fun ShopScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    containerColor = Color(ContextCompat.getColor(LocalContext.current, R.color.neutral_green)),
+                    titleContentColor = Color(ContextCompat.getColor(LocalContext.current, R.color.black)),
                 ),
                 title = {
                     Text(
@@ -263,15 +265,12 @@ fun ShopScreen(
                     }
                 }
             }
-
-            Icon(
-                painter = painterResource(id = R.drawable.baseline_warehouse_24),
-                contentDescription = "Item",
+            Image(painter = painterResource(id = R.drawable.shop_icon),
+                contentDescription = "Shop Icon",
                 modifier = Modifier
                     .size(105.dp)
                     .align(Alignment.CenterHorizontally)
             )
-
             LazyColumn (
                 modifier = Modifier
                     .fillMaxSize()

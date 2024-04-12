@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -27,12 +28,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.example.todofromscratch.model.domain.User
 import com.example.todofromscratch.presenter.AuthenticatePresenter
 import com.example.todofromscratch.presenter.LoginPresenter
@@ -174,6 +177,9 @@ fun RegisterScreen(
                     presenter.registerUser(username, password, email, firstname, lastname)
 //                    onLoginButtonClicked()
                 },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(ContextCompat.getColor(LocalContext.current, R.color.neutral_green))
+                ),
                 enabled = username.isNotBlank() && password.isNotBlank() && firstname.isNotBlank()
                         && lastname.isNotBlank() && email.isNotBlank()
             ) {
@@ -199,6 +205,9 @@ fun RegisterScreen(
 //                    presenter.login(username, password)
 //                    onLoginButtonClicked()
                 },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(ContextCompat.getColor(LocalContext.current, R.color.neutral_green))
+                ),
 //                enabled = username.isNotBlank() && password.isNotBlank()
             ) {
                 Text(text = "Login Page")

@@ -77,6 +77,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContextCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -300,8 +301,8 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                     Box(
                             modifier = Modifier
                                     .clickable { difficulty = "easy" }
-                                    .border(width = 2.dp, Color.Blue)
-                                    .background(if (difficulty == "easy") MaterialTheme.colorScheme.primary else Color.Transparent)
+                                    .border(width = 2.dp, Color(ContextCompat.getColor(context, R.color.dark_green)))
+                                    .background(if (difficulty == "easy") Color(ContextCompat.getColor(context, R.color.dark_green)) else Color.Transparent)
                     ) {
                         Text(text = "Easy",
                                 modifier = Modifier.padding(8.dp),
@@ -311,8 +312,8 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                     Box(
                             modifier = Modifier
                                     .clickable { difficulty = "medium" }
-                                    .border(width = 2.dp, Color.Blue)
-                                    .background(if (difficulty == "medium") MaterialTheme.colorScheme.primary else Color.Transparent)
+                                    .border(width = 2.dp, Color(ContextCompat.getColor(context, R.color.dark_green)))
+                                    .background(if (difficulty == "medium") Color(ContextCompat.getColor(context, R.color.dark_green)) else Color.Transparent)
                     ) {
                         Text(text = "Medium",
                                 modifier = Modifier.padding(8.dp),
@@ -322,8 +323,8 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                     Box(
                             modifier = Modifier
                                     .clickable { difficulty = "hard" }
-                                    .border(width = 2.dp, Color.Blue)
-                                    .background(if (difficulty == "hard") MaterialTheme.colorScheme.primary else Color.Transparent)
+                                    .border(width = 2.dp, Color(ContextCompat.getColor(context, R.color.dark_green)))
+                                    .background(if (difficulty == "hard") Color(ContextCompat.getColor(context, R.color.dark_green)) else Color.Transparent)
                     ) {
                         Text(text = "Hard",
                                 modifier = Modifier.padding(8.dp),
@@ -353,8 +354,8 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                     Box(
                             modifier = Modifier
                                     .clickable { type = "task" }
-                                    .border(width = 2.dp, Color.Blue)
-                                    .background(if (type == "task") MaterialTheme.colorScheme.primary else Color.Transparent)
+                                    .border(width = 2.dp, Color(ContextCompat.getColor(context, R.color.dark_green)))
+                                    .background(if (type == "task") Color(ContextCompat.getColor(context, R.color.dark_green)) else Color.Transparent)
                     ) {
                         Text(text = "To-do",
                                 modifier = Modifier.padding(8.dp),
@@ -364,8 +365,8 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                     Box(
                             modifier = Modifier
                                     .clickable { type = "daily" }
-                                    .border(width = 2.dp, Color.Blue)
-                                    .background(if (type == "daily") MaterialTheme.colorScheme.primary else Color.Transparent)
+                                    .border(width = 2.dp, Color(ContextCompat.getColor(context, R.color.dark_green)))
+                                    .background(if (type == "daily") Color(ContextCompat.getColor(context, R.color.dark_green)) else Color.Transparent)
                     ) {
                         Text(text = "Daily",
                                 modifier = Modifier.padding(8.dp),
@@ -375,8 +376,8 @@ fun AddTaskScreen(taskToUpdate: Task? = null, // Task to update if in edit mode
                     Box(
                             modifier = Modifier
                                     .clickable { type = "weekly" }
-                                    .border(width = 2.dp, Color.Blue)
-                                    .background(if (type == "weekly") MaterialTheme.colorScheme.primary else Color.Transparent)
+                                    .border(width = 2.dp, Color(ContextCompat.getColor(context, R.color.dark_green)))
+                                    .background(if (type == "weekly") Color(ContextCompat.getColor(context, R.color.dark_green)) else Color.Transparent)
                     ) {
                         Text(text = "Weekly",
                                 modifier = Modifier.padding(8.dp),
@@ -533,8 +534,8 @@ fun showTopBar(
    return (@Composable () {
         CenterAlignedTopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.primary,
+                containerColor = Color(ContextCompat.getColor(context, R.color.light_green)),
+                titleContentColor = Color(ContextCompat.getColor(context, R.color.black)),
             ),
             title = {
                 Text(

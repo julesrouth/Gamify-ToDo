@@ -1,5 +1,6 @@
 package com.example.todofromscratch.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +16,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -23,26 +23,24 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.example.todofromscratch.R
 import com.example.todofromscratch.cache.Cache
 import com.example.todofromscratch.ui.theme.TodoFromScratchTheme
-import com.example.todofromscratch.model.domain.Player
-import com.example.todofromscratch.model.domain.Stat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,14 +55,14 @@ fun CharacterScreen(
     val textSize = 30.sp
     val smallTextSize = 25.sp
     val boxSize = 55.dp
-
+    val context = LocalContext.current
     // Your blank screen UI goes here
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    containerColor = Color(ContextCompat.getColor(context, R.color.light_green)),
+                    titleContentColor = Color(ContextCompat.getColor(context, R.color.black)),
                 ),
                 title = {
                     Text(
@@ -119,7 +117,6 @@ fun CharacterScreen(
                         .size(imageSize)
                         .align(Alignment.CenterVertically)
                 )
-
                 Text("Health: ",
 
                     fontSize = textSize,
@@ -128,7 +125,7 @@ fun CharacterScreen(
                         .align(Alignment.CenterVertically)
                         //Change color
                         .padding(10.dp, 1.dp),
-                    color = MaterialTheme.colorScheme.primary
+                    color = Color(ContextCompat.getColor(context, R.color.black))
 
                 )
                 Text("${stat.health}",
@@ -164,7 +161,7 @@ fun CharacterScreen(
                         .align(Alignment.CenterVertically)
                         //Change color
                         .padding(10.dp, 1.dp),
-                    color = MaterialTheme.colorScheme.primary
+                    color = Color(ContextCompat.getColor(context, R.color.black))
 
                 )
                 Text("${stat.mana}",
@@ -200,7 +197,7 @@ fun CharacterScreen(
                         .align(Alignment.CenterVertically)
                         //Change color
                         .padding(10.dp, 1.dp),
-                    color = MaterialTheme.colorScheme.primary
+                    color = Color(ContextCompat.getColor(context, R.color.black))
 
                 )
                 Text("${stat.attack}",
@@ -215,8 +212,8 @@ fun CharacterScreen(
             Row(
                 modifier = Modifier
                     .padding(5.dp)
-                .fillMaxWidth()
-                .height(boxSize)
+                    .fillMaxWidth()
+                    .height(boxSize)
             ){
                 //Icon
                 //Image 
@@ -236,7 +233,7 @@ fun CharacterScreen(
                         .align(Alignment.CenterVertically)
                         //Change color
                         .padding(10.dp, 1.dp),
-                        color = MaterialTheme.colorScheme.primary
+                        color = Color(ContextCompat.getColor(context, R.color.black))
 
                 )
                 Text("${stat.defense}",
@@ -273,7 +270,7 @@ fun CharacterScreen(
                         .align(Alignment.CenterVertically)
                         //Change color
                         .padding(10.dp, 1.dp),
-                    color = MaterialTheme.colorScheme.primary
+                    color = Color(ContextCompat.getColor(context, R.color.black))
 
                 )
                 Text("${stat.speed}",
@@ -309,7 +306,7 @@ fun CharacterScreen(
                         .align(Alignment.CenterVertically)
                         //Change color
                         .padding(10.dp, 1.dp),
-                    color = MaterialTheme.colorScheme.primary
+                    color = Color(ContextCompat.getColor(context, R.color.black))
 
                 )
                 Text("${stat.level}",
@@ -386,7 +383,7 @@ fun CharacterScreen(
                                     .padding(5.dp, 1.dp)
                             )
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_android_gold_24dp),
+                                painter = painterResource(id = R.drawable.gold_ingots_gold_svgrepo_com),
                                 contentDescription = "Localized description",
                                 modifier = Modifier
                                     .size(15.dp)

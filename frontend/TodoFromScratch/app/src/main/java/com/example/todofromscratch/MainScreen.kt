@@ -65,6 +65,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.example.todofromscratch.model.domain.Task
 import com.example.todofromscratch.model.domain.User
 import com.example.todofromscratch.presenter.TaskPresenter
@@ -213,8 +214,8 @@ fun MainScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    containerColor = Color(ContextCompat.getColor(context, R.color.light_green)),
+                    titleContentColor = Color(ContextCompat.getColor(context, R.color.black)),
                 ),
                 title = {
                     Text(
