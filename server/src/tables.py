@@ -16,10 +16,21 @@ level_up_table = [0, 30, 100, 300, 800,
                   7500, 10000, 15000, 20000, 30000, 
                   50000, 75000, 100000, 150000, 200000]
 
-store_table = [StoreItem("potion", "It heals you in battle", 50),
-                StoreItem("sword", "It gives you more attack power", 100),
-                StoreItem("shield", "It gives you more defense", 100),
-                StoreItem("armor", "It gives you more health", 100)]
+store_table = [StoreItem("Wooden Sword", "Increases attack by 8", 100),
+               StoreItem("Wooden Armor", "Increases defense by 8", 100),
+               StoreItem("Wooden Boots", "Increases speed by 8", 100),
+               StoreItem("Stone Sword", "Increases attack by 12", 200),
+               StoreItem("Stone Armor", "Increases defense by 12", 200),
+               StoreItem("Stone Boots", "Increases speed by 12", 200),
+               StoreItem("Steel Sword", "Increases attack by 16", 300),
+               StoreItem("Steel Armor", "Increases defense by 16", 300),
+               StoreItem("Steel Boots", "Increases speed by 16", 300),
+               StoreItem("Diamond Sword", "Increases attack by 20", 400),
+               StoreItem("Diamond Armor", "Increases defense by 20", 400),
+               StoreItem("Diamond Boots", "Increases speed by 20", 400),
+               StoreItem("Mithral Sword", "Increases attack by 25", 500),
+               StoreItem("Mithral Armor", "Increases defense by 25", 500),
+               StoreItem("Mithral Boots", "Increases speed by 25", 500)]
                   
 def get_gold(difficulty, task_type):
     return gold_table[difficulty][task_type]

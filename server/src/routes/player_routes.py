@@ -3,9 +3,10 @@ import sys
 
 sys.path.append('..')
 
-from Model import Authtoken, Player
+from Model import Authtoken, Player, Stat
 from database.PlayerDAO import PlayerDAO
 from database.AuthtokenDAO import AuthtokenDAO
+from database.StatDao import StatDao
 from database.conn import create_connection
 from tables import get_experience, get_level_up_experience
 
@@ -159,6 +160,7 @@ def enemyKilled():
         
         experience_gained = get_experience(enemyLevel)
         new_experience = player.experience + experience_gained
+        old_level = player.level
         while new_experience >= get_level_up_experience(player.level):
             new_experience -= get_level_up_experience(player.level)
             player.level += 1
@@ -173,4 +175,18 @@ def enemyKilled():
         except Exception as e:
             return jsonify({'success': False, 'message': "Database Error", "experience": None, "level": None})
         
+        if (player.level != old_level):
+            stat_dao = StatDao(conn)
+            try:
+                stat = stat_dao.find_by_userId(authtoken.userId)
+                stat.attack += 3 * (player.level - old_level)
+                stat.defense += 3 * (player.level - old_level)
+                stat.speed += 3 * (player.level - old_level)
+                stat.maxMana += 3 * (player.level - old_level)
+                stat.maxHealth += 6 * (player.level - old_level)
+                stat.level = player.level
+                stat_dao.update(authtoken.userId, stat)
+            except Exception as e:
+                return jsonify({'success': False, 'message': "Database Error", "experience": None, "level": None})
+            
         return jsonify({'success': True, 'message': "Experience Updated", "experience": new_experience, "level": player.level})
