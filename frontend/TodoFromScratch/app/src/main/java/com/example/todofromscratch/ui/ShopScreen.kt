@@ -330,7 +330,7 @@ fun ShopScreen(
                                     fontSize = 15.sp
                                 )
                                 Text(
-                                    "You currently have ${playerItemsMap[item.itemName]}",
+                                    "You currently have ${playerItemsMap[item.itemName]?:0}",
                                     modifier = Modifier
                                         .padding(15.dp, 1.dp),
                                     fontSize = 10.sp
